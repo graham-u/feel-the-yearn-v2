@@ -8,6 +8,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "@material-ui/core": "^4.11.0",
     "@reduxjs/toolkit": "^1.4.0",
     "@rimble/connection-banner": "^1.2.3",
     "next": "9.5.3",
