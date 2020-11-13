@@ -1,6 +1,6 @@
 import AnimatedTicker from "components/vaultsReport/animatedTicker/AnimatedTicker";
 import ContractData from "components/vaultsReport/ContractData";
-import getNormalizedBalance from "utils/getNormalizedBalance";
+import normalizedValue from "utils/normalizedValue";
 import holdingsFormatterFactory from "utils/holdingsFormatterFactory";
 import { pure } from "recompose";
 
@@ -17,7 +17,7 @@ function VaultBalance({ vault }) {
       render={(rawBalance) => {
         return (
           <AnimatedTicker
-            value={getNormalizedBalance(rawBalance, decimals)}
+            value={normalizedValue(rawBalance, decimals)}
             formatter={holdingsFormatterFactory()}
           />
         );
