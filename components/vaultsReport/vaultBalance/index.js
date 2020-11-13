@@ -1,5 +1,5 @@
-import ContractData from "components/ContractData";
 import AnimatedTicker from "components/vaultsReport/animatedTicker/AnimatedTicker";
+import ContractData from "components/vaultsReport/ContractData";
 import getNormalizedBalance from "utils/getNormalizedBalance";
 import holdingsFormatterFactory from "utils/holdingsFormatterFactory";
 import { pure } from "recompose";
