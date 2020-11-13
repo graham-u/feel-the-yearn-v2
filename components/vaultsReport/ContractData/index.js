@@ -10,7 +10,6 @@ function ContractData({
   errorComponent,
   render,
 }) {
-  console.log("in ContractData");
   notReadyComponent = notReadyComponent ?? defaultNotReadyComponent;
   errorComponent = errorComponent ?? defaultErrorComponent;
 

@@ -79,13 +79,6 @@ function useContractData(contractKey, method, methodArgs = []) {
     };
   }
 
-  console.log({
-    contractKey,
-    method,
-    methodArgs,
-    result: contractData.value,
-  });
-
   return {
     ...response,
     result: contractData.value,
