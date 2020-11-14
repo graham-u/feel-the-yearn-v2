@@ -1,4 +1,4 @@
-import ContractData from "components/vaultsReport/ContractData";
+import ContractData from "components/vaultsReport/contractData";
 import AnimatedTicker from "components/vaultsReport/animatedTicker/AnimatedTicker";
 import normalizedValue from "utils/normalizedValue";
 import holdingsFormatterFactory from "utils/holdingsFormatterFactory";
