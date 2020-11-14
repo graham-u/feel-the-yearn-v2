@@ -75,7 +75,7 @@ export default function ConnectionProvider(props) {
 
   // SelectWallet function stored as ref, so that its not recreated and passed
   // into context as a new function instance everytime any state is set.
-  let selectWallet = useRef();
+  let selectWallet = useRef(() => {});
   selectWallet.current = async () => {
     const walletSelected = await onboard.walletSelect();
 
@@ -94,7 +94,7 @@ export default function ConnectionProvider(props) {
         ready,
         wallet,
         address,
-        selectWallet,
+        selectWallet: selectWallet.current,
         web3,
         connected,
         notify,
