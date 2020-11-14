@@ -49,12 +49,7 @@ function Header() {
     <AppBar position="static" classes={{ root: appBarClasses.root }}>
       <Grid container justify="space-between">
         <Grid item>
-          <Typography
-            component="h1"
-            variant={isXs ? "h5" : "h4"}
-            display="inline"
-            gutterBottom
-          >
+          <Typography component="h1" variant="h4" display="inline" gutterBottom>
             Feel the Yearn
           </Typography>
         </Grid>
