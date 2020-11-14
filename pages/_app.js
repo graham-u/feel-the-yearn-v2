@@ -16,19 +16,18 @@ const theme = getTheme();
 function MyApp({ Component, pageProps }) {
   return (
     <NoSSR>
-      <CssBaseline>
-        <ThemeProvider theme={theme}>
-          <StoreProvider>
-            <ConnectionProvider>
-              <DrizzleCreator>
-                <PageContainer>
-                  <Component {...pageProps} />
-                </PageContainer>
-              </DrizzleCreator>
-            </ConnectionProvider>
-          </StoreProvider>
-        </ThemeProvider>
-      </CssBaseline>
+      <CssBaseline />
+      <ThemeProvider theme={theme}>
+        <StoreProvider>
+          <ConnectionProvider>
+            <DrizzleCreator>
+              <PageContainer>
+                <Component {...pageProps} />
+              </PageContainer>
+            </DrizzleCreator>
+          </ConnectionProvider>
+        </StoreProvider>
+      </ThemeProvider>
     </NoSSR>
   );
 }
