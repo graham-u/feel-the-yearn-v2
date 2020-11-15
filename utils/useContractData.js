@@ -49,7 +49,7 @@ function useContractData(contractKey, method, methodArgs = []) {
   const contractData = useSelector(contractDataSelector.current);
 
   useEffect(() => {
-    if (contractsAddedToDrizzle) {
+    if (contractsAddedToDrizzle && !contractDataSelectorReady) {
       const dataKey = drizzle.contracts[contractKey].methods[method].cacheCall(
         ...methodArgs
       );
