@@ -4,7 +4,7 @@ const vaultRegistryInitialState = {
   vaultRegistry: {
     vaults: [],
     loading: false,
-    error: null,
+    error: false,
   },
 };
 
@@ -12,7 +12,6 @@ const vaultRegistryReducers = {
   fetchVaults(state) {
     state.vaultRegistry.loading = true;
     state.vaultRegistry.error = false;
-    state.vaultRegistry.vaults = [];
   },
   fetchVaultsSuccess(state, action) {
     state.vaultRegistry.vaults = action.payload;
@@ -24,10 +23,36 @@ const vaultRegistryReducers = {
   },
 };
 
+const wantTokenPricesInitialState = {
+  wantTokenPrices: {
+    prices: {},
+    loading: false,
+    error: null,
+  },
+};
+
+const wantTokenPricesReducers = {
+  fetchWantTokenPrices(state) {
+    state.wantTokenPrices.loading = true;
+    state.wantTokenPrices.error = false;
+  },
+  fetchWantTokenPricesSuccess(state, action) {
+    state.wantTokenPrices.prices = action.payload;
+    state.wantTokenPrices.loading = false;
+  },
+  fetchWantTokenPricesFailure(state) {
+    state.wantTokenPrices.loading = false;
+    state.wantTokenPrices.error = error;
+  },
+};
+
 const slice = createSlice({
   name: "vaultsReport",
-  initialState: vaultRegistryInitialState,
-  reducers: vaultRegistryReducers,
+  initialState: {
+    ...vaultRegistryInitialState,
+    ...wantTokenPricesInitialState,
+  },
+  reducers: { ...vaultRegistryReducers, ...wantTokenPricesReducers },
 });
 
 export const { name, actions, reducer } = slice;
