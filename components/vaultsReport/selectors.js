@@ -1,3 +1,6 @@
 const getVaults = (state) => state.vaultsReport.vaultRegistry.vaults;
 
-export { getVaults };
+const getContractsAddedToDrizzle = (state) =>
+  state.vaultsReport.contractsAddedToDrizzle;
+
+export { getVaults, getContractsAddedToDrizzle };

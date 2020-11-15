@@ -1,15 +1,30 @@
-import { getDrizzleInitialized } from "components/drizzleCreator/selectors";
-import { isEmpty, has } from "lodash";
+// The useContractData hook is used by the ContractData component to fetch and
+// keep in sync contract data. Once the ContractData component has mounted we
+// drizzle contracts' cacheCall method to initialize the data fetch and store
+// the results dataKey in state.
+//
+// We then create a selector function unique to this component that has
+// closure references to the contractKey, method and dataKey, that is used to
+// ensure the component re-renders when the data changes.  The selector funciton
+// is stored as a ref so that it persists between renders.
+//
+// Due to the rules of hooks, we cannot selectively store the dataKey and
+// selector function only once they are ready, so before the component mounts,
+// we set the dataKey to null and the selector to a dummy function.
+
+import { getContractsAddedToDrizzle } from "components/vaultsReport/selectors";
+import { has } from "lodash";
 import { useEffect, useState, useRef } from "react";
 import { useSelector } from "react-redux";
 
+// This factory function returns a selector function specific to the
+// ContractData component in which it is called, the returned selector function
+// keeps references to the contractKey, method, dataKey params passed in.
 const makeContractDataSelector = (contractKey, method, dataKey) => {
   return (state) => {
-    if (dataKey === null) {
-      return null;
-    }
-
     if (!has(state, ["contracts", contractKey, method, dataKey])) {
+      // The contract data has not yet been fetched and stored.  Once is has
+      // this selector will be re-run to return the actual data.
       return null;
     }
 
@@ -18,18 +33,23 @@ const makeContractDataSelector = (contractKey, method, dataKey) => {
 };
 
 function useContractData(contractKey, method, methodArgs = []) {
+  // Selector function initially set to a dummy function until the component
+  // mounts and creates it correctly with the established dataKey.
   const contractDataSelector = useRef(() => null);
-  const [dataKey, setDataKey] = useState(null);
-  const contractData = useSelector(contractDataSelector.current);
-  const drizzleInitialized = useSelector(getDrizzleInitialized);
 
-  const contractsReady =
-    drizzleInitialized &&
-    has(drizzle, "contracts") &&
-    !isEmpty(drizzle.contracts);
+  // This is used in useEffect to run the effect again once the selector has
+  // been set up.
+  const [contractDataSelectorReady, setContractDataSelectorReady] = useState(
+    false
+  );
+  const contractsAddedToDrizzle = useSelector(getContractsAddedToDrizzle);
+
+  const [dataKey, setDataKey] = useState(null);
+
+  const contractData = useSelector(contractDataSelector.current);
 
   useEffect(() => {
-    if (contractsReady) {
+    if (contractsAddedToDrizzle) {
       const dataKey = drizzle.contracts[contractKey].methods[method].cacheCall(
         ...methodArgs
       );
@@ -40,8 +60,16 @@ function useContractData(contractKey, method, methodArgs = []) {
         method,
         dataKey
       );
+
+      setContractDataSelectorReady(true);
     }
-  }, [contractsReady, contractKey, method, methodArgs]);
+  }, [
+    contractsAddedToDrizzle,
+    contractKey,
+    method,
+    methodArgs,
+    contractDataSelectorReady,
+  ]);
 
   const response = {
     result: null,
@@ -50,7 +78,7 @@ function useContractData(contractKey, method, methodArgs = []) {
     error: false,
   };
 
-  if (!contractsReady) {
+  if (!contractsAddedToDrizzle) {
     return {
       ...response,
       status: "Data not yet available",
