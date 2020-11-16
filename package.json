@@ -20,7 +20,7 @@
     "dotenv": "^8.2.0",
     "eth-block-tracker-es5": "^2.3.2",
     "lodash": "^4.17.20",
-    "next": "9.5.3",
+    "next": "^10.0.1",
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-no-ssr": "^1.1.0",
