@@ -14,7 +14,20 @@ const vaultRegistrySubSlice = {
       state.vaultRegistry.error = false;
     },
     fetchVaultsSuccess(state, action) {
-      state.vaultRegistry.vaults = action.payload;
+      const vaults = action.payload;
+      state.vaultRegistry.vaults = vaults;
+
+      const tokens = vaults.map((vault) => {
+        return {
+          name: vault.tokenName,
+          symbol: vault.tokenSymbol,
+          symbolAlias: vault.tokenSymbolAlias,
+          decimals: vault.decimals,
+          address: vault.tokenAddress,
+        };
+      });
+
+      keyAndStoreTokens(state.tokens, tokens);
       state.vaultRegistry.loading = false;
     },
     fetchVaultsFailure(state, error) {
@@ -59,17 +72,37 @@ const wantTokenPricesSubSlice = {
   },
 };
 
+const tokensSubSlice = {
+  initialState: {
+    tokens: {},
+  },
+  reducers: {
+    getStrategyTokensSuccess(state, action) {
+      const strategyTokens = action.payload;
+      keyAndStoreTokens(state.tokens, strategyTokens);
+    },
+  },
+};
+
+function keyAndStoreTokens(tokensState, tokensToSave) {
+  tokensToSave.forEach((token) => {
+    tokensState[token.address] = token;
+  });
+}
+
 const slice = createSlice({
   name: "vaultsReport",
   initialState: {
     ...vaultRegistrySubSlice.initialState,
     ...wantTokenPricesSubSlice.initialState,
     ...contractsAddedToDrizzleSubSlice.initialState,
+    ...tokensSubSlice.initialState,
   },
   reducers: {
     ...vaultRegistrySubSlice.reducers,
     ...wantTokenPricesSubSlice.reducers,
     ...contractsAddedToDrizzleSubSlice.reducers,
+    ...tokensSubSlice.reducers,
   },
 });
 

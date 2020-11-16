@@ -12,7 +12,7 @@
 // selector function only once they are ready, so before the component mounts,
 // we set the dataKey to null and the selector to a dummy function.
 
-import { getContractsAddedToDrizzle } from "components/vaultsReport/selectors";
+import { getContractsAreAddedToDrizzle } from "components/vaultsReport/selectors";
 import { has } from "lodash";
 import { useEffect, useState, useRef } from "react";
 import { useSelector } from "react-redux";
@@ -37,12 +37,9 @@ function useContractData(contractKey, method, methodArgs = []) {
   // mounts and creates it correctly with the established dataKey.
   const contractDataSelector = useRef(() => null);
 
-  // This is used in useEffect to run the effect again once the selector has
-  // been set up.
-  const [contractDataSelectorReady, setContractDataSelectorReady] = useState(
-    false
-  );
-  const contractsAddedToDrizzle = useSelector(getContractsAddedToDrizzle);
+  // This is used in useEffect to run the effect again once the selector has been set up.
+  const [contractDataSelectorReady, setContractDataSelectorReady] = useState(false);
+  const contractsAddedToDrizzle = useSelector(getContractsAreAddedToDrizzle);
 
   const [dataKey, setDataKey] = useState(null);
 
@@ -50,26 +47,14 @@ function useContractData(contractKey, method, methodArgs = []) {
 
   useEffect(() => {
     if (contractsAddedToDrizzle && !contractDataSelectorReady) {
-      const dataKey = drizzle.contracts[contractKey].methods[method].cacheCall(
-        ...methodArgs
-      );
+      const dataKey = drizzle.contracts[contractKey].methods[method].cacheCall(...methodArgs);
       setDataKey(dataKey);
 
-      contractDataSelector.current = makeContractDataSelector(
-        contractKey,
-        method,
-        dataKey
-      );
+      contractDataSelector.current = makeContractDataSelector(contractKey, method, dataKey);
 
       setContractDataSelectorReady(true);
     }
-  }, [
-    contractsAddedToDrizzle,
-    contractKey,
-    method,
-    methodArgs,
-    contractDataSelectorReady,
-  ]);
+  }, [contractsAddedToDrizzle, contractKey, method, methodArgs, contractDataSelectorReady]);
 
   const response = {
     result: null,

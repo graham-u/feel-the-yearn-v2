@@ -1,14 +1,13 @@
-import v1VaultABI from "abi/v1VaultABI";
-import {
-  useSelectWallet,
-  useWeb3,
-  useAddress,
-} from "components/connectionProvider/hooks";
+import Grid from "@material-ui/core/Grid";
+import { useWeb3 } from "components/connectionProvider/hooks";
 import { getDrizzleInitialized } from "components/drizzleCreator/selectors";
-import { getVaults } from "components/vaultsReport/selectors";
-import VaultBalance from "components/vaultsReport/vaultBalance";
-import VaultUserBalance from "components/vaultsReport/vaultUserBalance";
-import { useEffect, useState } from "react";
+import { getVaults, getContractsAreAddedToDrizzle } from "components/vaultsReport/selectors";
+import { initializeContractData, setPriceFetchInterval } from "components/vaultsReport/setup";
+import StrategyHoldings from "components/vaultsReport/strategyHoldings";
+import VaultHoldings from "components/vaultsReport/vaultHoldings";
+import VaultOverview from "components/vaultsReport/vaultOverview";
+import { isEmpty } from "lodash";
+import { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { actions } from "./slice";
 
@@ -16,53 +15,44 @@ function VaultsReport() {
   const dispatch = useDispatch();
   let vaults = useSelector(getVaults);
   const web3 = useWeb3();
-  const address = useAddress();
-  const selectWallet = useSelectWallet();
   const drizzleInitialized = useSelector(getDrizzleInitialized);
-  const [contractsAddedToDrizzle, setContractsAddedToDrizzle] = useState(false);
+  const contractsAreAddedToDrizzle = useSelector(getContractsAreAddedToDrizzle);
 
   useEffect(() => {
     dispatch(actions.fetchVaults());
   }, []);
 
   useEffect(() => {
-    if (drizzleInitialized && vaults) {
-      vaults.forEach((vault) => {
-        drizzle.addContract({
-          contractName: vault.address,
-          web3Contract: new web3.eth.Contract(v1VaultABI, vault.address),
-        });
-      });
-      setContractsAddedToDrizzle(true);
+    if (!isEmpty(vaults)) {
+      const interval = setPriceFetchInterval(vaults, dispatch);
+      return () => clearInterval(interval);
+    }
+  }, [vaults]);
+
+  const strategyContractsAddedToDrizzleRef = useRef({});
+  const strategyContractsAddedToDrizzle = strategyContractsAddedToDrizzleRef.current;
+
+  useEffect(() => {
+    if (drizzleInitialized && vaults && !contractsAreAddedToDrizzle) {
+      initializeContractData(vaults, web3, strategyContractsAddedToDrizzle, dispatch);
     }
   }, [drizzleInitialized, vaults]);
 
-  if (!contractsAddedToDrizzle) {
-    return null;
-  }
+  return vaults.map((vault) => (
+    <Grid key={vault.address} container spacing={3}>
+      <Grid item xs={12} lg={2}>
+        <VaultOverview vault={vault} />
+      </Grid>
 
-  return (
-    <>
-      <p>Vaults</p>
-      {vaults.map((vault) => (
-        <React.Fragment key={vault.address}>
-          <p>Vault: {vault.vaultAlias}</p>
-          <div>
-            Vault balance:
-            <VaultBalance vault={vault} />
-          </div>
+      <Grid item xs={12} lg={2}>
+        <VaultHoldings vault={vault} />
+      </Grid>
 
-          <div>
-            User balance:
-            <VaultUserBalance vault={vault} userAddress={address} />
-          </div>
-        </React.Fragment>
-      ))}
-      {!drizzleInitialized && (
-        <button onClick={selectWallet}>Select wallet</button>
-      )}
-    </>
-  );
+      <Grid item xs={12} lg={2}>
+        <StrategyHoldings vault={vault} />
+      </Grid>
+    </Grid>
+  ));
 }
 
 export default VaultsReport;
