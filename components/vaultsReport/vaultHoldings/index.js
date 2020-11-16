@@ -1,6 +1,5 @@
 import { Typography } from "@material-ui/core";
-import Card from "@material-ui/core/Card";
-import CardContent from "@material-ui/core/CardContent";
+import Hidden from "@material-ui/core/Hidden";
 import ContractData from "components/vaultsReport/contractData";
 import TokenAndFiatBalance from "components/vaultsReport/tokenAndFiatBalance";
 
@@ -15,17 +14,17 @@ function VaultHoldings({ vault }) {
   ];
 
   return (
-    <Card>
-      <CardContent>
+    <>
+      <Hidden lgUp>
         <Typography gutterBottom>Vault holdings</Typography>
-        <ContractData
-          contractConfigs={contractConfigs}
-          render={(rawBalance) => {
-            return <TokenAndFiatBalance rawBalance={rawBalance} tokenAddress={tokenAddress} />;
-          }}
-        />
-      </CardContent>
-    </Card>
+      </Hidden>
+      <ContractData
+        contractConfigs={contractConfigs}
+        render={(rawBalance) => {
+          return <TokenAndFiatBalance rawBalance={rawBalance} tokenAddress={tokenAddress} />;
+        }}
+      />
+    </>
   );
 }
 

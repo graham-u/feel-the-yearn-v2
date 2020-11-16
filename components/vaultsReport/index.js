@@ -1,4 +1,7 @@
+import Card from "@material-ui/core/Card";
+import CardContent from "@material-ui/core/CardContent";
 import Grid from "@material-ui/core/Grid";
+import { makeStyles } from "@material-ui/core/styles";
 import { useWeb3 } from "components/connectionProvider/hooks";
 import { getDrizzleInitialized } from "components/drizzleCreator/selectors";
 import { getVaults, getContractsAreAddedToDrizzle } from "components/vaultsReport/selectors";
@@ -10,6 +13,12 @@ import { isEmpty } from "lodash";
 import { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { actions } from "./slice";
+
+const useCardStyles = makeStyles({
+  root: {
+    marginBottom: "1rem",
+  },
+});
 
 function VaultsReport() {
   const dispatch = useDispatch();
@@ -38,20 +47,26 @@ function VaultsReport() {
     }
   }, [drizzleInitialized, vaults]);
 
+  const cardClasses = useCardStyles();
+
   return vaults.map((vault) => (
-    <Grid key={vault.address} container spacing={3}>
-      <Grid item xs={12} lg={2}>
-        <VaultOverview vault={vault} />
-      </Grid>
+    <Card key={vault.address} className={cardClasses.root}>
+      <CardContent>
+        <Grid container spacing={3}>
+          <Grid item xs={12} lg={3}>
+            <VaultOverview vault={vault} />
+          </Grid>
 
-      <Grid item xs={12} lg={2}>
-        <VaultHoldings vault={vault} />
-      </Grid>
+          <Grid item xs={12} lg={2}>
+            <VaultHoldings vault={vault} />
+          </Grid>
 
-      <Grid item xs={12} lg={2}>
-        <StrategyHoldings vault={vault} />
-      </Grid>
-    </Grid>
+          <Grid item xs={12} lg={2}>
+            <StrategyHoldings vault={vault} />
+          </Grid>
+        </Grid>
+      </CardContent>
+    </Card>
   ));
 }
 
