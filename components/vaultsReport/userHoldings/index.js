@@ -25,7 +25,15 @@ function UserHoldings({ vault }) {
       <ContractData
         contractConfigs={contractConfigs}
         render={(rawBalance) => {
-          return <TokenAndFiatBalance rawBalance={rawBalance} tokenAddress={tokenAddress} />;
+          rawBalance = Number(rawBalance);
+          return (
+            <TokenAndFiatBalance
+              rawBalance={rawBalance}
+              tokenAddress={tokenAddress}
+              fiatMinShow={0.01}
+              tokenMinShow={0.00001}
+            />
+          );
         }}
       />
     </>

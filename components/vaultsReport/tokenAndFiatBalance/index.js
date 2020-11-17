@@ -8,7 +8,7 @@ import { pure } from "recompose";
 import holdingsFormatterFactory from "utils/holdingsFormatterFactory";
 import normalizedValue from "utils/normalizedValue";
 
-function TokenAndFiatBalance({ rawBalance, tokenAddress }) {
+function TokenAndFiatBalance({ rawBalance, tokenAddress, fiatMinShow = 0, tokenMinShow = 0 }) {
   const tokenPriceSelector = useMemo(() => makeTokenPriceSelector(tokenAddress), []);
   const tokenPrice = useSelector(tokenPriceSelector);
 
@@ -19,18 +19,38 @@ function TokenAndFiatBalance({ rawBalance, tokenAddress }) {
     return null;
   }
 
-  const tokenBalance = normalizedValue(rawBalance, token.decimals);
-  const convertedFiatBalance = tokenBalance * tokenPrice;
+  let tokenBalance = normalizedValue(rawBalance, token.decimals);
+  let fiatBalance = tokenBalance * tokenPrice;
+
+  const shouldShowFiatBalance = fiatBalance >= fiatMinShow;
+  const shouldShowTokenBalance = tokenBalance >= tokenMinShow;
 
   return (
     <>
       <div>
-        <AnimatedTicker value={tokenBalance} formatter={holdingsFormatterFactory()} />{" "}
-        <TokenLink address={token.address} linkText={token.symbolAlias} titleText={token.name} />
+        {shouldShowTokenBalance ? (
+          <>
+            <AnimatedTicker value={tokenBalance} formatter={holdingsFormatterFactory()} />{" "}
+            <TokenLink
+              address={token.address}
+              linkText={token.symbolAlias}
+              titleText={token.name}
+            />
+          </>
+        ) : (
+          <Typography display="inline">-</Typography>
+        )}
       </div>
+
       <div>
-        <AnimatedTicker value={convertedFiatBalance} formatter={holdingsFormatterFactory()} />{" "}
-        <Typography display="inline">USD </Typography>
+        {shouldShowFiatBalance ? (
+          <>
+            <AnimatedTicker value={fiatBalance} formatter={holdingsFormatterFactory()} />{" "}
+            <Typography display="inline">USD </Typography>
+          </>
+        ) : (
+          <Typography display="inline">-</Typography>
+        )}
       </div>
     </>
   );
