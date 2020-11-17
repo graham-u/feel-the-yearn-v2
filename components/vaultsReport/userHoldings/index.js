@@ -3,6 +3,7 @@ import Hidden from "@material-ui/core/Hidden";
 import { useAddress } from "components/connectionProvider/hooks";
 import ContractData from "components/vaultsReport/contractData";
 import TokenAndFiatBalance from "components/vaultsReport/tokenAndFiatBalance";
+import normalizedValue from "utils/normalizedValue";
 
 function UserHoldings({ vault }) {
   const { address: vaultAddress, tokenAddress } = vault;
@@ -15,6 +16,10 @@ function UserHoldings({ vault }) {
       method: "balanceOf",
       methodArgs: [userAddress],
     },
+    {
+      contractKey: vaultAddress,
+      method: "getPricePerFullShare",
+    },
   ];
 
   return (
@@ -24,11 +29,12 @@ function UserHoldings({ vault }) {
       </Hidden>
       <ContractData
         contractConfigs={contractConfigs}
-        render={(rawBalance) => {
-          rawBalance = Number(rawBalance);
+        render={(rawYTokenBalance, sharePrice) => {
+          const rawTokenBalance = Number(rawYTokenBalance * normalizedValue(sharePrice, 18));
+
           return (
             <TokenAndFiatBalance
-              rawBalance={rawBalance}
+              rawBalance={rawTokenBalance}
               tokenAddress={tokenAddress}
               tokenDisplayPrecision={4}
               fiatMinShow={0.01}
