@@ -8,7 +8,13 @@ import { pure } from "recompose";
 import holdingsFormatterFactory from "utils/holdingsFormatterFactory";
 import normalizedValue from "utils/normalizedValue";
 
-function TokenAndFiatBalance({ rawBalance, tokenAddress, fiatMinShow = 0, tokenMinShow = 0 }) {
+function TokenAndFiatBalance({
+  rawBalance,
+  tokenAddress,
+  tokenDisplayPrecision = 2,
+  fiatMinShow = 0,
+  tokenMinShow = 0,
+}) {
   const tokenPriceSelector = useMemo(() => makeTokenPriceSelector(tokenAddress), []);
   const tokenPrice = useSelector(tokenPriceSelector);
 
@@ -30,7 +36,10 @@ function TokenAndFiatBalance({ rawBalance, tokenAddress, fiatMinShow = 0, tokenM
       <div>
         {shouldShowTokenBalance ? (
           <>
-            <AnimatedTicker value={tokenBalance} formatter={holdingsFormatterFactory()} />{" "}
+            <AnimatedTicker
+              value={tokenBalance}
+              formatter={holdingsFormatterFactory({ precision: tokenDisplayPrecision })}
+            />{" "}
             <TokenLink
               address={token.address}
               linkText={token.symbolAlias}

@@ -30,6 +30,7 @@ function UserHoldings({ vault }) {
             <TokenAndFiatBalance
               rawBalance={rawBalance}
               tokenAddress={tokenAddress}
+              tokenDisplayPrecision={4}
               fiatMinShow={0.01}
               tokenMinShow={0.00001}
             />
