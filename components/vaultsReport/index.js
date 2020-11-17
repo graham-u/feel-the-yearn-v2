@@ -1,3 +1,4 @@
+import { Typography, useTheme, useMediaQuery } from "@material-ui/core";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Grid from "@material-ui/core/Grid";
@@ -20,6 +21,31 @@ const useCardStyles = makeStyles({
     marginBottom: "1rem",
   },
 });
+
+const useHeaderCardContentStyles = makeStyles({
+  root: {
+    backgroundColor: "rgba(229, 107, 115, 0.25)",
+    padding: "8px 16px",
+    "&:last-child": {
+      paddingBottom: "8px",
+    },
+  },
+});
+
+const layoutWidths = {
+  overview: 3,
+  vaultHoldings: 2,
+  strategyHoldings: 2,
+  userHoldings: 2,
+};
+
+function VaultsReportComponentHeader({ title }) {
+  return (
+    <Typography variant="h5" component="p">
+      {title}
+    </Typography>
+  );
+}
 
 function VaultsReport() {
   const dispatch = useDispatch();
@@ -49,30 +75,61 @@ function VaultsReport() {
   }, [drizzleInitialized, vaults]);
 
   const cardClasses = useCardStyles();
+  const headerCardContentClasses = useHeaderCardContentStyles();
 
-  return vaults.map((vault) => (
-    <Card key={vault.address} className={cardClasses.root}>
-      <CardContent>
-        <Grid container spacing={3}>
-          <Grid item xs={12} lg={3}>
-            <VaultOverview vault={vault} />
-          </Grid>
+  const theme = useTheme();
+  const showComponentHeaders = useMediaQuery(theme.breakpoints.up("lg"));
 
-          <Grid item xs={12} lg={2}>
-            <VaultHoldings vault={vault} />
-          </Grid>
+  return (
+    <>
+      {showComponentHeaders && (
+        <Card elevation={0} className={cardClasses.root}>
+          <CardContent className={headerCardContentClasses.root}>
+            <Grid container spacing={3}>
+              <Grid item xs={12} lg={layoutWidths.overview}>
+                <VaultsReportComponentHeader title="Vault / strategy" />
+              </Grid>
 
-          <Grid item xs={12} lg={2}>
-            <StrategyHoldings vault={vault} />
-          </Grid>
+              <Grid item xs={12} lg={layoutWidths.vaultHoldings}>
+                <VaultsReportComponentHeader title="Vault holdings" />
+              </Grid>
 
-          <Grid item xs={12} lg={2}>
-            <UserHoldings vault={vault} />
-          </Grid>
-        </Grid>
-      </CardContent>
-    </Card>
-  ));
+              <Grid item xs={12} lg={layoutWidths.strategyHoldings}>
+                <VaultsReportComponentHeader title="Strategy holdings" />
+              </Grid>
+
+              <Grid item xs={12} lg={layoutWidths.userHoldings}>
+                <VaultsReportComponentHeader title="User holdings" />
+              </Grid>
+            </Grid>
+          </CardContent>
+        </Card>
+      )}
+      {vaults.map((vault) => (
+        <Card key={vault.address} className={cardClasses.root}>
+          <CardContent>
+            <Grid container spacing={3}>
+              <Grid item xs={12} lg={layoutWidths.overview}>
+                <VaultOverview vault={vault} />
+              </Grid>
+
+              <Grid item xs={12} lg={layoutWidths.vaultHoldings}>
+                <VaultHoldings vault={vault} />
+              </Grid>
+
+              <Grid item xs={12} lg={layoutWidths.strategyHoldings}>
+                <StrategyHoldings vault={vault} />
+              </Grid>
+
+              <Grid item xs={12} lg={layoutWidths.userHoldings}>
+                <UserHoldings vault={vault} />
+              </Grid>
+            </Grid>
+          </CardContent>
+        </Card>
+      ))}
+    </>
+  );
 }
 
 export default VaultsReport;
