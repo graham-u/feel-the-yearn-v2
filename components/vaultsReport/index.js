@@ -7,6 +7,7 @@ import { getDrizzleInitialized } from "components/drizzleCreator/selectors";
 import { getVaults, getContractsAreAddedToDrizzle } from "components/vaultsReport/selectors";
 import { initializeContractData, setPriceFetchInterval } from "components/vaultsReport/setup";
 import StrategyHoldings from "components/vaultsReport/strategyHoldings";
+import UserHoldings from "components/vaultsReport/userHoldings";
 import VaultHoldings from "components/vaultsReport/vaultHoldings";
 import VaultOverview from "components/vaultsReport/vaultOverview";
 import { isEmpty } from "lodash";
@@ -63,6 +64,10 @@ function VaultsReport() {
 
           <Grid item xs={12} lg={2}>
             <StrategyHoldings vault={vault} />
+          </Grid>
+
+          <Grid item xs={12} lg={2}>
+            <UserHoldings vault={vault} />
           </Grid>
         </Grid>
       </CardContent>
