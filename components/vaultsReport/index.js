@@ -1,4 +1,3 @@
-import { Typography, useTheme, useMediaQuery } from "@material-ui/core";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Grid from "@material-ui/core/Grid";
@@ -26,30 +25,12 @@ const useCardStyles = makeStyles({
   },
 });
 
-const useHeaderCardContentStyles = makeStyles({
-  root: {
-    backgroundColor: "rgba(229, 107, 115, 0.25)",
-    padding: "8px 16px",
-    "&:last-child": {
-      paddingBottom: "8px",
-    },
-  },
-});
-
 const layoutWidths = {
   overview: 3,
   vaultHoldings: 3,
   strategyHoldings: 3,
   userPosition: 3,
 };
-
-function VaultsReportComponentHeader({ title }) {
-  return (
-    <Typography variant="h5" component="p">
-      {title}
-    </Typography>
-  );
-}
 
 function VaultsReport() {
   const dispatch = useDispatch();
@@ -88,36 +69,9 @@ function VaultsReport() {
   }, [drizzleInitialized, vaults]);
 
   const cardClasses = useCardStyles();
-  const headerCardContentClasses = useHeaderCardContentStyles();
-
-  const theme = useTheme();
-  const showComponentHeaders = useMediaQuery(theme.breakpoints.up("lg"));
 
   return (
     <>
-      {showComponentHeaders && (
-        <Card elevation={0} className={cardClasses.root}>
-          <CardContent className={headerCardContentClasses.root}>
-            <Grid container spacing={3}>
-              <Grid item xs={12} lg={layoutWidths.overview}>
-                <VaultsReportComponentHeader title="Vault / strategy" />
-              </Grid>
-
-              <Grid item xs={12} lg={layoutWidths.vaultHoldings}>
-                <VaultsReportComponentHeader title="Vault holdings" />
-              </Grid>
-
-              <Grid item xs={12} lg={layoutWidths.strategyHoldings}>
-                <VaultsReportComponentHeader title="Strategy holdings" />
-              </Grid>
-
-              <Grid item xs={12} lg={layoutWidths.userPosition}>
-                <VaultsReportComponentHeader title="Your position" />
-              </Grid>
-            </Grid>
-          </CardContent>
-        </Card>
-      )}
       {vaults.map((vault) => (
         <Card key={vault.address} className={cardClasses.root}>
           <CardContent>
