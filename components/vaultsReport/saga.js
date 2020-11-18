@@ -1,4 +1,4 @@
-import { transform, reduce } from "lodash";
+import { reduce, mapValues } from "lodash";
 import { takeEvery, call, put, all } from "redux-saga/effects";
 import getTokenSymbolAlias from "utils/getTokenSymbolAlias";
 import request from "utils/request";
@@ -36,15 +36,10 @@ function* fetchWantTokenPrices(action) {
   try {
     let priceResults = yield all(priceCalls);
 
-    // CoinGecko API returns the price keyed by the address (lower case), so we need to tidy the
-    // results before storing.
-    priceResults = transform(
-      priceResults,
-      function (result, value, key) {
-        result[key] = value[key.toLowerCase()][vsCurrency];
-      },
-      {}
-    );
+    // CoinGecko API returns the price keyed by the address (lower case), so we need to tidy the results before storing.
+    priceResults = mapValues(priceResults, (priceResult, key) => {
+      return priceResult[key.toLowerCase()][vsCurrency];
+    });
 
     yield put(actions.fetchWantTokenPricesSuccess(priceResults));
   } catch (error) {
