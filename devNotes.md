@@ -12,3 +12,16 @@ if (typeof window !== "undefined" && process.env.NODE_ENV === "development") {
   });
 }
 ```
+
+To monitor breakpoints, use the following code in a high level component.
+```
+import useMediaQuery from "@material-ui/core/useMediaQuery";
+```
+
+```
+  ["xs", "sm", "md", "lg", "xl"].forEach((breakpoint) => {
+    const matches =
+      useMediaQuery((theme) => theme.breakpoints.only(breakpoint)) && console.log(breakpoint);
+  });
+
+```
