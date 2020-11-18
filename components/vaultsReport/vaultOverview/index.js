@@ -32,7 +32,11 @@ function VaultOverview({ vault }) {
       </Grid>
       <Grid item xs={10}>
         <VaultLink address={vault.address} linkText={vault.vaultAlias} titleText={vault.name} />
-        <StrategyLink address={vault.strategyAddress} linkText={vault.strategyName} />
+        <StrategyLink
+          address={vault.strategyAddress}
+          linkText={vault.strategyName}
+          titleText={vault.strategyName}
+        />
       </Grid>
     </Grid>
   );
