@@ -34,9 +34,9 @@ const useHeaderCardContentStyles = makeStyles({
 
 const layoutWidths = {
   overview: 3,
-  vaultHoldings: 2,
-  strategyHoldings: 2,
-  userHoldings: 2,
+  vaultHoldings: 3,
+  strategyHoldings: 3,
+  userHoldingsAndEarnings: 3,
 };
 
 function VaultsReportComponentHeader({ title }) {
@@ -98,7 +98,7 @@ function VaultsReport() {
                 <VaultsReportComponentHeader title="Strategy holdings" />
               </Grid>
 
-              <Grid item xs={12} lg={layoutWidths.userHoldings}>
+              <Grid item xs={12} lg={layoutWidths.userHoldingsAndEarnings}>
                 <VaultsReportComponentHeader title="User holdings" />
               </Grid>
             </Grid>
@@ -121,7 +121,7 @@ function VaultsReport() {
                 <StrategyHoldings vault={vault} />
               </Grid>
 
-              <Grid item xs={12} lg={layoutWidths.userHoldings}>
+              <Grid item xs={12} lg={layoutWidths.userHoldingsAndEarnings}>
                 <UserHoldings vault={vault} />
               </Grid>
             </Grid>
