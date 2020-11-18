@@ -73,11 +73,6 @@ function Header() {
             <a>Vaults</a>
           </PageAwareLink>
         </li>
-        <li className={navClasses.listItem}>
-          <PageAwareLink href={"/governance"}>
-            <a>Governance</a>
-          </PageAwareLink>
-        </li>
       </ul>
     </AppBar>
   );
