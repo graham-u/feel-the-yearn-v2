@@ -52,7 +52,6 @@ function VaultsReport() {
 
   const userAddress = useAddress();
   useEffect(() => {
-    // Check we have user address, not vaults...
     if (!isEmpty(userAddress)) {
       const interval = setUserStatsFetchInterval(userAddress, dispatch);
       return () => clearInterval(interval);
