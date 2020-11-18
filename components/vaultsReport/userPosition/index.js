@@ -5,7 +5,7 @@ import ContractData from "components/vaultsReport/contractData";
 import TokenAndFiatBalance from "components/vaultsReport/tokenAndFiatBalance";
 import normalizedValue from "utils/normalizedValue";
 
-function UserHoldings({ vault }) {
+function UserPosition({ vault }) {
   const { address: vaultAddress, tokenAddress } = vault;
 
   const userAddress = useAddress();
@@ -47,4 +47,4 @@ function UserHoldings({ vault }) {
   );
 }
 
-export default UserHoldings;
+export default UserPosition;

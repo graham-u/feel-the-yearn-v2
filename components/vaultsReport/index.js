@@ -8,7 +8,7 @@ import { getDrizzleInitialized } from "components/drizzleCreator/selectors";
 import { getVaults, getContractsAreAddedToDrizzle } from "components/vaultsReport/selectors";
 import { initializeContractData, setPriceFetchInterval } from "components/vaultsReport/setup";
 import StrategyHoldings from "components/vaultsReport/strategyHoldings";
-import UserHoldings from "components/vaultsReport/userHoldings";
+import UserPosition from "components/vaultsReport/userPosition";
 import VaultHoldings from "components/vaultsReport/vaultHoldings";
 import VaultOverview from "components/vaultsReport/vaultOverview";
 import { isEmpty } from "lodash";
@@ -36,7 +36,7 @@ const layoutWidths = {
   overview: 3,
   vaultHoldings: 3,
   strategyHoldings: 3,
-  userHoldingsAndEarnings: 3,
+  userPosition: 3,
 };
 
 function VaultsReportComponentHeader({ title }) {
@@ -98,8 +98,8 @@ function VaultsReport() {
                 <VaultsReportComponentHeader title="Strategy holdings" />
               </Grid>
 
-              <Grid item xs={12} lg={layoutWidths.userHoldingsAndEarnings}>
-                <VaultsReportComponentHeader title="User holdings" />
+              <Grid item xs={12} lg={layoutWidths.userPosition}>
+                <VaultsReportComponentHeader title="Your position" />
               </Grid>
             </Grid>
           </CardContent>
@@ -121,8 +121,8 @@ function VaultsReport() {
                 <StrategyHoldings vault={vault} />
               </Grid>
 
-              <Grid item xs={12} lg={layoutWidths.userHoldingsAndEarnings}>
-                <UserHoldings vault={vault} />
+              <Grid item xs={12} lg={layoutWidths.userPosition}>
+                <UserPosition vault={vault} />
               </Grid>
             </Grid>
           </CardContent>
