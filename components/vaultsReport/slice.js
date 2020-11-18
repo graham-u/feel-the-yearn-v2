@@ -84,6 +84,31 @@ const tokensSubSlice = {
   },
 };
 
+const userStatsSubSlice = {
+  initialState: {
+    userStats: {
+      stats: {},
+      loading: false,
+      error: null,
+    },
+  },
+  reducers: {
+    fetchUserStats(state) {
+      state.userStats.loading = true;
+      state.userStats.error = false;
+    },
+    fetchUserStatsSuccess(state, action) {
+      state.userStats.stats = action.payload;
+      state.userStats.loading = false;
+    },
+    fetchUserStatsFailure(state, action) {
+      const { error } = action.payload;
+      state.userStats.loading = false;
+      state.userStats.error = error;
+    },
+  },
+};
+
 function keyAndStoreTokens(tokensState, tokensToSave) {
   tokensToSave.forEach((token) => {
     tokensState[token.address] = token;
@@ -97,12 +122,14 @@ const slice = createSlice({
     ...wantTokenPricesSubSlice.initialState,
     ...contractsAddedToDrizzleSubSlice.initialState,
     ...tokensSubSlice.initialState,
+    ...userStatsSubSlice.initialState,
   },
   reducers: {
     ...vaultRegistrySubSlice.reducers,
     ...wantTokenPricesSubSlice.reducers,
     ...contractsAddedToDrizzleSubSlice.reducers,
     ...tokensSubSlice.reducers,
+    ...userStatsSubSlice.reducers,
   },
 });
 

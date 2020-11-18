@@ -73,4 +73,15 @@ function setPriceFetchInterval(vaults, dispatch) {
   return interval;
 }
 
-export { initializeContractData, setPriceFetchInterval };
+function setUserStatsFetchInterval(userAddress, dispatch) {
+  const dispatchFetch = () => dispatch(actions.fetchUserStats({ userAddress }));
+
+  dispatchFetch();
+  const interval = setInterval(() => {
+    dispatchFetch();
+  }, 120 * 1000);
+
+  return interval;
+}
+
+export { initializeContractData, setPriceFetchInterval, setUserStatsFetchInterval };

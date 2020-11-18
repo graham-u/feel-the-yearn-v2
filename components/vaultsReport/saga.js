@@ -1,4 +1,4 @@
-import { transform } from "lodash";
+import { transform, reduce } from "lodash";
 import { takeEvery, call, put, all } from "redux-saga/effects";
 import getTokenSymbolAlias from "utils/getTokenSymbolAlias";
 import request from "utils/request";
@@ -53,7 +53,32 @@ function* fetchWantTokenPrices(action) {
   }
 }
 
+function* fetchUserStats(action) {
+  const userAddress = action.payload.userAddress;
+  const uri = `https://api.yearn.tools/user/${userAddress}/vaults/statistics`;
+
+  try {
+    let userStats = yield call(request, uri);
+
+    // Transform array of stats into object keyed by vaultAddress
+    userStats = reduce(
+      userStats,
+      (result, vaultStats) => {
+        result[vaultStats.vaultAddress] = vaultStats;
+        return result;
+      },
+      {}
+    );
+
+    yield put(actions.fetchUserStatsSuccess(userStats));
+  } catch (error) {
+    console.log(error.message);
+    yield put(actions.fetchUserStatsFailure({ error: error.message }));
+  }
+}
+
 export default function* vaultsReportSaga() {
   yield takeEvery(actions.fetchVaults, fetchVaults);
   yield takeEvery(actions.fetchWantTokenPrices, fetchWantTokenPrices);
+  yield takeEvery(actions.fetchUserStats, fetchUserStats);
 }

@@ -3,10 +3,14 @@ import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Grid from "@material-ui/core/Grid";
 import { makeStyles } from "@material-ui/core/styles";
-import { useWeb3 } from "components/connectionProvider/hooks";
+import { useWeb3, useAddress } from "components/connectionProvider/hooks";
 import { getDrizzleInitialized } from "components/drizzleCreator/selectors";
 import { getVaults, getContractsAreAddedToDrizzle } from "components/vaultsReport/selectors";
-import { initializeContractData, setPriceFetchInterval } from "components/vaultsReport/setup";
+import {
+  initializeContractData,
+  setPriceFetchInterval,
+  setUserStatsFetchInterval,
+} from "components/vaultsReport/setup";
 import StrategyHoldings from "components/vaultsReport/strategyHoldings";
 import UserPosition from "components/vaultsReport/userPosition";
 import VaultHoldings from "components/vaultsReport/vaultHoldings";
@@ -64,6 +68,15 @@ function VaultsReport() {
       return () => clearInterval(interval);
     }
   }, [vaults]);
+
+  const userAddress = useAddress();
+  useEffect(() => {
+    // Check we have user address, not vaults...
+    if (!isEmpty(userAddress)) {
+      const interval = setUserStatsFetchInterval(userAddress, dispatch);
+      return () => clearInterval(interval);
+    }
+  }, [userAddress]);
 
   const strategyContractsAddedToDrizzleRef = useRef({});
   const strategyContractsAddedToDrizzle = strategyContractsAddedToDrizzleRef.current;
