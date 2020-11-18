@@ -1,5 +1,3 @@
-import { Typography } from "@material-ui/core";
-import Hidden from "@material-ui/core/Hidden";
 import { useAddress } from "components/connectionProvider/hooks";
 import ContractData from "components/vaultsReport/contractData";
 import ReportLabel from "components/vaultsReport/reportLabel";
@@ -24,31 +22,25 @@ function UserHoldings({ vault }) {
   ];
 
   return (
-    <>
-      <Hidden lgUp>
-        <Typography gutterBottom>User holdings</Typography>
-      </Hidden>
+    <ContractData
+      contractConfigs={contractConfigs}
+      render={(rawYTokenBalance, sharePrice) => {
+        const rawTokenBalance = Number(rawYTokenBalance * normalizedValue(sharePrice, 18));
 
-      <ContractData
-        contractConfigs={contractConfigs}
-        render={(rawYTokenBalance, sharePrice) => {
-          const rawTokenBalance = Number(rawYTokenBalance * normalizedValue(sharePrice, 18));
-
-          return (
-            <>
-              <ReportLabel>Holdings</ReportLabel>
-              <TokenAndFiatBalance
-                rawBalance={rawTokenBalance}
-                tokenAddress={tokenAddress}
-                tokenDisplayPrecision={4}
-                fiatMinShow={0.01}
-                tokenMinShow={0.00001}
-              />
-            </>
-          );
-        }}
-      />
-    </>
+        return (
+          <>
+            <ReportLabel>Your holdings</ReportLabel>
+            <TokenAndFiatBalance
+              rawBalance={rawTokenBalance}
+              tokenAddress={tokenAddress}
+              tokenDisplayPrecision={4}
+              fiatMinShow={0.01}
+              tokenMinShow={0.00001}
+            />
+          </>
+        );
+      }}
+    />
   );
 }
 
