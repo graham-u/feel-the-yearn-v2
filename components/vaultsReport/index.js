@@ -44,6 +44,10 @@ function VaultsReport() {
   }, []);
 
   useEffect(() => {
+    dispatch(actions.fetchVaultsApy());
+  }, []);
+
+  useEffect(() => {
     if (!isEmpty(vaults)) {
       const interval = setPriceFetchInterval(vaults, dispatch);
       return () => clearInterval(interval);

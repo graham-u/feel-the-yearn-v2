@@ -72,8 +72,32 @@ function* fetchUserStats(action) {
   }
 }
 
+function* fetchVaultsApy() {
+  const uri = `https://api.yearn.tools/vaults/apy`;
+
+  try {
+    let vaultsApyStats = yield call(request, uri);
+
+    // Transform array of stats into object keyed by vaultAddress
+    vaultsApyStats = reduce(
+      vaultsApyStats,
+      (result, vaultApyStats) => {
+        result[vaultApyStats.address] = vaultApyStats;
+        return result;
+      },
+      {}
+    );
+
+    yield put(actions.fetchVaultsApySuccess(vaultsApyStats));
+  } catch (error) {
+    console.log(error.message);
+    yield put(actions.fetchVaultsApyFailure({ error: error.message }));
+  }
+}
+
 export default function* vaultsReportSaga() {
   yield takeEvery(actions.fetchVaults, fetchVaults);
   yield takeEvery(actions.fetchWantTokenPrices, fetchWantTokenPrices);
   yield takeEvery(actions.fetchUserStats, fetchUserStats);
+  yield takeEvery(actions.fetchVaultsApy, fetchVaultsApy);
 }

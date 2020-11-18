@@ -38,6 +38,32 @@ const vaultRegistrySubSlice = {
   },
 };
 
+const vaultsApySubSlice = {
+  initialState: {
+    vaultsApyStats: {
+      stats: [],
+      loading: false,
+      error: false,
+    },
+  },
+  reducers: {
+    fetchVaultsApy(state) {
+      state.vaultsApyStats.loading = true;
+      state.vaultsApyStats.error = false;
+    },
+    fetchVaultsApySuccess(state, action) {
+      let vaultsApyStats = action.payload;
+      state.vaultsApyStats.stats = vaultsApyStats;
+      state.vaultsApyStats.loading = false;
+    },
+    fetchVaultsApyFailure(state, action) {
+      const { error } = action.payload;
+      state.vaultsApyStats.loading = false;
+      state.vaultsApyStats.error = error;
+    },
+  },
+};
+
 const contractsAddedToDrizzleSubSlice = {
   initialState: {
     contractsAddedToDrizzle: false,
@@ -125,6 +151,7 @@ const slice = createSlice({
     ...contractsAddedToDrizzleSubSlice.initialState,
     ...tokensSubSlice.initialState,
     ...userStatsSubSlice.initialState,
+    ...vaultsApySubSlice.initialState,
   },
   reducers: {
     ...vaultRegistrySubSlice.reducers,
@@ -132,6 +159,7 @@ const slice = createSlice({
     ...contractsAddedToDrizzleSubSlice.reducers,
     ...tokensSubSlice.reducers,
     ...userStatsSubSlice.reducers,
+    ...vaultsApySubSlice.reducers,
   },
 });
 
