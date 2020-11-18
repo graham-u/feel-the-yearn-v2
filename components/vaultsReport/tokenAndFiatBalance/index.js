@@ -21,15 +21,18 @@ function TokenAndFiatBalance({
   const getToken = useMemo(getTokenSelector, []);
   const token = useSelector((state) => getToken(state, tokenAddress));
 
-  if (!token) {
-    return null;
+  let shouldShowFiatBalance = false;
+  let shouldShowTokenBalance = false;
+  let tokenBalance = null;
+  let fiatBalance = null;
+
+  if (token && rawBalance !== null) {
+    tokenBalance = normalizedValue(rawBalance, token.decimals);
+    fiatBalance = tokenBalance * tokenPrice;
+
+    shouldShowFiatBalance = fiatBalance >= fiatMinShow;
+    shouldShowTokenBalance = tokenBalance >= tokenMinShow;
   }
-
-  let tokenBalance = normalizedValue(rawBalance, token.decimals);
-  let fiatBalance = tokenBalance * tokenPrice;
-
-  const shouldShowFiatBalance = fiatBalance >= fiatMinShow;
-  const shouldShowTokenBalance = tokenBalance >= tokenMinShow;
 
   return (
     <>
