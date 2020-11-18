@@ -30,7 +30,8 @@ const vaultRegistrySubSlice = {
       keyAndStoreTokens(state.tokens, tokens);
       state.vaultRegistry.loading = false;
     },
-    fetchVaultsFailure(state, error) {
+    fetchVaultsFailure(state, action) {
+      const { error } = action.payload;
       state.vaultRegistry.loading = false;
       state.vaultRegistry.error = error;
     },
@@ -65,7 +66,8 @@ const wantTokenPricesSubSlice = {
       state.wantTokenPrices.prices = action.payload;
       state.wantTokenPrices.loading = false;
     },
-    fetchWantTokenPricesFailure(state) {
+    fetchWantTokenPricesFailure(state, action) {
+      const { error } = action.payload;
       state.wantTokenPrices.loading = false;
       state.wantTokenPrices.error = error;
     },
