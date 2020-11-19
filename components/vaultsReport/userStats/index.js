@@ -12,10 +12,6 @@ function UserStats({ vault }) {
 
   const lifetimeEarningsRawBalance = userStats ? userStats.earnings : null;
 
-  if (lifetimeEarningsRawBalance === null) {
-    return null;
-  }
-
   return (
     <>
       <ReportLabel>
