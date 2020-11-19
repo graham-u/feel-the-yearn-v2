@@ -1,7 +1,7 @@
 import Tooltip from "@material-ui/core/Tooltip";
 import ReportLabel from "components/vaultsReport/reportLabel";
 import TokenAndFiatBalance from "components/vaultsReport/tokenAndFiatBalance";
-import { getUserStatsSelector } from "components/vaultsReport/userPosition/userStats/selectors";
+import { getUserStatsSelector } from "components/vaultsReport/userStats/selectors";
 import React, { useMemo } from "react";
 import { useSelector } from "react-redux";
 import HelpOutlineIcon from "@material-ui/icons/HelpOutline";

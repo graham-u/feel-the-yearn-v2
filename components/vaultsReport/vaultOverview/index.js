@@ -6,7 +6,7 @@ import VaultLink from "components/vaultsReport/vaultOverview/vaultLink";
 
 const useVaultLogoStyles = makeStyles((theme) => {
   return {
-    [theme.breakpoints.down("md")]: {
+    [theme.breakpoints.down("xs")]: {
       root: {
         float: "right",
       },
@@ -16,12 +16,12 @@ const useVaultLogoStyles = makeStyles((theme) => {
 
 function VaultOverview({ vault }) {
   const theme = useTheme();
-  const direction = useMediaQuery(theme.breakpoints.down("md")) ? "row-reverse" : "row";
+  const direction = useMediaQuery(theme.breakpoints.down("xs")) ? "row-reverse" : "row";
   const vaultLogoClasses = useVaultLogoStyles();
 
   return (
     <Grid container direction={direction}>
-      <Grid item xs={2}>
+      <Grid item xs={3} sm={1} md={3}>
         <img
           src={vault.tokenIcon}
           alt="Vault logo"
@@ -30,7 +30,7 @@ function VaultOverview({ vault }) {
           height={48}
         />
       </Grid>
-      <Grid item xs={10}>
+      <Grid item xs={9} sm={11} md={9}>
         <VaultLink address={vault.address} linkText={vault.vaultAlias} titleText={vault.name} />
         <StrategyLink
           address={vault.strategyAddress}

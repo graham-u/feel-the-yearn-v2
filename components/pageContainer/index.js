@@ -3,7 +3,7 @@ import Header from "components/pageContainer/header";
 
 function PageContainer({ children }) {
   return (
-    <Container maxWidth="xl">
+    <Container maxWidth="lg">
       <header>
         <Header />
       </header>

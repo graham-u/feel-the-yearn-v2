@@ -11,7 +11,8 @@ import {
   setUserStatsFetchInterval,
 } from "components/vaultsReport/setup";
 import StrategyHoldings from "components/vaultsReport/strategyHoldings";
-import UserPosition from "components/vaultsReport/userPosition";
+import UserHoldings from "components/vaultsReport/userHoldings";
+import UserStats from "components/vaultsReport/userStats";
 import VaultHoldings from "components/vaultsReport/vaultHoldings";
 import VaultOverview from "components/vaultsReport/vaultOverview";
 import { isEmpty } from "lodash";
@@ -25,11 +26,20 @@ const useCardStyles = makeStyles({
   },
 });
 
-const layoutWidths = {
-  overview: 3,
-  vaultHoldings: 3,
-  strategyHoldings: 3,
-  userPosition: 3,
+const layout = {
+  overview: {
+    width: 3,
+    vaultDetails: {
+      width: 12,
+    },
+  },
+  data: {
+    width: 9,
+    vaultHoldings: { width: 3 },
+    strategyHoldings: { width: 3 },
+    userHoldings: { width: 3 },
+    userEarnings: { width: 3 },
+  },
 };
 
 function VaultsReport() {
@@ -78,21 +88,29 @@ function VaultsReport() {
       {vaults.map((vault) => (
         <Card key={vault.address} className={cardClasses.root}>
           <CardContent>
-            <Grid container spacing={3}>
-              <Grid item xs={12} lg={layoutWidths.overview}>
-                <VaultOverview vault={vault} />
+            <Grid container spacing={0}>
+              <Grid container spacing={1} item md={layout.overview.width}>
+                <Grid item xs={12} md={layout.overview.vaultDetails.width}>
+                  <VaultOverview vault={vault} />
+                </Grid>
               </Grid>
 
-              <Grid item xs={12} lg={layoutWidths.vaultHoldings}>
-                <VaultHoldings vault={vault} />
-              </Grid>
+              <Grid container spacing={1} item md={layout.data.width}>
+                <Grid item xs={12} sm={3} md={layout.data.vaultHoldings.width}>
+                  <VaultHoldings vault={vault} />
+                </Grid>
 
-              <Grid item xs={12} lg={layoutWidths.strategyHoldings}>
-                <StrategyHoldings vault={vault} />
-              </Grid>
+                <Grid item xs={12} sm={3} md={layout.data.strategyHoldings.width}>
+                  <StrategyHoldings vault={vault} />
+                </Grid>
 
-              <Grid item xs={12} lg={layoutWidths.userPosition}>
-                <UserPosition vault={vault} />
+                <Grid item xs={12} sm={3} md={layout.data.strategyHoldings.width}>
+                  <UserHoldings vault={vault} />
+                </Grid>
+
+                <Grid item xs={12} sm={3} md={layout.data.strategyHoldings.width}>
+                  <UserStats vault={vault} />
+                </Grid>
               </Grid>
             </Grid>
           </CardContent>
