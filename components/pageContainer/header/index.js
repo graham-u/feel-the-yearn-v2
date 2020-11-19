@@ -1,6 +1,7 @@
 import AppBar from "@material-ui/core/AppBar";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
+import Link from "@material-ui/core/Link";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
@@ -50,6 +51,15 @@ function Header() {
           <Typography component="h1" variant="h4" display="inline" gutterBottom>
             Feel the Yearn
           </Typography>
+          <Link
+            href="https://old.feel-the-yearn.app/vaults"
+            title="Visit original site (for limited time)"
+            variant="subtitle1"
+            color="inherit"
+            display="block"
+          >
+            Old site
+          </Link>
         </Grid>
         <Grid item>
           {!drizzleInitialized && (
