@@ -1,20 +1,20 @@
-import Tooltip from "@material-ui/core/Tooltip";
 import ErrorOutlineOutlinedIcon from "@material-ui/icons/ErrorOutlineOutlined";
 import OfflineBoltOutlinedIcon from "@material-ui/icons/OfflineBoltOutlined";
+import IconTip from "components/vaultsReport/iconTip";
 import { find } from "lodash";
 import React from "react";
 import useContractData from "utils/useContractData";
 
 const defaultNotReadyComponent = (
-  <Tooltip title="Contract data unavailable, wallet not connected?" arrow>
-    <OfflineBoltOutlinedIcon fontSize={"default"} color={"disabled"} />
-  </Tooltip>
+  <IconTip IconComponent={OfflineBoltOutlinedIcon} color="disabled" fontSize="default">
+    Contract data unavailable, wallet not connected?
+  </IconTip>
 );
 
 const defaultErrorComponent = (
-  <Tooltip title="An error occurred whilst syncing data." arrow>
-    <ErrorOutlineOutlinedIcon fontSize={"default"} color={"disabled"} />
-  </Tooltip>
+  <IconTip IconComponent={ErrorOutlineOutlinedIcon} color="disabled" fontSize="default">
+    An error occurred whilst syncing data.
+  </IconTip>
 );
 
 function ContractData({ contractConfigs, notReadyComponent, errorComponent, render }) {

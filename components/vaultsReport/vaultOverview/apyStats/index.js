@@ -1,7 +1,6 @@
 import Grid from "@material-ui/core/Grid";
-import Tooltip from "@material-ui/core/Tooltip";
 import Typography from "@material-ui/core/Typography";
-import HelpOutlineIcon from "@material-ui/icons/HelpOutline";
+import IconTip from "components/vaultsReport/iconTip";
 import ReportLabel from "components/vaultsReport/reportLabel";
 import { getVaultApySelector } from "components/vaultsReport/vaultOverview/apyStats/selectors";
 import { useMemo } from "react";
@@ -36,9 +35,7 @@ function ApyStats({ vaultAddress }) {
             <Grid key={interval} item xs={4}>
               <ReportLabel>
                 {interval}
-                <Tooltip title={helpText} arrow>
-                  <HelpOutlineIcon fontSize={"inherit"} color={"primary"} />
-                </Tooltip>
+                <IconTip>{helpText}</IconTip>
               </ReportLabel>
             </Grid>
           );

@@ -1,10 +1,9 @@
-import Tooltip from "@material-ui/core/Tooltip";
+import IconTip from "components/vaultsReport/iconTip";
 import ReportLabel from "components/vaultsReport/reportLabel";
 import TokenAndFiatBalance from "components/vaultsReport/tokenAndFiatBalance";
 import { getUserStatsSelector } from "components/vaultsReport/userStats/selectors";
 import React, { useMemo } from "react";
 import { useSelector } from "react-redux";
-import HelpOutlineIcon from "@material-ui/icons/HelpOutline";
 
 function UserStats({ vault }) {
   const getUserStats = useMemo(() => getUserStatsSelector(), []);
@@ -16,12 +15,10 @@ function UserStats({ vault }) {
     <>
       <ReportLabel>
         Lifetime earnings
-        <Tooltip
-          title="Fiat value as of current conversion rate. Does not take into account rate at time of deposits, withdrawals or transfers."
-          arrow
-        >
-          <HelpOutlineIcon fontSize={"inherit"} color={"primary"} />
-        </Tooltip>
+        <IconTip>
+          Fiat value as of current conversion rate. Does not take into account rate at time of
+          deposits, withdrawals or transfers.
+        </IconTip>
       </ReportLabel>
 
       <TokenAndFiatBalance
