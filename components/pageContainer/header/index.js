@@ -11,9 +11,7 @@ import { useSelector } from "react-redux";
 
 const useAppBarStyles = makeStyles({
   root: {
-    paddingLeft: "1em",
-    paddingRight: "1em",
-    paddingTop: "0.5em",
+    padding: "1rem",
     marginBottom: "2rem",
   },
 });
@@ -28,7 +26,7 @@ const useNavStyles = makeStyles((theme) => {
       display: "inline-block",
       paddingRight: "2rem",
       "& a": {
-        color: theme.palette.secondary.main,
+        color: theme.palette.common.white,
       },
       fontSize: "1.2em",
     },
@@ -58,7 +56,7 @@ function Header() {
             <Button
               variant="outlined"
               size={isXs ? "small" : "large"}
-              color="secondary"
+              color="inherit"
               onClick={selectWallet}
             >
               Select wallet
@@ -67,13 +65,13 @@ function Header() {
         </Grid>
       </Grid>
 
-      <ul className={navClasses.list}>
-        <li className={navClasses.listItem}>
-          <PageAwareLink href={"/vaults"}>
-            <a>Vaults</a>
-          </PageAwareLink>
-        </li>
-      </ul>
+      {/*<ul className={navClasses.list}>*/}
+      {/*  <li className={navClasses.listItem}>*/}
+      {/*    <PageAwareLink href={"/vaults"}>*/}
+      {/*      <a>Vaults</a>*/}
+      {/*    </PageAwareLink>*/}
+      {/*  </li>*/}
+      {/*</ul>*/}
     </AppBar>
   );
 }
