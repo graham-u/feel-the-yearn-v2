@@ -15,10 +15,19 @@ const useVaultLogoStyles = makeStyles((theme) => {
   };
 });
 
+const useVaultDetailsStyles = makeStyles((theme) => {
+  return {
+    root: {
+      marginBottom: "0.4rem",
+    },
+  };
+});
+
 function VaultOverview({ vault }) {
   const theme = useTheme();
   const direction = useMediaQuery(theme.breakpoints.down("xs")) ? "row-reverse" : "row";
   const vaultLogoClasses = useVaultLogoStyles();
+  const vaultDetailsClasses = useVaultDetailsStyles();
 
   return (
     <Grid container direction={direction}>
@@ -32,7 +41,7 @@ function VaultOverview({ vault }) {
         />
       </Grid>
       <Grid container item xs={9} sm={11} md={10} justify="space-between">
-        <Grid item>
+        <Grid item className={vaultDetailsClasses.root}>
           <VaultLink address={vault.address} linkText={vault.vaultAlias} titleText={vault.name} />
           <StrategyLink
             address={vault.strategyAddress}
