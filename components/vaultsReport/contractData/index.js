@@ -1,15 +1,23 @@
+import Tooltip from "@material-ui/core/Tooltip";
+import ErrorOutlineOutlinedIcon from "@material-ui/icons/ErrorOutlineOutlined";
+import OfflineBoltOutlinedIcon from "@material-ui/icons/OfflineBoltOutlined";
 import { find } from "lodash";
+import React from "react";
 import useContractData from "utils/useContractData";
 
-const defaultNotReadyComponent = <span>Not ready</span>;
-const defaultErrorComponent = <span>Error</span>;
+const defaultNotReadyComponent = (
+  <Tooltip title="Contract data unavailable, wallet not connected?" arrow>
+    <OfflineBoltOutlinedIcon fontSize={"default"} color={"disabled"} />
+  </Tooltip>
+);
 
-function ContractData({
-  contractConfigs,
-  notReadyComponent,
-  errorComponent,
-  render,
-}) {
+const defaultErrorComponent = (
+  <Tooltip title="An error occurred whilst syncing data." arrow>
+    <ErrorOutlineOutlinedIcon fontSize={"default"} color={"disabled"} />
+  </Tooltip>
+);
+
+function ContractData({ contractConfigs, notReadyComponent, errorComponent, render }) {
   notReadyComponent = notReadyComponent ?? defaultNotReadyComponent;
   errorComponent = errorComponent ?? defaultErrorComponent;
 
@@ -22,9 +30,8 @@ function ContractData({
   // This approach enables rendering components via a render prop, that
   // dynamically update based on fresh data from multiple contract calls, that
   // can all share default notReady / error components for consistency.
-  const contractsData = contractConfigs.map(
-    ({ contractKey, method, methodArgs }) =>
-      useContractData(contractKey, method, methodArgs)
+  const contractsData = contractConfigs.map(({ contractKey, method, methodArgs }) =>
+    useContractData(contractKey, method, methodArgs)
   );
 
   // When contractData results are in error state, we show the error component.

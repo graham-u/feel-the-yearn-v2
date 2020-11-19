@@ -85,6 +85,7 @@ function useContractData(contractKey, method, methodArgs = []) {
   }
 
   if (contractData.error) {
+    let methodState = drizzle.contracts[contractKey].methods[method];
     return {
       ...response,
       status: `Error:  ${methodState[dataKey].error}`,
