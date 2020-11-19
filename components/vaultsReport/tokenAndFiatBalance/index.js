@@ -1,7 +1,9 @@
 import { Typography } from "@material-ui/core";
+import { ThemeProvider } from "@material-ui/core/styles";
 import AnimatedTicker from "components/vaultsReport/animatedTicker/AnimatedTicker";
 import { makeTokenPriceSelector, getTokenSelector } from "components/vaultsReport/selectors";
 import TokenLink from "components/vaultsReport/tokenLink";
+import produce, { setAutoFreeze } from "immer";
 import { useMemo } from "react";
 import { useSelector } from "react-redux";
 import { pure } from "recompose";
@@ -56,10 +58,21 @@ function TokenAndFiatBalance({
 
       <div>
         {shouldShowFiatBalance ? (
-          <>
+          <ThemeProvider
+            theme={(outerTheme) => {
+              // Have to turn off autofreeze otherwise immer tries to freeze an immutable theme
+              // property which causes an error.
+              setAutoFreeze(false);
+              return produce(outerTheme, (draftState) => {
+                draftState.palette.text.primary = outerTheme.palette.text.hint;
+              });
+            }}
+          >
             <AnimatedTicker value={fiatBalance} formatter={holdingsFormatterFactory()} />{" "}
-            <Typography display="inline">USD </Typography>
-          </>
+            <Typography color={"textPrimary"} display="inline">
+              USD{" "}
+            </Typography>
+          </ThemeProvider>
         ) : (
           <Typography display="inline">-</Typography>
         )}

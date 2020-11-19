@@ -18,6 +18,7 @@
     "bnc-onboard": "^1.14.0",
     "currency.js": "^2.0.3",
     "eth-block-tracker-es5": "^2.3.2",
+    "immer": "^8.0.0",
     "lodash": "^4.17.20",
     "next": "^10.0.1",
     "react": "16.13.1",

@@ -8,7 +8,7 @@ const defaultDuration = 1000;
 function AnimatedTicker({ value, formatter = defaultFormatter, duration = defaultDuration }) {
   return (
     <Tooltip title={value} arrow>
-      <Typography display="inline">
+      <Typography color={"textPrimary"} display="inline">
         <AnimatedNumber value={value} duration={duration} formatValue={formatter} />
       </Typography>
     </Tooltip>
