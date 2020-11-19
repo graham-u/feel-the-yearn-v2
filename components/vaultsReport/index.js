@@ -28,13 +28,13 @@ const useCardStyles = makeStyles({
 
 const layout = {
   overview: {
-    width: 3,
+    width: 4,
     vaultDetails: {
       width: 12,
     },
   },
   data: {
-    width: 9,
+    width: 8,
     vaultHoldings: { width: 3 },
     strategyHoldings: { width: 3 },
     userHoldings: { width: 3 },
@@ -88,14 +88,14 @@ function VaultsReport() {
       {vaults.map((vault) => (
         <Card key={vault.address} className={cardClasses.root}>
           <CardContent>
-            <Grid container spacing={0}>
+            <Grid container spacing={1}>
               <Grid container spacing={1} item md={layout.overview.width}>
                 <Grid item xs={12} md={layout.overview.vaultDetails.width}>
                   <VaultOverview vault={vault} />
                 </Grid>
               </Grid>
 
-              <Grid container spacing={1} item md={layout.data.width}>
+              <Grid container spacing={1} alignItems="center" item md={layout.data.width}>
                 <Grid item xs={12} sm={3} md={layout.data.vaultHoldings.width}>
                   <VaultHoldings vault={vault} />
                 </Grid>
