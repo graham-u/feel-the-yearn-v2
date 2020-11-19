@@ -1,4 +1,4 @@
-import { reduce, mapValues } from "lodash";
+import { reduce, mapValues, sortBy } from "lodash";
 import { takeEvery, call, put, all } from "redux-saga/effects";
 import getTokenSymbolAlias from "utils/getTokenSymbolAlias";
 import request from "utils/request";
@@ -6,17 +6,24 @@ import { actions } from "./slice";
 
 function* fetchVaults() {
   try {
-    let data = yield call(request, "https://api.yearn.tools/vaults");
+    let vaults = yield call(request, "https://api.yearn.tools/vaults");
     // Swap in our own tokenSymbolAliases as some aliases in the vault differ
     // from whats seen on the official site.
-    data = data.map((vault) => {
+    vaults = vaults.map((vault) => {
       return {
         ...vault,
         tokenSymbolAlias: getTokenSymbolAlias(vault.tokenSymbol),
       };
     });
 
-    yield put(actions.fetchVaultsSuccess(data));
+    // Sort alphabetically by alias.
+    vaults = sortBy(vaults, [
+      function (vault) {
+        return vault.vaultAlias.toLowerCase();
+      },
+    ]);
+
+    yield put(actions.fetchVaultsSuccess(vaults));
   } catch (error) {
     console.log(error.message);
     yield put(actions.fetchVaultsFailure({ error: error.message }));
