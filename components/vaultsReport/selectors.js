@@ -18,4 +18,18 @@ const getTokenSelector = () =>
     }
   );
 
-export { getVaults, getContractsAreAddedToDrizzle, makeTokenPriceSelector, getTokenSelector };
+const getUserStatsFetchFailed = (state) => Boolean(state.vaultsReport.userStats.error);
+const getVaultRegistryFetchFailed = (state) => Boolean(state.vaultsReport.vaultRegistry.error);
+const getTokenPricesFetchFailed = (state) => Boolean(state.vaultsReport.wantTokenPrices.error);
+const getVaultApyStatsFetchFailed = (state) => Boolean(state.vaultsReport.vaultsApyStats.error);
+
+export {
+  getVaults,
+  getContractsAreAddedToDrizzle,
+  makeTokenPriceSelector,
+  getTokenSelector,
+  getUserStatsFetchFailed,
+  getVaultRegistryFetchFailed,
+  getTokenPricesFetchFailed,
+  getVaultApyStatsFetchFailed,
+};

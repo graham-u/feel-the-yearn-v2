@@ -1,3 +1,5 @@
+// @TODO move tokenSymbolAliases to siteConfig.js
+
 const tokenSymbolAliases = {
   "yDAI+yUSDC+yUSDT+yTUSD": "yCRV",
   "vcDAI+cUSDC": "cDAI+cUSDC",

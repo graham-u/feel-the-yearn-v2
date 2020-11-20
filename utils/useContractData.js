@@ -47,12 +47,15 @@ function useContractData(contractKey, method, methodArgs = []) {
 
   useEffect(() => {
     if (contractsAddedToDrizzle && !contractDataSelectorReady) {
-      const dataKey = drizzle.contracts[contractKey].methods[method].cacheCall(...methodArgs);
-      setDataKey(dataKey);
-
-      contractDataSelector.current = makeContractDataSelector(contractKey, method, dataKey);
-
-      setContractDataSelectorReady(true);
+      try {
+        const dataKey = drizzle.contracts[contractKey].methods[method].cacheCall(...methodArgs);
+        setDataKey(dataKey);
+        contractDataSelector.current = makeContractDataSelector(contractKey, method, dataKey);
+        setContractDataSelectorReady(true);
+      } catch (e) {
+        console.log(e);
+        console.log(drizzle);
+      }
     }
   }, [contractsAddedToDrizzle, contractKey, method, methodArgs, contractDataSelectorReady]);
 
@@ -85,10 +88,9 @@ function useContractData(contractKey, method, methodArgs = []) {
   }
 
   if (contractData.error) {
-    let methodState = drizzle.contracts[contractKey].methods[method];
     return {
       ...response,
-      status: `Error:  ${methodState[dataKey].error}`,
+      status: `Error:  ${contractData.error}`,
       error: true,
     };
   }

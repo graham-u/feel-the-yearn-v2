@@ -25,8 +25,9 @@ function* fetchVaults() {
 
     yield put(actions.fetchVaultsSuccess(vaults));
   } catch (error) {
-    console.log(error.message);
-    yield put(actions.fetchVaultsFailure({ error: error.message }));
+    const errorMessage = error?.message || "An error occurred";
+    console.log(errorMessage);
+    yield put(actions.fetchVaultsFailure({ error: errorMessage }));
   }
 }
 
@@ -50,8 +51,9 @@ function* fetchWantTokenPrices(action) {
 
     yield put(actions.fetchWantTokenPricesSuccess(priceResults));
   } catch (error) {
-    console.log(error.message);
-    yield put(actions.fetchWantTokenPricesFailure({ error: error.message }));
+    const errorMessage = error?.message || "An error occurred";
+    console.log(errorMessage);
+    yield put(actions.fetchWantTokenPricesFailure({ error: errorMessage }));
   }
 }
 
@@ -74,8 +76,9 @@ function* fetchUserStats(action) {
 
     yield put(actions.fetchUserStatsSuccess(userStats));
   } catch (error) {
-    console.log(error.message);
-    yield put(actions.fetchUserStatsFailure({ error: error.message }));
+    const errorMessage = error?.message || "An error occurred";
+    console.log(errorMessage);
+    yield put(actions.fetchUserStatsFailure({ error: errorMessage }));
   }
 }
 
@@ -97,8 +100,9 @@ function* fetchVaultsApy() {
 
     yield put(actions.fetchVaultsApySuccess(vaultsApyStats));
   } catch (error) {
-    console.log(error.message);
-    yield put(actions.fetchVaultsApyFailure({ error: error.message }));
+    const errorMessage = error?.message || "An error occurred";
+    console.log(errorMessage);
+    yield put(actions.fetchVaultsApyFailure({ error: errorMessage }));
   }
 }
 

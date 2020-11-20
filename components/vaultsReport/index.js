@@ -4,7 +4,15 @@ import Grid from "@material-ui/core/Grid";
 import { makeStyles } from "@material-ui/core/styles";
 import { useWeb3, useAddress } from "components/connectionProvider/hooks";
 import { getDrizzleInitialized } from "components/drizzleCreator/selectors";
-import { getVaults, getContractsAreAddedToDrizzle } from "components/vaultsReport/selectors";
+import Notifier from "components/vaultsReport/Notifier";
+import {
+  getVaults,
+  getContractsAreAddedToDrizzle,
+  getUserStatsFetchFailed,
+  getVaultRegistryFetchFailed,
+  getTokenPricesFetchFailed,
+  getVaultApyStatsFetchFailed,
+} from "components/vaultsReport/selectors";
 import {
   initializeContractData,
   setPriceFetchInterval,
@@ -18,6 +26,7 @@ import VaultOverview from "components/vaultsReport/vaultOverview";
 import { isEmpty } from "lodash";
 import { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { notificationMessages } from "siteConfig";
 import { actions } from "./slice";
 
 const useCardStyles = makeStyles({
@@ -85,6 +94,27 @@ function VaultsReport() {
 
   return (
     <>
+      <Notifier
+        shouldShowSelector={getUserStatsFetchFailed}
+        message={notificationMessages.userStatsFetchFailed}
+        severity="error"
+      />
+      <Notifier
+        shouldShowSelector={getVaultRegistryFetchFailed}
+        message={notificationMessages.vaultRegistryFetchFailed}
+        severity="error"
+      />
+      <Notifier
+        shouldShowSelector={getTokenPricesFetchFailed}
+        message={notificationMessages.tokenPricesFetchFailed}
+        severity="error"
+      />
+      <Notifier
+        shouldShowSelector={getVaultApyStatsFetchFailed}
+        message={notificationMessages.vaultApyStatsFetchFailed}
+        severity="error"
+      />
+
       {vaults.map((vault) => (
         <Card key={vault.address} className={cardClasses.root}>
           <CardContent>
