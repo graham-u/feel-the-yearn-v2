@@ -29,11 +29,13 @@ function VaultOverview({ vault }) {
   const vaultLogoClasses = useVaultLogoStyles();
   const vaultDetailsClasses = useVaultDetailsStyles();
 
+  const vaultLogoUrl = `https://raw.githubusercontent.com/iearn-finance/yearn-assets/e3a9cdb9e63abe188a9b58e1b031deb044928d6e/icons/tokens/${vault.tokenAddress}/logo.svg`;
+
   return (
     <Grid container direction={direction}>
       <Grid item xs={3} sm={1} md={2}>
         <img
-          src={vault.tokenIcon}
+          src={vaultLogoUrl}
           alt="Vault logo"
           className={vaultLogoClasses.root}
           width={48}
