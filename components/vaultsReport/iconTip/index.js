@@ -8,7 +8,7 @@ function IconTip({
   fontSize = "inherit",
 }) {
   return (
-    <Tooltip title={children} arrow>
+    <Tooltip title={children} enterTouchDelay={0} leaveTouchDelay={2500} arrow>
       <IconComponent fontSize={fontSize} color={color} />
     </Tooltip>
   );
