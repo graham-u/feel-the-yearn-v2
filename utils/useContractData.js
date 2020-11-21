@@ -12,16 +12,33 @@
 // selector function only once they are ready, so before the component mounts,
 // we set the dataKey to null and the selector to a dummy function.
 
-import { getContractsAreAddedToDrizzle } from "components/vaultsReport/selectors";
+import {
+  getFinishedAddingContractsToDrizzle,
+  getContractsMissingFromDrizzle,
+} from "components/vaultsReport/selectors";
+import { actions } from "components/vaultsReport/slice";
 import { has } from "lodash";
-import { useEffect, useState, useRef } from "react";
-import { useSelector } from "react-redux";
+import { useEffect, useState, useMemo } from "react";
+import { useSelector, useDispatch } from "react-redux";
 
-// This factory function returns a selector function specific to the
-// ContractData component in which it is called, the returned selector function
-// keeps references to the contractKey, method, dataKey params passed in.
+const startSyncingContractData = (contractKey, method, methodArgs) => {
+  if (!has(drizzle, ["contracts", contractKey])) {
+    throw `Could not set up syncing for contract ${contractKey}, contract missing from drizzle`;
+  }
+
+  const dataKey = drizzle.contracts[contractKey].methods[method].cacheCall(...methodArgs);
+  return dataKey;
+};
+
 const makeContractDataSelector = (contractKey, method, dataKey) => {
-  return (state) => {
+  // When called before contract syncing is set up, return a dummy selector that returns null
+  if (dataKey === null) {
+    return () => null;
+  }
+
+  // Return a selector function specific to the ContractData component in which it is called.
+  // The returned selector function keeps references to the contractKey, method, dataKey params.
+  return function (state) {
     if (!has(state, ["contracts", contractKey, method, dataKey])) {
       // The contract data has not yet been fetched and stored.  Once is has
       // this selector will be re-run to return the actual data.
@@ -33,31 +50,50 @@ const makeContractDataSelector = (contractKey, method, dataKey) => {
 };
 
 function useContractData(contractKey, method, methodArgs = []) {
-  // Selector function initially set to a dummy function until the component
-  // mounts and creates it correctly with the established dataKey.
-  const contractDataSelector = useRef(() => null);
+  const dispatch = useDispatch();
 
   // This is used in useEffect to run the effect again once the selector has been set up.
   const [contractDataSelectorReady, setContractDataSelectorReady] = useState(false);
-  const contractsAddedToDrizzle = useSelector(getContractsAreAddedToDrizzle);
+  const finishedAddingContractsToDrizzle = useSelector(getFinishedAddingContractsToDrizzle);
+
+  // Sometimes drizzles contracts fail to populate. When we  find this we record it in the store
+  // so that we don't try to run the effect for every other component.
+  const contractsMissingFromDrizzle = useSelector(getContractsMissingFromDrizzle);
 
   const [dataKey, setDataKey] = useState(null);
 
-  const contractData = useSelector(contractDataSelector.current);
+  const contractDataSelector = useMemo(
+    () => makeContractDataSelector(contractKey, method, dataKey),
+    [dataKey]
+  );
+
+  const contractData = useSelector((state) =>
+    contractDataSelector(state, contractKey, method, dataKey)
+  );
 
   useEffect(() => {
-    if (contractsAddedToDrizzle && !contractDataSelectorReady) {
+    if (
+      finishedAddingContractsToDrizzle &&
+      !contractsMissingFromDrizzle &&
+      !contractDataSelectorReady
+    ) {
       try {
-        const dataKey = drizzle.contracts[contractKey].methods[method].cacheCall(...methodArgs);
+        const dataKey = startSyncingContractData(contractKey, method, methodArgs);
         setDataKey(dataKey);
-        contractDataSelector.current = makeContractDataSelector(contractKey, method, dataKey);
         setContractDataSelectorReady(true);
       } catch (e) {
+        console.log(`Tried to create datakey but drizzle.contracts['${contractKey}'] is missing`);
         console.log(e);
-        console.log(drizzle);
+        dispatch(actions.foundContractsMissingFromDrizzle());
       }
     }
-  }, [contractsAddedToDrizzle, contractKey, method, methodArgs, contractDataSelectorReady]);
+  }, [
+    finishedAddingContractsToDrizzle,
+    contractKey,
+    method,
+    methodArgs,
+    contractDataSelectorReady,
+  ]);
 
   const response = {
     result: null,
@@ -66,7 +102,7 @@ function useContractData(contractKey, method, methodArgs = []) {
     error: false,
   };
 
-  if (!contractsAddedToDrizzle) {
+  if (!finishedAddingContractsToDrizzle) {
     return {
       ...response,
       status: "Data not yet available",

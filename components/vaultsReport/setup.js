@@ -29,7 +29,7 @@ function initializeContractData(vaults, web3, strategyContractsAddedToDrizzle, d
     dispatch(actions.getStrategyTokensSuccess(strategyTokens));
   })();
 
-  dispatch(actions.addContractsToDrizzleSuccess());
+  dispatch(actions.finishAddingContractsToDrizzle());
 }
 
 async function getStrategyTokens(strategyContractsAddedToDrizzle, web3) {

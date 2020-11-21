@@ -66,11 +66,15 @@ const vaultsApySubSlice = {
 
 const contractsAddedToDrizzleSubSlice = {
   initialState: {
-    contractsAddedToDrizzle: false,
+    finishedAddingContractsToDrizzle: false,
+    contractsMissingFromDrizzle: false,
   },
   reducers: {
-    addContractsToDrizzleSuccess(state) {
-      state.contractsAddedToDrizzle = true;
+    finishAddingContractsToDrizzle(state) {
+      state.finishedAddingContractsToDrizzle = true;
+    },
+    foundContractsMissingFromDrizzle(state) {
+      state.contractsMissingFromDrizzle = true;
     },
   },
 };

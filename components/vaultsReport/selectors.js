@@ -2,7 +2,10 @@ import { createSelector } from "reselect";
 
 const getVaults = (state) => state.vaultsReport.vaultRegistry.vaults;
 
-const getContractsAreAddedToDrizzle = (state) => state.vaultsReport.contractsAddedToDrizzle;
+const getContractsMissingFromDrizzle = (state) => state.vaultsReport.contractsMissingFromDrizzle;
+
+const getFinishedAddingContractsToDrizzle = (state) =>
+  state.vaultsReport.finishedAddingContractsToDrizzle;
 
 const makeTokenPriceSelector = (tokenAddress) => (state) =>
   state.vaultsReport.wantTokenPrices.prices[tokenAddress];
@@ -25,7 +28,8 @@ const getVaultApyStatsFetchFailed = (state) => Boolean(state.vaultsReport.vaults
 
 export {
   getVaults,
-  getContractsAreAddedToDrizzle,
+  getFinishedAddingContractsToDrizzle,
+  getContractsMissingFromDrizzle,
   makeTokenPriceSelector,
   getTokenSelector,
   getUserStatsFetchFailed,

@@ -4,6 +4,7 @@ const notificationMessages = {
   tokenPricesFetchFailed: "Failed to fetch token prices. Fiat balances may be missing / stale.",
   vaultApyStatsFetchFailed:
     "Failed to fetch vault performance stats. Vault returns cannot currently be shown.",
+  contractsMissingFromDrizzle: "Failed to load smart contracts, please try reloading the page.",
 };
 
 export { notificationMessages };

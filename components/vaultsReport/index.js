@@ -7,11 +7,12 @@ import { getDrizzleInitialized } from "components/drizzleCreator/selectors";
 import Notifier from "components/vaultsReport/Notifier";
 import {
   getVaults,
-  getContractsAreAddedToDrizzle,
   getUserStatsFetchFailed,
   getVaultRegistryFetchFailed,
   getTokenPricesFetchFailed,
   getVaultApyStatsFetchFailed,
+  getFinishedAddingContractsToDrizzle,
+  getContractsMissingFromDrizzle,
 } from "components/vaultsReport/selectors";
 import {
   initializeContractData,
@@ -56,7 +57,7 @@ function VaultsReport() {
   let vaults = useSelector(getVaults);
   const web3 = useWeb3();
   const drizzleInitialized = useSelector(getDrizzleInitialized);
-  const contractsAreAddedToDrizzle = useSelector(getContractsAreAddedToDrizzle);
+  const finishedAddingContractsToDrizzle = useSelector(getFinishedAddingContractsToDrizzle);
 
   useEffect(() => {
     dispatch(actions.fetchVaults());
@@ -85,7 +86,7 @@ function VaultsReport() {
   const strategyContractsAddedToDrizzle = strategyContractsAddedToDrizzleRef.current;
 
   useEffect(() => {
-    if (drizzleInitialized && vaults && !contractsAreAddedToDrizzle) {
+    if (drizzleInitialized && vaults && !finishedAddingContractsToDrizzle) {
       initializeContractData(vaults, web3, strategyContractsAddedToDrizzle, dispatch);
     }
   }, [drizzleInitialized, vaults]);
@@ -112,6 +113,11 @@ function VaultsReport() {
       <Notifier
         shouldShowSelector={getVaultApyStatsFetchFailed}
         message={notificationMessages.vaultApyStatsFetchFailed}
+        severity="error"
+      />
+      <Notifier
+        shouldShowSelector={getContractsMissingFromDrizzle}
+        message={notificationMessages.contractsMissingFromDrizzle}
         severity="error"
       />
 
