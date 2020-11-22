@@ -1,5 +1,4 @@
 import AppBar from "@material-ui/core/AppBar";
-import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import Link from "@material-ui/core/Link";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
@@ -74,14 +73,6 @@ function Header() {
           )}
         </Grid>
       </Grid>
-
-      {/*<ul className={navClasses.list}>*/}
-      {/*  <li className={navClasses.listItem}>*/}
-      {/*    <PageAwareLink href={"/vaults"}>*/}
-      {/*      <a>Vaults</a>*/}
-      {/*    </PageAwareLink>*/}
-      {/*  </li>*/}
-      {/*</ul>*/}
     </AppBar>
   );
 }
