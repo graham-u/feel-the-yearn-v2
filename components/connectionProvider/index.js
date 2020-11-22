@@ -57,14 +57,14 @@ export default function ConnectionProvider(props) {
   };
 
   const reconnectWallet = () => {
-    const previouslySelectedWallet = window.localStorage.getItem(
-      "selectedWallet"
-    );
+    const previouslySelectedWallet = window.localStorage.getItem("selectedWallet");
     if (previouslySelectedWallet && onboard) {
       (async () => {
-        await onboard.walletSelect(previouslySelectedWallet);
-        const ready = await onboard.walletCheck();
-        setReady(ready);
+        const walletSelected = await onboard.walletSelect(previouslySelectedWallet);
+        if (walletSelected) {
+          const ready = await onboard.walletCheck();
+          setReady(ready);
+        }
       })();
     }
   };
