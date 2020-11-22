@@ -4,6 +4,7 @@ import ConnectionProvider from "components/connectionProvider";
 import DrizzleCreator from "components/drizzleCreator";
 import PageContainer from "components/pageContainer";
 import dynamic from "next/dynamic";
+import Head from "next/head";
 import NoSSR from "react-no-ssr";
 import getTheme from "theme/getTheme";
 import "theme/global.css";
@@ -23,6 +24,9 @@ function MyApp({ Component, pageProps }) {
           <ConnectionProvider>
             <DrizzleCreator>
               <PageContainer>
+                <Head>
+                  <title>Feel the Yearn</title>
+                </Head>
                 <Component {...pageProps} />
               </PageContainer>
             </DrizzleCreator>
