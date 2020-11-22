@@ -77,7 +77,7 @@ function VaultsReport() {
   const strategyContractsAddedToDrizzle = strategyContractsAddedToDrizzleRef.current;
 
   useEffect(() => {
-    if (drizzleInitialized && vaults && !finishedAddingContractsToDrizzle) {
+    if (drizzleInitialized && !isEmpty(vaults) && !finishedAddingContractsToDrizzle) {
       initializeContractData(vaults, web3, strategyContractsAddedToDrizzle, dispatch);
     }
   }, [drizzleInitialized, vaults]);
