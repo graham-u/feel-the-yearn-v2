@@ -1,13 +1,9 @@
 import AppBar from "@material-ui/core/AppBar";
 import Grid from "@material-ui/core/Grid";
 import Link from "@material-ui/core/Link";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
-import useMediaQuery from "@material-ui/core/useMediaQuery";
-import { useSelectWallet } from "components/connectionProvider/hooks";
-import { getDrizzleInitialized } from "components/drizzleCreator/selectors";
-import PageAwareLink from "components/pageContainer/header/pageAwareLink";
-import { useSelector } from "react-redux";
+import ControlPanel from "components/pageContainer/header/controlPanel";
 
 const useAppBarStyles = makeStyles({
   root: {
@@ -16,32 +12,8 @@ const useAppBarStyles = makeStyles({
   },
 });
 
-const useNavStyles = makeStyles((theme) => {
-  return {
-    list: {
-      listStyle: "none",
-      paddingLeft: 0,
-    },
-    listItem: {
-      display: "inline-block",
-      paddingRight: "2rem",
-      "& a": {
-        color: theme.palette.common.white,
-      },
-      fontSize: "1.2em",
-    },
-  };
-});
-
 function Header() {
-  const drizzleInitialized = useSelector(getDrizzleInitialized);
-  const selectWallet = useSelectWallet();
-
   const appBarClasses = useAppBarStyles();
-  const navClasses = useNavStyles();
-
-  const theme = useTheme();
-  const isXs = useMediaQuery(theme.breakpoints.only("xs"));
 
   return (
     <AppBar position="static" classes={{ root: appBarClasses.root }}>
