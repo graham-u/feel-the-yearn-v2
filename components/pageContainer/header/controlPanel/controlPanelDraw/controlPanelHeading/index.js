@@ -4,7 +4,8 @@ import makeStyles from "@material-ui/core/styles/makeStyles";
 
 const useHeadingStyles = makeStyles({
   root: {
-    marginBottom: "0.5rem",
+    marginBottom: "0.25rem",
+    marginTop: "1rem",
   },
 });
 
