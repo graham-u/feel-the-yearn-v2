@@ -11,17 +11,22 @@ function ControlPanelButton() {
   const isXs = useMediaQuery(theme.breakpoints.only("xs"));
 
   const dispatch = useDispatch();
+  const togglePanel = () => {
+    dispatch(actions.panelToggled());
+  };
 
   return (
-    <IconButton color="inherit" onClick={() => dispatch(actions.panelToggled())} edge={"end"}>
+    <>
       {isXs ? (
-        <MenuIcon />
+        <IconButton color="inherit" edge={"end"} onClick={togglePanel}>
+          <MenuIcon />
+        </IconButton>
       ) : (
-        <Button variant={"outlined"} color={"inherit"}>
+        <Button color={"inherit"} variant={"outlined"} onClick={togglePanel}>
           Settings
         </Button>
       )}
-    </IconButton>
+    </>
   );
 }
 
