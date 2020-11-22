@@ -50,7 +50,7 @@ function ControlPanelDrawer() {
               </IconButton>
             </Grid>
           </Grid>
-          <Grid container justify="flex-start">
+          <Grid container>
             <Grid item xs={12}>
               <ControlPanelHeading title="Wallet" />
             </Grid>
