@@ -37,10 +37,16 @@ function createStore() {
     },
   });
 
+  let devTools = false;
+  // Any devTools configuration can be done here.
+  if (process.env.NODE_ENV !== "production") {
+    devTools = {};
+  }
+
   const store = configureStore({
     reducer,
     middleware: [...defaultMiddleWare, ...middlewares],
-    devTools: process.env.NODE_ENV !== "production",
+    devTools: devTools,
   });
 
   sagaMiddleware.run(vaultsReportSaga);
