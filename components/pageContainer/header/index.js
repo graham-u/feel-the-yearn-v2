@@ -33,16 +33,7 @@ function Header() {
           </Link>
         </Grid>
         <Grid item>
-          {!drizzleInitialized && (
-            <Button
-              variant="outlined"
-              size={isXs ? "small" : "large"}
-              color="inherit"
-              onClick={selectWallet}
-            >
-              Select wallet
-            </Button>
-          )}
+          <ControlPanel />
         </Grid>
       </Grid>
     </AppBar>

@@ -5,11 +5,13 @@ import { configureStore, getDefaultMiddleware } from "@reduxjs/toolkit";
 import { reducer as connectionProviderReducer } from "components/connectionProvider/slice";
 import vaultsReportSaga from "components/vaultsReport/saga";
 import { reducer as vaultsReportReducer } from "components/vaultsReport/slice";
+import { reducer as settingsReducer } from "components/pageContainer/header/controlPanel/slice";
 import createSagaMiddleware from "redux-saga";
 
 const reducer = {
   vaultsReport: vaultsReportReducer,
   walletConnection: connectionProviderReducer,
+  settings: settingsReducer,
   // We have to put all of drizzle's reducers at the root as
   // DrizzleContract.cacheCallFunction expects to find contract key there
   // on lines like contract.store.getState().contracts[contractName]
