@@ -1,11 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+const nameSpace = "settings";
+
 const initialState = {
   panelOpen: false,
 };
 
 const slice = createSlice({
-  name: "settings",
+  name: nameSpace,
   initialState,
   reducers: {
     panelToggled(state) {
@@ -14,4 +16,11 @@ const slice = createSlice({
   },
 });
 
+const selectors = {
+  getControlPanelOpen(state) {
+    return state[nameSpace].panelOpen;
+  },
+};
+
 export const { name, actions, reducer } = slice;
+export { selectors };
