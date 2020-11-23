@@ -9,12 +9,8 @@ function WalletSettings() {
   const dispatch = useDispatch();
   const selectWallet = useSelectWallet();
 
-  const togglePanel = () => {
-    dispatch(actions.panelToggled());
-  };
-
   const showSelectWallet = () => {
-    togglePanel();
+    dispatch(actions.panelToggled());
     selectWallet();
   };
 

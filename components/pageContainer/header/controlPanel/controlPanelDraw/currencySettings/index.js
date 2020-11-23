@@ -11,7 +11,9 @@ import { fiatCurrencyCodes } from "siteConfig";
 
 function CurrencySettings() {
   const dispatch = useDispatch();
+
   const handleCurrencySelection = (currencyCode) => {
+    dispatch(actions.panelToggled());
     dispatch(actions.localCurrencySelected(currencyCode));
   };
 
