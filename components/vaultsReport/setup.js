@@ -61,9 +61,10 @@ async function getStrategyTokens(strategyContractsAddedToDrizzle, web3) {
   return await Promise.all(strategyTokenPromises);
 }
 
-function setPriceFetchInterval(vaults, dispatch) {
+function setPriceFetchInterval(vaults, localCurrency, dispatch) {
   const vaultWantTokens = vaults.map((vault) => vault.tokenAddress);
-  const dispatchFetch = () => dispatch(actions.fetchWantTokenPrices({ vaultWantTokens }));
+  const dispatchFetch = () =>
+    dispatch(actions.fetchWantTokenPrices({ vaultWantTokens, localCurrency }));
 
   dispatchFetch();
   const interval = setInterval(() => {

@@ -1,7 +1,12 @@
 import { Typography } from "@material-ui/core";
 import { ThemeProvider } from "@material-ui/core/styles";
+import { selectors as settingSelectors } from "components/pageContainer/header/controlPanel/slice";
 import AnimatedTicker from "components/vaultsReport/animatedTicker/AnimatedTicker";
-import { makeTokenPriceSelector, getTokenSelector } from "components/vaultsReport/selectors";
+import {
+  makeTokenPriceSelector,
+  getTokenSelector,
+  getTokenPricesLoading,
+} from "components/vaultsReport/selectors";
 import TokenLink from "components/vaultsReport/tokenLink";
 import produce, { setAutoFreeze } from "immer";
 import { useMemo } from "react";
@@ -22,6 +27,9 @@ function TokenAndFiatBalance({
 
   const getToken = useMemo(getTokenSelector, []);
   const token = useSelector((state) => getToken(state, tokenAddress));
+
+  const tokenPricesLoading = useSelector(getTokenPricesLoading);
+  const localCurrency = useSelector(settingSelectors.getLocalCurrency);
 
   let shouldShowFiatBalance = false;
   let shouldShowTokenBalance = false;
@@ -68,9 +76,13 @@ function TokenAndFiatBalance({
               });
             }}
           >
-            <AnimatedTicker value={fiatBalance} formatter={holdingsFormatterFactory()} />{" "}
+            {tokenPricesLoading ? (
+              <Typography display="inline">Loading...</Typography>
+            ) : (
+              <AnimatedTicker value={fiatBalance} formatter={holdingsFormatterFactory()} />
+            )}{" "}
             <Typography color={"textPrimary"} display="inline">
-              USD{" "}
+              {localCurrency}
             </Typography>
           </ThemeProvider>
         ) : (

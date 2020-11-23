@@ -8,4 +8,27 @@ const notificationMessages = {
     "Failed to load smart contracts, please try reloading the page or loading in a new tab.",
 };
 
-export { notificationMessages };
+const fiatCurrencyCodes = [
+  "AUD",
+  "CAD",
+  "CHF",
+  "CNY",
+  "EUR",
+  "GBP",
+  "HKD",
+  "IDR",
+  "INR",
+  "JPY",
+  "KRW",
+  "RUB",
+  "SGD",
+  "THB",
+  "TRY",
+  "TWD",
+  "UAH",
+  "USD",
+  "VND",
+  "ZAR",
+];
+
+export { notificationMessages, fiatCurrencyCodes };

@@ -4,6 +4,7 @@ import Grid from "@material-ui/core/Grid";
 import { makeStyles } from "@material-ui/core/styles";
 import { useWeb3, useAddress } from "components/connectionProvider/hooks";
 import { getDrizzleInitialized } from "components/drizzleCreator/selectors";
+import { selectors } from "components/pageContainer/header/controlPanel/slice";
 import Notifications from "components/vaultsReport/notifications";
 import { getVaults, getFinishedAddingContractsToDrizzle } from "components/vaultsReport/selectors";
 import {
@@ -50,6 +51,8 @@ function VaultsReport() {
   const drizzleInitialized = useSelector(getDrizzleInitialized);
   const finishedAddingContractsToDrizzle = useSelector(getFinishedAddingContractsToDrizzle);
 
+  const localCurrency = useSelector(selectors.getLocalCurrency);
+
   useEffect(() => {
     dispatch(actions.fetchVaults());
   }, []);
@@ -60,10 +63,10 @@ function VaultsReport() {
 
   useEffect(() => {
     if (!isEmpty(vaults)) {
-      const interval = setPriceFetchInterval(vaults, dispatch);
+      const interval = setPriceFetchInterval(vaults, localCurrency, dispatch);
       return () => clearInterval(interval);
     }
-  }, [vaults]);
+  }, [vaults, localCurrency]);
 
   const userAddress = useAddress();
   useEffect(() => {

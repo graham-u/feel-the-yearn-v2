@@ -33,7 +33,7 @@ function* fetchVaults() {
 
 function* fetchWantTokenPrices(action) {
   const tokenAddresses = action.payload.vaultWantTokens;
-  const vsCurrency = action.payload.vsCurrency ?? "usd";
+  const vsCurrency = (action.payload.localCurrency ?? "USD").toLowerCase();
   const uri = `https://api.coingecko.com/api/v3/simple/token_price/ethereum?contract_addresses=TOKEN_ADDRESS&vs_currencies=${vsCurrency}`;
 
   let priceCalls = {};

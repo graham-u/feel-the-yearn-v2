@@ -26,6 +26,11 @@ const getVaultRegistryFetchFailed = (state) => Boolean(state.vaultsReport.vaultR
 const getTokenPricesFetchFailed = (state) => Boolean(state.vaultsReport.wantTokenPrices.error);
 const getVaultApyStatsFetchFailed = (state) => Boolean(state.vaultsReport.vaultsApyStats.error);
 
+const getUserStatsLoading = (state) => state.vaultsReport.userStats.loading;
+const getVaultRegistryLoading = (state) => state.vaultsReport.vaultRegistry.loading;
+const getTokenPricesLoading = (state) => state.vaultsReport.wantTokenPrices.loading;
+const getVaultApyStatsLoading = (state) => state.vaultsReport.vaultsApyStats.loading;
+
 export {
   getVaults,
   getFinishedAddingContractsToDrizzle,
@@ -36,4 +41,8 @@ export {
   getVaultRegistryFetchFailed,
   getTokenPricesFetchFailed,
   getVaultApyStatsFetchFailed,
+  getUserStatsLoading,
+  getVaultRegistryLoading,
+  getTokenPricesLoading,
+  getVaultApyStatsLoading,
 };
