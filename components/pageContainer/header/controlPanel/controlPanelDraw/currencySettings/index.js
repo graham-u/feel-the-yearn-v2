@@ -4,8 +4,8 @@ import Grid from "@material-ui/core/Grid";
 import InputLabel from "@material-ui/core/InputLabel";
 import NativeSelect from "@material-ui/core/NativeSelect";
 import ControlPanelHeading from "components/pageContainer/header/controlPanel/controlPanelDraw/controlPanelHeading";
-
-import { selectors, actions } from "components/pageContainer/header/controlPanel/slice";
+import { getLocalCurrency } from "components/pageContainer/header/controlPanel/selectors";
+import { actions } from "components/pageContainer/header/controlPanel/slice";
 import { useSelector, useDispatch } from "react-redux";
 import { fiatCurrencyCodes } from "siteConfig";
 
@@ -17,7 +17,7 @@ function CurrencySettings() {
     dispatch(actions.localCurrencySelected(currencyCode));
   };
 
-  const localCurrency = useSelector(selectors.getLocalCurrency);
+  const localCurrency = useSelector(getLocalCurrency);
 
   return (
     <Grid container>

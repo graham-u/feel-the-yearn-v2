@@ -1,6 +1,6 @@
 import { Typography } from "@material-ui/core";
 import { ThemeProvider } from "@material-ui/core/styles";
-import { selectors as settingSelectors } from "components/pageContainer/header/controlPanel/slice";
+import { getLocalCurrency } from "components/pageContainer/header/controlPanel/selectors";
 import AnimatedTicker from "components/vaultsReport/animatedTicker/AnimatedTicker";
 import {
   makeTokenPriceSelector,
@@ -29,7 +29,7 @@ function TokenAndFiatBalance({
   const token = useSelector((state) => getToken(state, tokenAddress));
 
   const tokenPricesLoading = useSelector(getTokenPricesLoading);
-  const localCurrency = useSelector(settingSelectors.getLocalCurrency);
+  const localCurrency = useSelector(getLocalCurrency);
 
   let shouldShowFiatBalance = false;
   let shouldShowTokenBalance = false;

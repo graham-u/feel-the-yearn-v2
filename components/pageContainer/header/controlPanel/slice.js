@@ -22,14 +22,5 @@ const slice = createSlice({
   },
 });
 
-const selectors = {
-  getControlPanelOpen(state) {
-    return state[nameSpace].panelOpen;
-  },
-  getLocalCurrency(state) {
-    return state[nameSpace].localCurrency;
-  },
-};
-
 export const { name, actions, reducer } = slice;
-export { selectors };
+export { nameSpace };
