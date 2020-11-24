@@ -76,11 +76,11 @@ function TokenAndFiatBalance({
               });
             }}
           >
-            {tokenPricesLoading ? (
-              <Typography display="inline">Loading...</Typography>
-            ) : (
-              <AnimatedTicker value={fiatBalance} formatter={holdingsFormatterFactory()} />
-            )}{" "}
+            <AnimatedTicker
+              value={fiatBalance}
+              formatter={holdingsFormatterFactory()}
+              loading={tokenPricesLoading}
+            />{" "}
             <Typography color={"textPrimary"} display="inline">
               {localCurrency}
             </Typography>
