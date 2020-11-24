@@ -3,6 +3,7 @@ import drizzleReducers from "@drizzle/store/src/reducer";
 import drizzleSagas from "@drizzle/store/src/rootSaga";
 import { configureStore, getDefaultMiddleware } from "@reduxjs/toolkit";
 import { reducer as connectionProviderReducer } from "components/connectionProvider/slice";
+import settingsSaga from "components/pageContainer/header/settingsPanel/saga";
 import vaultsReportSaga from "components/vaultsReport/saga";
 import { reducer as vaultsReportReducer } from "components/vaultsReport/slice";
 import { reducer as settingsReducer } from "components/pageContainer/header/settingsPanel/slice";
@@ -52,6 +53,7 @@ function createStore() {
   });
 
   sagaMiddleware.run(vaultsReportSaga);
+  sagaMiddleware.run(settingsSaga);
   drizzleSagas.forEach((saga) => sagaMiddleware.run(saga));
 
   return store;

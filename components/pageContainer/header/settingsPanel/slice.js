@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { loadSetting, saveSetting } from "utils/settings";
+import { loadSetting } from "utils/settings";
 
 const nameSpace = "settings";
 
@@ -17,7 +17,6 @@ const slice = createSlice({
     },
     localCurrencySelected(state, action) {
       state.localCurrency = action.payload;
-      saveSetting("localCurrency", action.payload);
     },
   },
 });
