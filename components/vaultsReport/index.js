@@ -4,7 +4,7 @@ import Grid from "@material-ui/core/Grid";
 import { makeStyles } from "@material-ui/core/styles";
 import { useWeb3, useAddress } from "components/connectionProvider/hooks";
 import { getDrizzleInitialized } from "components/drizzleCreator/selectors";
-import { getLocalCurrency } from "components/pageContainer/header/controlPanel/selectors";
+import { getLocalCurrency } from "components/pageContainer/header/settingsPanel/selectors";
 import Notifications from "components/vaultsReport/notifications";
 import { getVaults, getFinishedAddingContractsToDrizzle } from "components/vaultsReport/selectors";
 import {

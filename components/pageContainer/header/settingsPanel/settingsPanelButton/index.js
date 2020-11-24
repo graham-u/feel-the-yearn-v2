@@ -3,10 +3,10 @@ import IconButton from "@material-ui/core/IconButton";
 import { useTheme } from "@material-ui/core/styles";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import MenuIcon from "@material-ui/icons/Menu";
-import { actions } from "components/pageContainer/header/controlPanel/slice";
+import { actions } from "components/pageContainer/header/settingsPanel/slice";
 import { useDispatch } from "react-redux";
 
-function ControlPanelButton() {
+function SettingsPanelButton() {
   const theme = useTheme();
   const isXs = useMediaQuery(theme.breakpoints.only("xs"));
 
@@ -30,4 +30,4 @@ function ControlPanelButton() {
   );
 }
 
-export default ControlPanelButton;
+export default SettingsPanelButton;

@@ -9,7 +9,7 @@ const useHeadingStyles = makeStyles({
   },
 });
 
-function ControlPanelHeading({ title }) {
+function SettingsPanelHeading({ title }) {
   const headingStyles = useHeadingStyles();
 
   return (
@@ -22,4 +22,4 @@ function ControlPanelHeading({ title }) {
   );
 }
 
-export default ControlPanelHeading;
+export default SettingsPanelHeading;

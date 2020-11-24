@@ -3,7 +3,7 @@ import Grid from "@material-ui/core/Grid";
 import Link from "@material-ui/core/Link";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
-import ControlPanel from "components/pageContainer/header/controlPanel";
+import SettingsPanel from "components/pageContainer/header/settingsPanel";
 
 const useAppBarStyles = makeStyles({
   root: {
@@ -33,7 +33,7 @@ function Header() {
           </Link>
         </Grid>
         <Grid item>
-          <ControlPanel />
+          <SettingsPanel />
         </Grid>
       </Grid>
     </AppBar>

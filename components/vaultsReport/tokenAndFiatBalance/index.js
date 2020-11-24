@@ -1,6 +1,6 @@
 import { Typography } from "@material-ui/core";
 import { ThemeProvider } from "@material-ui/core/styles";
-import { getLocalCurrency } from "components/pageContainer/header/controlPanel/selectors";
+import { getLocalCurrency } from "components/pageContainer/header/settingsPanel/selectors";
 import AnimatedTicker from "components/vaultsReport/animatedTicker/AnimatedTicker";
 import {
   makeTokenPriceSelector,

@@ -1,9 +1,9 @@
 import Drawer from "@material-ui/core/Drawer";
 import makeStyles from "@material-ui/core/styles/makeStyles";
-import CloseButton from "components/pageContainer/header/controlPanel/controlPanelDraw/closeButton";
-import CurrencySettings from "components/pageContainer/header/controlPanel/controlPanelDraw/currencySettings";
-import WalletSettings from "components/pageContainer/header/controlPanel/controlPanelDraw/walletSettings";
-import { getControlPanelOpen } from "components/pageContainer/header/controlPanel/selectors";
+import CloseButton from "components/pageContainer/header/settingsPanel/settingsPanelDraw/closeButton";
+import CurrencySettings from "components/pageContainer/header/settingsPanel/settingsPanelDraw/currencySettings";
+import WalletSettings from "components/pageContainer/header/settingsPanel/settingsPanelDraw/walletSettings";
+import { getSettingsPanelOpen } from "components/pageContainer/header/settingsPanel/selectors";
 import { useSelector } from "react-redux";
 
 const useDrawerContentStyles = makeStyles({
@@ -13,8 +13,8 @@ const useDrawerContentStyles = makeStyles({
   },
 });
 
-function ControlPanelDrawer() {
-  const panelOpen = useSelector(getControlPanelOpen);
+function SettingsPanelDrawer() {
+  const panelOpen = useSelector(getSettingsPanelOpen);
   const drawerContentClasses = useDrawerContentStyles();
 
   return (
@@ -30,4 +30,4 @@ function ControlPanelDrawer() {
   );
 }
 
-export default ControlPanelDrawer;
+export default SettingsPanelDrawer;

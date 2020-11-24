@@ -3,9 +3,9 @@ import FormHelperText from "@material-ui/core/FormHelperText";
 import Grid from "@material-ui/core/Grid";
 import InputLabel from "@material-ui/core/InputLabel";
 import NativeSelect from "@material-ui/core/NativeSelect";
-import ControlPanelHeading from "components/pageContainer/header/controlPanel/controlPanelDraw/controlPanelHeading";
-import { getLocalCurrency } from "components/pageContainer/header/controlPanel/selectors";
-import { actions } from "components/pageContainer/header/controlPanel/slice";
+import SettingsPanelHeading from "components/pageContainer/header/settingsPanel/settingsPanelDraw/settingsPanelHeading";
+import { getLocalCurrency } from "components/pageContainer/header/settingsPanel/selectors";
+import { actions } from "components/pageContainer/header/settingsPanel/slice";
 import { useSelector, useDispatch } from "react-redux";
 import { fiatCurrencyCodes } from "siteConfig";
 
@@ -22,7 +22,7 @@ function CurrencySettings() {
   return (
     <Grid container>
       <Grid item xs={12}>
-        <ControlPanelHeading title="Currency settings" />
+        <SettingsPanelHeading title="Currency settings" />
       </Grid>
       <Grid item xs={12}>
         <FormControl>
