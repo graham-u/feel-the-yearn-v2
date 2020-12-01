@@ -75,11 +75,11 @@ async function getStrategyWantTokenMapping(batchCall, strategyAddresses) {
       namespace: "addresses",
       addresses: strategyAddresses,
       abi: v1StrategyABI,
-      methods: [{ name: "want" }],
+      readMethods: [{ name: "want" }],
     },
   ]);
 
-  const strategyWantTokenMapping = strategyWantTokenAddressesBatchResult.addresses.reduce(
+  const strategyWantTokenMapping = strategyWantTokenAddressesBatchResult.reduce(
     (result, mapping) => {
       result[mapping.address] = mapping.want[0].value;
       return result;
@@ -96,11 +96,11 @@ async function getStrategyTokenData(batchCall, strategyWantTokenAddresses) {
       namespace: "tokenData",
       addresses: strategyWantTokenAddresses,
       abi: ERC20ABI,
-      methods: [{ name: "name" }, { name: "symbol" }, { name: "decimals" }],
+      readMethods: [{ name: "name" }, { name: "symbol" }, { name: "decimals" }],
     },
   ]);
 
-  const strategyTokenData = strategyWantTokensBatchResult.tokenData.map((tokenDataResult) => {
+  const strategyTokenData = strategyWantTokensBatchResult.map((tokenDataResult) => {
     const name = tokenDataResult.name[0].value;
     const symbol = tokenDataResult.symbol[0].value;
     const decimals = parseInt(tokenDataResult.decimals[0].value, 10);

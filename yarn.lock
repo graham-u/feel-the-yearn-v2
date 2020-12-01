@@ -10193,9 +10193,10 @@ web-vitals@0.2.4:
   resolved "https://registry.yarnpkg.com/web-vitals/-/web-vitals-0.2.4.tgz#ec3df43c834a207fd7cdefd732b2987896e08511"
   integrity sha512-6BjspCO9VriYy12z356nL6JBS0GYeEcA457YyRzD+dD6XYCQ75NKhcOHUMHentOE7OcVCIXXDvOm0jKFfQG2Gg==
 
-web3-batch-call@graham-u/web3-batch-call:
-  version "1.0.1"
-  resolved "https://codeload.github.com/graham-u/web3-batch-call/tar.gz/45d49394b5ba41b69a4cd389c9c3dfa185450118"
+web3-batch-call@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/web3-batch-call/-/web3-batch-call-1.0.3.tgz#bb417057abf8c7d2b87d47092b7df0312383d339"
+  integrity sha512-QI5DIt8WN2wzFkw+fhfzQaz7NnmSqHYL+v/Ll+C/5aF3biv4hf0Cr9zlkFzayDAPlF7ZJlgnO1hZ19E4xFHnEw==
   dependencies:
     cross-fetch "^3.0.6"
     delay "^4.4.0"
