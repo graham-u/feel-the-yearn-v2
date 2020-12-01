@@ -1,11 +1,4 @@
-// @TODO move tokenSymbolAliases to siteConfig.js
-
-const tokenSymbolAliases = {
-  "yDAI+yUSDC+yUSDT+yTUSD": "yCRV",
-  "vcDAI+cUSDC": "cDAI+cUSDC",
-  crvRenWSBTC: "crvBTC",
-  "yDAI+yUSDC+yUSDT+yBUSD": "crvBUSD",
-};
+import { tokenSymbolAliases } from "siteConfig";
 
 function getTokenSymbolAlias(symbol) {
   return tokenSymbolAliases[symbol] ?? symbol;

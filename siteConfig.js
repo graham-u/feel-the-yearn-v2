@@ -29,4 +29,11 @@ const fiatCurrencyCodes = [
   "ZAR",
 ];
 
-export { notificationMessages, fiatCurrencyCodes };
+const tokenSymbolAliases = {
+  "yDAI+yUSDC+yUSDT+yTUSD": "yCRV",
+  "vcDAI+cUSDC": "cDAI+cUSDC",
+  crvRenWSBTC: "crvBTC",
+  "yDAI+yUSDC+yUSDT+yBUSD": "crvBUSD",
+};
+
+export { notificationMessages, fiatCurrencyCodes, tokenSymbolAliases };
