@@ -18,8 +18,10 @@ function AnimatedTicker({
 }) {
   const loadingClasses = useLoadingStyles(loading);
 
+  const tooltipTitle = value ?? "No value yet";
+
   return (
-    <Tooltip title={value} arrow>
+    <Tooltip title={tooltipTitle} arrow>
       <Typography
         color={"textPrimary"}
         display="inline"

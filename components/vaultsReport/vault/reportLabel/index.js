@@ -1,4 +1,5 @@
 import Typography from "@material-ui/core/Typography";
+import { pure } from "recompose";
 
 function ReportLabel({ children }) {
   return (
@@ -8,4 +9,4 @@ function ReportLabel({ children }) {
   );
 }
 
-export default ReportLabel;
+export default pure(ReportLabel);

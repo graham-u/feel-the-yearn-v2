@@ -1,9 +1,9 @@
 import { useMediaQuery, useTheme } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
 import makeStyles from "@material-ui/core/styles/makeStyles";
-import RoiStats from "components/vaultsReport/vaultOverview/apyStats";
-import StrategyLink from "components/vaultsReport/vaultOverview/strategyLink";
-import VaultLink from "components/vaultsReport/vaultOverview/vaultLink";
+import RoiStats from "components/vaultsReport/vault/vaultOverview/apyStats";
+import StrategyLink from "components/vaultsReport/vault/vaultOverview/strategyLink";
+import VaultLink from "components/vaultsReport/vault/vaultOverview/vaultLink";
 
 const useVaultLogoStyles = makeStyles((theme) => {
   return {

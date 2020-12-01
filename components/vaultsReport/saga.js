@@ -1,6 +1,8 @@
-import { reduce, mapValues, sortBy } from "lodash";
+import { reduce, mapValues, sortBy, isEmpty, keyBy, map } from "lodash";
 import { takeEvery, call, put, all } from "redux-saga/effects";
+import { getContractAddressFromKey } from "utils/contractKey";
 import getTokenSymbolAlias from "utils/getTokenSymbolAlias";
+import normalizedValue from "utils/normalizedValue";
 import request from "utils/request";
 import { actions } from "./slice";
 
@@ -23,11 +25,16 @@ function* fetchVaults() {
       },
     ]);
 
-    yield put(actions.fetchVaultsSuccess(vaults));
+    // Create array of vault addresses that will determine rendering order.
+    const orderedVaultAddresses = map(vaults, (vault) => vault.address);
+
+    // Transform into object keyed by vault address
+    vaults = keyBy(vaults, "address");
+
+    yield put(actions.fetchVaultsSuccess({ vaults, orderedVaultAddresses }));
   } catch (error) {
-    const errorMessage = error?.message || "An error occurred";
-    console.log(errorMessage);
-    yield put(actions.fetchVaultsFailure({ error: errorMessage }));
+    console.log(error);
+    yield put(actions.fetchVaultsFailure());
   }
 }
 
@@ -51,9 +58,8 @@ function* fetchWantTokenPrices(action) {
 
     yield put(actions.fetchWantTokenPricesSuccess(priceResults));
   } catch (error) {
-    const errorMessage = error?.message || "An error occurred";
-    console.log(errorMessage);
-    yield put(actions.fetchWantTokenPricesFailure({ error: errorMessage }));
+    console.log(error);
+    yield put(actions.fetchWantTokenPricesFailure());
   }
 }
 
@@ -76,9 +82,8 @@ function* fetchUserStats(action) {
 
     yield put(actions.fetchUserStatsSuccess(userStats));
   } catch (error) {
-    const errorMessage = error?.message || "An error occurred";
-    console.log(errorMessage);
-    yield put(actions.fetchUserStatsFailure({ error: errorMessage }));
+    console.log(error);
+    yield put(actions.fetchUserStatsFailure());
   }
 }
 
@@ -100,9 +105,63 @@ function* fetchVaultsApy() {
 
     yield put(actions.fetchVaultsApySuccess(vaultsApyStats));
   } catch (error) {
-    const errorMessage = error?.message || "An error occurred";
-    console.log(errorMessage);
-    yield put(actions.fetchVaultsApyFailure({ error: errorMessage }));
+    console.log(error);
+    yield put(actions.fetchVaultsApyFailure());
+  }
+}
+
+function* updatePricePerFullShare(vaultAddress, pricePerFullShare) {
+  const normalizedPricePerFullShare = normalizedValue(pricePerFullShare, 18);
+  yield put(
+    actions.updatePricePerFullShare({
+      vaultAddress,
+      pricePerFullShare: normalizedPricePerFullShare,
+    })
+  );
+}
+
+const isVaultHoldingsUpdate = (action) => {
+  return action.variable === "balance" && action.name.startsWith("vault:");
+};
+
+const isStrategyHoldingsUpdate = (action) => {
+  return action.variable === "balanceOf" && action.name.startsWith("strategy:");
+};
+
+const isUserHoldingsUpdate = (action) => {
+  return (
+    action.variable === "balanceOf" && action.name.startsWith("vault:") && !isEmpty(action.args)
+  );
+};
+
+const isPricePerFullShareUpdate = (action) => {
+  return action.variable === "getPricePerFullShare";
+};
+
+/*
+ * Receives all GOT_CONTRACT_VAR actions from drizzle, determines their meaning and delegates
+ * to various handlers.
+ */
+function* dispatchContactVariableUpdateHandler(action) {
+  if (isVaultHoldingsUpdate(action)) {
+    const vaultAddress = getContractAddressFromKey(action.name);
+    yield put(actions.receivedRawVaultHoldings({ vaultAddress, rawHoldings: action.value }));
+  }
+
+  if (isStrategyHoldingsUpdate(action)) {
+    const strategyAddress = getContractAddressFromKey(action.name);
+    yield put(actions.receivedRawStrategyHoldings({ strategyAddress, rawHoldings: action.value }));
+  }
+
+  if (isUserHoldingsUpdate(action)) {
+    const vaultAddress = getContractAddressFromKey(action.name);
+    yield put(actions.receivedRawUserYvHoldings({ vaultAddress, rawYvHoldings: action.value }));
+  }
+
+  if (isPricePerFullShareUpdate(action)) {
+    const vaultAddress = getContractAddressFromKey(action.name);
+    const rawPricePerFullShare = action.value;
+    yield* updatePricePerFullShare(vaultAddress, rawPricePerFullShare);
   }
 }
 
@@ -111,4 +170,5 @@ export default function* vaultsReportSaga() {
   yield takeEvery(actions.fetchWantTokenPrices, fetchWantTokenPrices);
   yield takeEvery(actions.fetchUserStats, fetchUserStats);
   yield takeEvery(actions.fetchVaultsApy, fetchVaultsApy);
+  yield takeEvery("GOT_CONTRACT_VAR", dispatchContactVariableUpdateHandler);
 }

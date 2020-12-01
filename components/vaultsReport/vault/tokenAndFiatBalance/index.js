@@ -1,48 +1,28 @@
 import { Typography } from "@material-ui/core";
 import { ThemeProvider } from "@material-ui/core/styles";
 import { getLocalCurrency } from "components/pageContainer/header/settingsPanel/selectors";
-import AnimatedTicker from "components/vaultsReport/animatedTicker/AnimatedTicker";
-import {
-  makeTokenPriceSelector,
-  getTokenSelector,
-  getTokenPricesLoading,
-} from "components/vaultsReport/selectors";
-import TokenLink from "components/vaultsReport/tokenLink";
+import { getTokenPricesLoading } from "components/vaultsReport/selectors";
+import AnimatedTicker from "components/vaultsReport/vault/animatedTicker/AnimatedTicker";
+import TokenLink from "components/vaultsReport/vault/tokenLink";
 import produce, { setAutoFreeze } from "immer";
-import { useMemo } from "react";
+import { isUndefined } from "lodash";
 import { useSelector } from "react-redux";
 import { pure } from "recompose";
 import holdingsFormatterFactory from "utils/holdingsFormatterFactory";
-import normalizedValue from "utils/normalizedValue";
 
 function TokenAndFiatBalance({
-  rawBalance,
-  tokenAddress,
+  tokenBalance,
+  fiatBalance,
+  token,
   tokenDisplayPrecision = 2,
   fiatMinShow = 0,
   tokenMinShow = 0,
 }) {
-  const tokenPriceSelector = useMemo(() => makeTokenPriceSelector(tokenAddress), []);
-  const tokenPrice = useSelector(tokenPriceSelector);
-
-  const getToken = useMemo(getTokenSelector, []);
-  const token = useSelector((state) => getToken(state, tokenAddress));
-
   const tokenPricesLoading = useSelector(getTokenPricesLoading);
   const localCurrency = useSelector(getLocalCurrency);
 
-  let shouldShowFiatBalance = false;
-  let shouldShowTokenBalance = false;
-  let tokenBalance = null;
-  let fiatBalance = null;
-
-  if (token && rawBalance !== null) {
-    tokenBalance = normalizedValue(rawBalance, token.decimals);
-    fiatBalance = tokenBalance * tokenPrice;
-
-    shouldShowFiatBalance = fiatBalance >= fiatMinShow;
-    shouldShowTokenBalance = tokenBalance >= tokenMinShow;
-  }
+  const shouldShowFiatBalance = !isUndefined(fiatBalance) && fiatBalance >= fiatMinShow;
+  const shouldShowTokenBalance = !isUndefined(tokenBalance) && tokenBalance >= tokenMinShow;
 
   return (
     <>

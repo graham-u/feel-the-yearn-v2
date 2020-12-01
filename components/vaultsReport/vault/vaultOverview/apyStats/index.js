@@ -1,8 +1,8 @@
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
-import IconTip from "components/vaultsReport/iconTip";
-import ReportLabel from "components/vaultsReport/reportLabel";
-import { getVaultApySelector } from "components/vaultsReport/vaultOverview/apyStats/selectors";
+import IconTip from "components/vaultsReport/vault/iconTip";
+import ReportLabel from "components/vaultsReport/vault/reportLabel";
+import { getVaultApySelector } from "components/vaultsReport/vault/vaultOverview/apyStats/selectors";
 import { useMemo } from "react";
 import { useSelector } from "react-redux";
 

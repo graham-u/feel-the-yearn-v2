@@ -1,10 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { transform } from "lodash";
+import getTokenSymbolAlias from "utils/getTokenSymbolAlias";
 
 const vaultRegistrySubSlice = {
   initialState: {
     vaultRegistry: {
-      vaults: [],
+      vaults: {},
+      orderedVaultAddresses: [],
       loading: false,
+      loaded: false,
       error: false,
     },
   },
@@ -14,26 +18,87 @@ const vaultRegistrySubSlice = {
       state.vaultRegistry.error = false;
     },
     fetchVaultsSuccess(state, action) {
-      const vaults = action.payload;
+      const { vaults, orderedVaultAddresses } = action.payload;
       state.vaultRegistry.vaults = vaults;
+      state.vaultRegistry.orderedVaultAddresses = orderedVaultAddresses;
 
-      const tokens = vaults.map((vault) => {
-        return {
+      const tokens = transform(vaults, (acc, vault) => {
+        const tokenAddress = vault.tokenAddress;
+        acc[tokenAddress] = {
           name: vault.tokenName,
           symbol: vault.tokenSymbol,
-          symbolAlias: vault.tokenSymbolAlias,
+          symbolAlias: getTokenSymbolAlias(vault.tokenSymbol),
           decimals: vault.decimals,
-          address: vault.tokenAddress,
+          address: tokenAddress,
         };
       });
 
       keyAndStoreTokens(state.tokens, tokens);
       state.vaultRegistry.loading = false;
+      state.vaultRegistry.loaded = true;
     },
     fetchVaultsFailure(state, action) {
-      const { error } = action.payload;
       state.vaultRegistry.loading = false;
-      state.vaultRegistry.error = error;
+      state.vaultRegistry.error = true;
+    },
+  },
+};
+
+const strategyTokenMappingSlice = {
+  initialState: {
+    strategyWantTokensMapping: {},
+  },
+  reducers: {
+    getStrategyWantTokenMapping(state, action) {
+      state.strategyWantTokensMapping = action.payload.strategyWantTokenMapping;
+    },
+  },
+};
+
+const vaultHoldingsSlice = {
+  initialState: {
+    allVaultRawHoldings: {},
+  },
+  reducers: {
+    receivedRawVaultHoldings(state, action) {
+      const { vaultAddress, rawHoldings } = action.payload;
+      state.allVaultRawHoldings[vaultAddress] = rawHoldings;
+    },
+  },
+};
+
+const strategyHoldingsSlice = {
+  initialState: {
+    allStrategyRawHoldings: {},
+  },
+  reducers: {
+    receivedRawStrategyHoldings(state, action) {
+      const { strategyAddress, rawHoldings } = action.payload;
+      state.allStrategyRawHoldings[strategyAddress] = rawHoldings;
+    },
+  },
+};
+
+const userHoldingsSlice = {
+  initialState: {
+    allUserRawYvHoldings: {},
+  },
+  reducers: {
+    receivedRawUserYvHoldings(state, action) {
+      const { vaultAddress, rawYvHoldings } = action.payload;
+      state.allUserRawYvHoldings[vaultAddress] = rawYvHoldings;
+    },
+  },
+};
+
+const pricePerFullShareSlice = {
+  initialState: {
+    pricePerFullShare: {},
+  },
+  reducers: {
+    updatePricePerFullShare(state, action) {
+      const { vaultAddress, pricePerFullShare } = action.payload;
+      state.pricePerFullShare[vaultAddress] = pricePerFullShare;
     },
   },
 };
@@ -57,24 +122,8 @@ const vaultsApySubSlice = {
       state.vaultsApyStats.loading = false;
     },
     fetchVaultsApyFailure(state, action) {
-      const { error } = action.payload;
       state.vaultsApyStats.loading = false;
-      state.vaultsApyStats.error = error;
-    },
-  },
-};
-
-const contractsAddedToDrizzleSubSlice = {
-  initialState: {
-    finishedAddingContractsToDrizzle: false,
-    contractsMissingFromDrizzle: false,
-  },
-  reducers: {
-    finishAddingContractsToDrizzle(state) {
-      state.finishedAddingContractsToDrizzle = true;
-    },
-    foundContractsMissingFromDrizzle(state) {
-      state.contractsMissingFromDrizzle = true;
+      state.vaultsApyStats.error = true;
     },
   },
 };
@@ -84,7 +133,7 @@ const wantTokenPricesSubSlice = {
     wantTokenPrices: {
       prices: {},
       loading: false,
-      error: null,
+      error: false,
     },
   },
   reducers: {
@@ -97,9 +146,8 @@ const wantTokenPricesSubSlice = {
       state.wantTokenPrices.loading = false;
     },
     fetchWantTokenPricesFailure(state, action) {
-      const { error } = action.payload;
       state.wantTokenPrices.loading = false;
-      state.wantTokenPrices.error = error;
+      state.wantTokenPrices.error = true;
     },
   },
 };
@@ -109,9 +157,8 @@ const tokensSubSlice = {
     tokens: {},
   },
   reducers: {
-    getStrategyTokensSuccess(state, action) {
-      const strategyTokens = action.payload;
-      keyAndStoreTokens(state.tokens, strategyTokens);
+    getStrategyTokenData(state, action) {
+      keyAndStoreTokens(state.tokens, action.payload.strategyTokenData);
     },
   },
 };
@@ -121,7 +168,7 @@ const userStatsSubSlice = {
     userStats: {
       stats: {},
       loading: false,
-      error: null,
+      error: false,
     },
   },
   reducers: {
@@ -134,17 +181,14 @@ const userStatsSubSlice = {
       state.userStats.loading = false;
     },
     fetchUserStatsFailure(state, action) {
-      const { error } = action.payload;
       state.userStats.loading = false;
-      state.userStats.error = error;
+      state.userStats.error = true;
     },
   },
 };
 
 function keyAndStoreTokens(tokensState, tokensToSave) {
-  tokensToSave.forEach((token) => {
-    tokensState[token.address] = token;
-  });
+  Object.assign(tokensState, tokensToSave);
 }
 
 const slice = createSlice({
@@ -152,18 +196,26 @@ const slice = createSlice({
   initialState: {
     ...vaultRegistrySubSlice.initialState,
     ...wantTokenPricesSubSlice.initialState,
-    ...contractsAddedToDrizzleSubSlice.initialState,
     ...tokensSubSlice.initialState,
     ...userStatsSubSlice.initialState,
     ...vaultsApySubSlice.initialState,
+    ...strategyTokenMappingSlice.initialState,
+    ...vaultHoldingsSlice.initialState,
+    ...userHoldingsSlice.initialState,
+    ...strategyHoldingsSlice.initialState,
+    ...pricePerFullShareSlice.initialState,
   },
   reducers: {
     ...vaultRegistrySubSlice.reducers,
     ...wantTokenPricesSubSlice.reducers,
-    ...contractsAddedToDrizzleSubSlice.reducers,
     ...tokensSubSlice.reducers,
     ...userStatsSubSlice.reducers,
     ...vaultsApySubSlice.reducers,
+    ...strategyTokenMappingSlice.reducers,
+    ...vaultHoldingsSlice.reducers,
+    ...userHoldingsSlice.reducers,
+    ...strategyHoldingsSlice.reducers,
+    ...pricePerFullShareSlice.reducers,
   },
 });
 

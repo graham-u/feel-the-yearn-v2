@@ -1,10 +1,9 @@
-import Notifier from "components/vaultsReport/notifier";
+import Notifier from "components/vaultsReport/vault/notifier";
 import {
   getUserStatsFetchFailed,
   getVaultRegistryFetchFailed,
   getTokenPricesFetchFailed,
   getVaultApyStatsFetchFailed,
-  getContractsMissingFromDrizzle,
 } from "components/vaultsReport/selectors";
 import { notificationMessages } from "siteConfig";
 
@@ -29,11 +28,6 @@ function Notifications() {
       <Notifier
         shouldShowSelector={getVaultApyStatsFetchFailed}
         message={notificationMessages.vaultApyStatsFetchFailed}
-        severity="error"
-      />
-      <Notifier
-        shouldShowSelector={getContractsMissingFromDrizzle}
-        message={notificationMessages.contractsMissingFromDrizzle}
         severity="error"
       />
     </>
