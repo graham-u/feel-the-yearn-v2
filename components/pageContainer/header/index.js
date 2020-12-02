@@ -12,8 +12,14 @@ const useAppBarStyles = makeStyles({
   },
 });
 
+const useLinkStyles = makeStyles({
+  root: {
+    paddingRight: "1rem",
+  },
+});
 function Header() {
   const appBarClasses = useAppBarStyles();
+  const linkClasses = useLinkStyles();
 
   return (
     <AppBar position="static" classes={{ root: appBarClasses.root }}>
@@ -22,15 +28,28 @@ function Header() {
           <Typography component="h1" variant="h4" display="inline" gutterBottom>
             Feel the Yearn
           </Typography>
-          <Link
-            href="https://old.feel-the-yearn.app/vaults"
-            title="Visit original site (for limited time)"
-            variant="subtitle1"
-            color="inherit"
-            display="block"
-          >
-            Old site
-          </Link>
+          <div>
+            <Link
+              className={linkClasses.root}
+              href="https://old.feel-the-yearn.app/vaults"
+              title="Visit original site (for limited time)"
+              variant="subtitle1"
+              color="inherit"
+              display="inline"
+            >
+              Old site
+            </Link>
+            <Link
+              className={linkClasses.root}
+              href="https://gitcoin.co/grants/1647/feel-the-yearn-2"
+              title="Donate to my gitcoin grant"
+              variant="subtitle1"
+              color="inherit"
+              display="inline"
+            >
+              Support me!
+            </Link>
+          </div>
         </Grid>
         <Grid item>
           <SettingsPanel />
