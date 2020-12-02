@@ -1,4 +1,4 @@
-import Notifier from "components/vaultsReport/vault/notifier";
+import Notifier from "components/notifier";
 import {
   getUserStatsFetchFailed,
   getVaultRegistryFetchFailed,
