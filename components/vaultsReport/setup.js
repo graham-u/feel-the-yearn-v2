@@ -116,35 +116,6 @@ async function getStrategyTokenData(batchCall, strategyWantTokenAddresses) {
   return strategyTokenData;
 }
 
-async function getStrategyTokens(strategyContractsAddedToDrizzle, web3) {
-  const createStrategyTokenPromise = (strategyContract) => {
-    return new Promise((resolve) => {
-      (async () => {
-        const strategyTokenAddress = await strategyContract.methods.want().call();
-        const strategyTokenContract = new web3.eth.Contract(ERC20ABI, strategyTokenAddress);
-        const strategyToken = {
-          name: await strategyTokenContract.methods.name().call(),
-          symbol: await strategyTokenContract.methods.symbol().call(),
-          decimals: await strategyTokenContract.methods.decimals().call(),
-          address: strategyTokenAddress,
-        };
-
-        // Add symbolAliases so we can use shorter symbols e.g. yCRV => yDAI+yUSDC+yUSDT+yTUSD
-        strategyToken.symbolAlias = getTokenSymbolAlias(strategyToken.symbol);
-
-        resolve(strategyToken);
-      })();
-    });
-  };
-
-  let strategyTokenPromises = [];
-  forIn(strategyContractsAddedToDrizzle, (strategyContract) => {
-    strategyTokenPromises.push(createStrategyTokenPromise(strategyContract));
-  });
-
-  return await Promise.all(strategyTokenPromises);
-}
-
 function setPriceFetchInterval(vaults, localCurrency, dispatch) {
   const vaultWantTokenAddresses = transform(
     vaults,
