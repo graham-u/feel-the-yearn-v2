@@ -56,7 +56,6 @@ function VaultsReport() {
   const vaultRegistryLoaded = useSelector(getVaultRegistryLoaded);
   useEffect(() => {
     if (drizzleInitialized && vaultRegistryLoaded) {
-      console.log("about to initialize contract data");
       initializeContractData(allVaults, web3, userAddress, dispatch);
     }
   }, [drizzleInitialized, vaultRegistryLoaded]);

@@ -1,9 +1,10 @@
 import Drawer from "@material-ui/core/Drawer";
 import makeStyles from "@material-ui/core/styles/makeStyles";
+import { getSettingsPanelOpen } from "components/pageContainer/header/settingsPanel/selectors";
 import CloseButton from "components/pageContainer/header/settingsPanel/settingsPanelDraw/closeButton";
 import CurrencySettings from "components/pageContainer/header/settingsPanel/settingsPanelDraw/currencySettings";
+import ThemeSettings from "components/pageContainer/header/settingsPanel/settingsPanelDraw/themeSettings";
 import WalletSettings from "components/pageContainer/header/settingsPanel/settingsPanelDraw/walletSettings";
-import { getSettingsPanelOpen } from "components/pageContainer/header/settingsPanel/selectors";
 import { useSelector } from "react-redux";
 
 const useDrawerContentStyles = makeStyles({
@@ -24,6 +25,7 @@ function SettingsPanelDrawer() {
           <CloseButton />
           <WalletSettings />
           <CurrencySettings />
+          <ThemeSettings />
         </div>
       </aside>
     </Drawer>

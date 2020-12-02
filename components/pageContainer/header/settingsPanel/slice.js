@@ -6,6 +6,7 @@ const nameSpace = "settings";
 const initialState = {
   panelOpen: false,
   localCurrency: loadSetting("localCurrency") ?? "USD",
+  theme: loadSetting("theme") ?? "Red (Light)",
 };
 
 const slice = createSlice({
@@ -17,6 +18,9 @@ const slice = createSlice({
     },
     localCurrencySelected(state, action) {
       state.localCurrency = action.payload;
+    },
+    themeSelected(state, action) {
+      state.theme = action.payload;
     },
   },
 });

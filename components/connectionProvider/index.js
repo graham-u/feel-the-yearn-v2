@@ -1,11 +1,10 @@
+import { getCurrentThemeName } from "components/pageContainer/header/settingsPanel/selectors";
 import React, { useEffect, useState, useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import Web3 from "web3";
-import { useDispatch } from "react-redux";
+import ConnectionContext from "./context";
 import { initOnboard, initNotify } from "./services";
 import { actions } from "./slice";
-import ConnectionContext from "./context";
-
-const darkMode = false;
 
 export default function ConnectionProvider(props) {
   const { children } = props;
@@ -17,6 +16,9 @@ export default function ConnectionProvider(props) {
   const [notify, setNotify] = useState(null);
   const [web3, setWeb3] = useState(null);
   const [connected, setConnected] = useState(false);
+
+  const themeName = useSelector(getCurrentThemeName);
+  const usingDarkMode = themeName.includes("Dark");
 
   const initializeWallet = () => {
     const selectWallet = (newWallet) => {
@@ -39,8 +41,8 @@ export default function ConnectionProvider(props) {
       wallet: selectWallet,
     };
 
-    const newOnboard = initOnboard(onboardConfig, darkMode);
-    setNotify(initNotify(darkMode));
+    const newOnboard = initOnboard(onboardConfig, usingDarkMode);
+    setNotify(initNotify(usingDarkMode));
     setOnboard(newOnboard);
   };
 
@@ -69,7 +71,7 @@ export default function ConnectionProvider(props) {
     }
   };
 
-  useEffect(initializeWallet, []);
+  useEffect(initializeWallet, [usingDarkMode]);
   useEffect(reconnectWallet, [onboard]);
   useEffect(addressChanged, [address]);
 

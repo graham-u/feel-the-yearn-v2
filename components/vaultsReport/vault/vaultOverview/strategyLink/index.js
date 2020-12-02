@@ -1,4 +1,4 @@
-import Link from "@material-ui/core/Link";
+import { ThemedLink as Link } from "components/Link";
 
 function StrategyLink({ address, linkText, titleText }) {
   const url = `https://etherscan.io/address/${address}#code`;
