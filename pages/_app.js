@@ -6,7 +6,6 @@ import dynamic from "next/dynamic";
 import Head from "next/head";
 import NoSSR from "react-no-ssr";
 import getTheme from "theme/getTheme";
-import "theme/global.css";
 
 const StoreProvider = dynamic(() => import("components/storeProvider"), {
   ssr: false,
