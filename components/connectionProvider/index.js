@@ -71,7 +71,15 @@ export default function ConnectionProvider(props) {
     }
   };
 
-  useEffect(initializeWallet, [usingDarkMode]);
+  useEffect(initializeWallet, []);
+
+  // Update dark mode when theme is dark.
+  useEffect(() => {
+    if (onboard !== null) {
+      onboard.config({ darkMode: usingDarkMode });
+    }
+  }, [usingDarkMode, onboard]);
+
   useEffect(reconnectWallet, [onboard]);
   useEffect(addressChanged, [address]);
 

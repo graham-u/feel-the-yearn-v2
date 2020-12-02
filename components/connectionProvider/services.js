@@ -5,12 +5,11 @@ const networkId = 1;
 const rpcUrl = process.env.NEXT_PUBLIC_BLOCKNATIVE_RPC_URL;
 const dappId = process.env.NEXT_PUBLIC_BLOCKNATIVE_DAPP_ID;
 
-export function initOnboard(subscriptions, darkMode) {
+export function initOnboard(subscriptions) {
   return Onboard({
     dappId,
     hideBranding: true,
     networkId,
-    darkMode,
     subscriptions,
     walletSelect: {
       wallets: [
