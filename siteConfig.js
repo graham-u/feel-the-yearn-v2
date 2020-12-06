@@ -1,10 +1,21 @@
-const notificationMessages = {
-  userStatsFetchFailed: "Failed to fetch user stats. Lifetime earnings may be missing / stale.",
-  vaultRegistryFetchFailed: "Failed to fetch vault registry data. Vaults cannot be shown.",
-  tokenPricesFetchFailed: "Failed to fetch token prices. Fiat balances may be missing / stale.",
-  vaultApyStatsFetchFailed:
+const errorMessages = {
+  fetchUserStatsFailure: "Failed to fetch user stats. Lifetime earnings may be missing / stale.",
+  fetchVaultsFailure: "Failed to fetch vault registry data. Vaults cannot be shown.",
+  fetchWantTokenPricesFailure:
+    "Failed to fetch token prices. Fiat balances may be missing / stale.",
+  fetchVaultsApyFailure:
     "Failed to fetch vault performance stats. Vault returns cannot currently be shown.",
 };
+
+const announcementDurationInDays = 7;
+
+const announcements = [
+  // {
+  //   id: "exampleId",
+  //   message: "This is an example feature announcement!",
+  //   date: "2020-12-01",
+  // }
+];
 
 const fiatCurrencyCodes = [
   "AUD",
@@ -36,4 +47,10 @@ const tokenSymbolAliases = {
   "yDAI+yUSDC+yUSDT+yBUSD": "crvBUSD",
 };
 
-export { notificationMessages, fiatCurrencyCodes, tokenSymbolAliases };
+export {
+  errorMessages,
+  fiatCurrencyCodes,
+  tokenSymbolAliases,
+  announcements,
+  announcementDurationInDays,
+};

@@ -21,7 +21,7 @@ function saveSetting(name, value) {
   try {
     const serializedValue = JSON.stringify(value);
     localStorage.setItem(getSettingsKey(name), serializedValue);
-  } catch {
+  } catch (err) {
     console.log(err);
   }
 }

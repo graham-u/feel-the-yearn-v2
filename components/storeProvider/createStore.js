@@ -4,15 +4,18 @@ import drizzleSagas from "@drizzle/store/src/rootSaga";
 import { configureStore, getDefaultMiddleware } from "@reduxjs/toolkit";
 import { reducer as connectionProviderReducer } from "components/connectionProvider/slice";
 import settingsSaga from "components/pageContainer/header/settingsPanel/saga";
+import { reducer as settingsReducer } from "components/pageContainer/header/settingsPanel/slice";
+import notificationsSaga from "components/pageContainer/notifications/saga";
+import { reducer as notificationsReducer } from "components/pageContainer/notifications/slice";
 import vaultsReportSaga from "components/vaultsReport/saga";
 import { reducer as vaultsReportReducer } from "components/vaultsReport/slice";
-import { reducer as settingsReducer } from "components/pageContainer/header/settingsPanel/slice";
 import createSagaMiddleware from "redux-saga";
 
 const reducer = {
   vaultsReport: vaultsReportReducer,
   walletConnection: connectionProviderReducer,
   settings: settingsReducer,
+  notifications: notificationsReducer,
   // We have to put all of drizzle's reducers at the root as
   // DrizzleContract.cacheCallFunction expects to find contract key there
   // on lines like contract.store.getState().contracts[contractName]
@@ -54,6 +57,7 @@ function createStore() {
 
   sagaMiddleware.run(vaultsReportSaga);
   sagaMiddleware.run(settingsSaga);
+  sagaMiddleware.run(notificationsSaga);
   drizzleSagas.forEach((saga) => sagaMiddleware.run(saga));
 
   return store;

@@ -12,7 +12,6 @@ import {
   setUserStatsFetchInterval,
 } from "components/vaultsReport/setup";
 import Vault from "components/vaultsReport/vault";
-import Notifications from "components/vaultsReport/notifications";
 import { isEmpty } from "lodash";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -62,7 +61,6 @@ function VaultsReport() {
 
   return (
     <>
-      <Notifications />
       {orderedVaultAddresses.map((vaultAddress) => (
         <Vault key={vaultAddress} vaultAddress={vaultAddress} />
       ))}
