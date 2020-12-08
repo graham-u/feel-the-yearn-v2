@@ -39,7 +39,7 @@ const getAllVaultsKeyedLowerCase = createSelector(getAllVaults, (allVaults) => {
   return allVaultsKeyedLowerCase;
 });
 
-const getOrderedVaultAddresses = (state) => state.vaultsReport.vaultRegistry.orderedVaultAddresses;
+const getVaultStats = (state) => state.vaultsReport.vaultsApyStats.stats;
 
 const getVault = createCachedSelector(
   getAllVaults,
@@ -246,15 +246,19 @@ const getVaultRegistryLoaded = (state) => state.vaultsReport.vaultRegistry.loade
 export {
   getAllVaults,
   getVault,
-  getOrderedVaultAddresses,
+  getVaultStats,
   getAllVaultsHoldings,
   getVaultHoldings,
+  getAllVaultsFiatValue,
   getVaultFiatValue,
   getStrategyHoldings,
+  getAllStrategiesFiatValue,
   getStrategyFiatValue,
   getUserHoldings,
+  getAllUserFiatValue,
   getUserFiatValue,
   getUserEarnings,
+  getAllUserEarningsFiatValue,
   getUserEarningsFiatValue,
   getVaultWantToken,
   getStrategyWantTokensMapping,

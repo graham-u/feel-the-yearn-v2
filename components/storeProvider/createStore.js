@@ -55,8 +55,8 @@ function createStore() {
     devTools: devTools,
   });
 
-  sagaMiddleware.run(vaultsReportSaga);
   sagaMiddleware.run(settingsSaga);
+  sagaMiddleware.run(vaultsReportSaga);
   sagaMiddleware.run(notificationsSaga);
   drizzleSagas.forEach((saga) => sagaMiddleware.run(saga));
 

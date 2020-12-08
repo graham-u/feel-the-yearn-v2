@@ -7,6 +7,7 @@ const initialState = {
   panelOpen: false,
   localCurrency: loadSetting("localCurrency") ?? "USD",
   theme: loadSetting("theme") ?? "Red (Light)",
+  vaultSortField: loadSetting("vaultSortField") ?? "Vault name",
 };
 
 const slice = createSlice({
@@ -21,6 +22,9 @@ const slice = createSlice({
     },
     themeSelected(state, action) {
       state.theme = action.payload;
+    },
+    vaultSortFieldSelected(state, action) {
+      state.vaultSortField = action.payload;
     },
   },
 });

@@ -4,6 +4,7 @@ import { getSettingsPanelOpen } from "components/pageContainer/header/settingsPa
 import CloseButton from "components/pageContainer/header/settingsPanel/settingsPanelDraw/closeButton";
 import CurrencySettings from "components/pageContainer/header/settingsPanel/settingsPanelDraw/currencySettings";
 import ThemeSettings from "components/pageContainer/header/settingsPanel/settingsPanelDraw/themeSettings";
+import VaultSortSettings from "components/pageContainer/header/settingsPanel/settingsPanelDraw/vaultSortSettings";
 import WalletSettings from "components/pageContainer/header/settingsPanel/settingsPanelDraw/walletSettings";
 import { useSelector } from "react-redux";
 
@@ -26,6 +27,7 @@ function SettingsPanelDrawer() {
           <WalletSettings />
           <CurrencySettings />
           <ThemeSettings />
+          <VaultSortSettings />
         </div>
       </aside>
     </Drawer>

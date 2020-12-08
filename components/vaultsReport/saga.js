@@ -1,4 +1,4 @@
-import { reduce, mapValues, sortBy, isEmpty, keyBy, map } from "lodash";
+import { reduce, mapValues, isEmpty, keyBy } from "lodash";
 import { takeEvery, call, put, all } from "redux-saga/effects";
 import { getContractAddressFromKey } from "utils/contractKey";
 import getTokenSymbolAlias from "utils/getTokenSymbolAlias";
@@ -18,20 +18,10 @@ function* fetchVaults() {
       };
     });
 
-    // Sort alphabetically by alias.
-    vaults = sortBy(vaults, [
-      function (vault) {
-        return vault.vaultAlias.toLowerCase();
-      },
-    ]);
-
-    // Create array of vault addresses that will determine rendering order.
-    const orderedVaultAddresses = map(vaults, (vault) => vault.address);
-
     // Transform into object keyed by vault address
     vaults = keyBy(vaults, "address");
 
-    yield put(actions.fetchVaultsSuccess({ vaults, orderedVaultAddresses }));
+    yield put(actions.fetchVaultsSuccess({ vaults }));
   } catch (error) {
     console.log(error);
     yield put(actions.fetchVaultsFailure());

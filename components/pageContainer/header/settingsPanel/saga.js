@@ -11,6 +11,10 @@ function* saveToLocalStorage(action) {
       saveSetting("theme", action.payload);
       break;
     }
+    case "settings/vaultSortFieldSelected": {
+      saveSetting("vaultSortField", action.payload);
+      break;
+    }
   }
 }
 

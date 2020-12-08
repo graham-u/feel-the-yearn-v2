@@ -6,7 +6,6 @@ const vaultRegistrySubSlice = {
   initialState: {
     vaultRegistry: {
       vaults: {},
-      orderedVaultAddresses: [],
       loading: false,
       loaded: false,
       error: false,
@@ -18,9 +17,8 @@ const vaultRegistrySubSlice = {
       state.vaultRegistry.error = false;
     },
     fetchVaultsSuccess(state, action) {
-      const { vaults, orderedVaultAddresses } = action.payload;
+      const { vaults } = action.payload;
       state.vaultRegistry.vaults = vaults;
-      state.vaultRegistry.orderedVaultAddresses = orderedVaultAddresses;
 
       const tokens = transform(vaults, (acc, vault) => {
         const tokenAddress = vault.tokenAddress;

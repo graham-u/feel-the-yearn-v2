@@ -1,16 +1,13 @@
 import { useWeb3, useAddress } from "components/connectionProvider/hooks";
 import { getDrizzleInitialized } from "components/drizzleCreator/selectors";
 import { getLocalCurrency } from "components/pageContainer/header/settingsPanel/selectors";
-import {
-  getOrderedVaultAddresses,
-  getVaultRegistryLoaded,
-  getAllVaults,
-} from "components/vaultsReport/selectors";
+import { getVaultRegistryLoaded, getAllVaults } from "components/vaultsReport/selectors";
 import {
   initializeContractData,
   setPriceFetchInterval,
   setUserStatsFetchInterval,
 } from "components/vaultsReport/setup";
+import { getSortedVaultAddresses } from "components/vaultsReport/sortedVaultAddressSelectors";
 import Vault from "components/vaultsReport/vault";
 import { isEmpty } from "lodash";
 import { useEffect } from "react";
@@ -32,7 +29,6 @@ function VaultsReport() {
     dispatch(actions.fetchVaultsApy());
   }, []);
 
-  const orderedVaultAddresses = useSelector(getOrderedVaultAddresses);
   const allVaults = useSelector(getAllVaults);
 
   useEffect(() => {
@@ -59,9 +55,11 @@ function VaultsReport() {
     }
   }, [drizzleInitialized, vaultRegistryLoaded]);
 
+  const sortedVaultAddresses = useSelector(getSortedVaultAddresses);
+
   return (
     <>
-      {orderedVaultAddresses.map((vaultAddress) => (
+      {sortedVaultAddresses.map((vaultAddress) => (
         <Vault key={vaultAddress} vaultAddress={vaultAddress} />
       ))}
     </>
