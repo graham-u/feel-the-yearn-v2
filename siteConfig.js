@@ -10,11 +10,11 @@ const errorMessages = {
 const announcementDurationInDays = 7;
 
 const announcements = [
-  // {
-  //   id: "exampleId",
-  //   message: "This is an example feature announcement!",
-  //   date: "2020-12-01",
-  // }
+  {
+    id: "vaultSortingRelease",
+    message: "You can now re-order vaults by any field! Configure via settings button.",
+    date: "2020-12-08",
+  },
 ];
 
 const fiatCurrencyCodes = [
