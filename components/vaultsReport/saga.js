@@ -43,6 +43,11 @@ function* fetchWantTokenPrices(action) {
 
     // CoinGecko API returns the price keyed by the address (lower case), so we need to tidy the results before storing.
     priceResults = mapValues(priceResults, (priceResult, key) => {
+      if (isEmpty(priceResult)) {
+        // No price data returned.
+        return null;
+      }
+
       return priceResult[key.toLowerCase()][vsCurrency];
     });
 
