@@ -39,6 +39,7 @@ function createStore() {
         "BLOCK_RECEIVED",
         "BLOCKS_LISTENING",
         "CALL_CONTRACT_FN",
+        "ERROR_CONTRACT_VAR",
       ],
     },
   });
