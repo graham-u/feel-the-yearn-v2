@@ -1,9 +1,11 @@
 import { useMediaQuery, useTheme } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
 import makeStyles from "@material-ui/core/styles/makeStyles";
+import HelpOutlineOutlinedIcon from "@material-ui/icons/HelpOutlineOutlined";
 import RoiStats from "components/vaultsReport/vault/vaultOverview/apyStats";
 import StrategyLink from "components/vaultsReport/vault/vaultOverview/strategyLink";
 import VaultLink from "components/vaultsReport/vault/vaultOverview/vaultLink";
+import ReactImageFallback from "react-image-fallback";
 
 const useVaultLogoStyles = makeStyles((theme) => {
   return {
@@ -26,6 +28,8 @@ const useVaultDetailsStyles = makeStyles((theme) => {
 const getVaultLogo = (vault) =>
   `https://raw.githubusercontent.com/iearn-finance/yearn-assets/master/icons/tokens/${vault.tokenAddress}/logo.svg`;
 
+const fallBackLogo = <HelpOutlineOutlinedIcon style={{ fontSize: 48 }} />;
+
 function VaultOverview({ vault }) {
   const theme = useTheme();
   const direction = useMediaQuery(theme.breakpoints.down("xs")) ? "row-reverse" : "row";
@@ -35,8 +39,9 @@ function VaultOverview({ vault }) {
   return (
     <Grid container direction={direction}>
       <Grid item xs={3} sm={1} md={2}>
-        <img
+        <ReactImageFallback
           src={getVaultLogo(vault)}
+          fallbackImage={fallBackLogo}
           alt="Vault logo"
           className={vaultLogoClasses.root}
           width={48}
