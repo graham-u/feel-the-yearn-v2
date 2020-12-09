@@ -15,11 +15,6 @@ const announcements = [
     message: "You can now re-order vaults by any field! Configure via settings button.",
     date: "2020-12-08",
   },
-  {
-    id: "handleMissingPriceDataBug",
-    message: "A bug is preventing fiat holdings data from showing :( - I am looking into it.",
-    date: "2020-12-09",
-  },
 ];
 
 const fiatCurrencyCodes = [
