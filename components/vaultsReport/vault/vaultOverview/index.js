@@ -8,13 +8,21 @@ import VaultLink from "components/vaultsReport/vault/vaultOverview/vaultLink";
 import ReactImageFallback from "react-image-fallback";
 
 const useVaultLogoStyles = makeStyles((theme) => {
-  return {
+  const styles = {
     [theme.breakpoints.down("xs")]: {
       root: {
         float: "right",
       },
     },
   };
+
+  if (!theme.vaults.showIcons) {
+    styles.root = {
+      display: "none",
+    };
+  }
+
+  return styles;
 });
 
 const useVaultDetailsStyles = makeStyles((theme) => {

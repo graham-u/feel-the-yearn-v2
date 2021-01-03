@@ -11,13 +11,26 @@ const usePageStyles = makeStyles((theme) => {
   };
 });
 
+const useContainerStyles = makeStyles((theme) => {
+  const styles = {};
+
+  if (theme?.container?.background) {
+    styles.root = {
+      background: theme.container.background,
+    };
+  }
+
+  return styles;
+});
+
 function PageContainer({ children }) {
   const pageClasses = usePageStyles();
+  const containerClasses = useContainerStyles();
 
   return (
     <div className={pageClasses.root}>
       <Notifications />
-      <Container maxWidth="lg">
+      <Container maxWidth="lg" className={containerClasses.root}>
         <header>
           <Header />
         </header>
