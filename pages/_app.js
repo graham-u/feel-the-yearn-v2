@@ -1,7 +1,6 @@
 import CssBaseline from "@material-ui/core/CssBaseline";
 import ConnectionProvider from "components/connectionProvider";
 import { CustomThemeProvider as ThemeProvider } from "components/customThemeProvider";
-import DrizzleCreator from "components/drizzleCreator";
 import dynamic from "next/dynamic";
 import Head from "next/head";
 import NoSSR from "react-no-ssr";
@@ -21,14 +20,12 @@ function MyApp({ Component, pageProps }) {
       <StoreProvider>
         <ThemeProvider>
           <ConnectionProvider>
-            <DrizzleCreator>
-              <PageContainer>
-                <Head>
-                  <title>Feel the Yearn</title>
-                </Head>
-                <Component {...pageProps} />
-              </PageContainer>
-            </DrizzleCreator>
+            <PageContainer>
+              <Head>
+                <title>Feel the Yearn</title>
+              </Head>
+              <Component {...pageProps} />
+            </PageContainer>
           </ConnectionProvider>
         </ThemeProvider>
       </StoreProvider>

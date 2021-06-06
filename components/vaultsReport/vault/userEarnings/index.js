@@ -1,23 +1,23 @@
 import { getVaultUnderlyingToken } from "components/vaultsReport/selectors";
 import ReportLabel from "components/vaultsReport/vault/reportLabel";
 import TokenAndUSDCBalance from "components/vaultsReport/vault/tokenAndUSDCBalance";
-import { getUserBalance } from "components/vaultsReport/vault/userHoldings/selectors";
+import { getUserEarnings } from "components/vaultsReport/vault/userEarnings/selectors";
 import { useSelector } from "react-redux";
 
-function UserHoldings({ vaultAddress }) {
-  const userBalance = useSelector((state) => getUserBalance(state, vaultAddress));
+function UserEarnings({ vaultAddress }) {
+  const userEarnings = useSelector((state) => getUserEarnings(state, vaultAddress));
   const underlyingToken = useSelector((state) => getVaultUnderlyingToken(state, vaultAddress));
 
   return (
     <>
-      <ReportLabel>User holdings</ReportLabel>
+      <ReportLabel>User earnings</ReportLabel>
       <TokenAndUSDCBalance
-        tokenBalance={userBalance.amount}
-        usdcBalance={userBalance.amountUsdc}
+        tokenBalance={userEarnings.amount}
+        usdcBalance={userEarnings.amountUsdc}
         token={underlyingToken}
       />
     </>
   );
 }
 
-export default UserHoldings;
+export default UserEarnings;

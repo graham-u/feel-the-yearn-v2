@@ -36,12 +36,7 @@ function* handleCloseNotification(action) {
 
 export default function* notificationsSaga() {
   yield takeEvery(
-    [
-      vaultsReportActions.fetchVaultsFailure,
-      vaultsReportActions.fetchVaultsApyFailure,
-      vaultsReportActions.fetchWantTokenPricesFailure,
-      vaultsReportActions.fetchUserStatsFailure,
-    ],
+    [vaultsReportActions.fetchVaultsFailure, vaultsReportActions.fetchUserPositionsFailure],
     handleError
   );
 

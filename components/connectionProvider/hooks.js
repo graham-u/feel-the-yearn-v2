@@ -1,11 +1,6 @@
 import { useContext } from "react";
 import context from "./context";
 
-export function useConnected() {
-  const { connected } = useContext(context);
-  return connected;
-}
-
 export function useReady() {
   const { ready } = useContext(context);
   return ready;
@@ -14,6 +9,11 @@ export function useReady() {
 export function useWeb3() {
   const { web3 } = useContext(context);
   return web3;
+}
+
+export function useYearnSDK() {
+  const { yearnSDK } = useContext(context);
+  return yearnSDK;
 }
 
 export function useAddress() {

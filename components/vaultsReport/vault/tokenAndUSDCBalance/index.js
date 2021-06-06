@@ -1,28 +1,23 @@
 import { Typography } from "@material-ui/core";
 import { ThemeProvider } from "@material-ui/core/styles";
-import { getLocalCurrency } from "components/pageContainer/header/settingsPanel/selectors";
-import { getTokenPricesLoading } from "components/vaultsReport/selectors";
 import AnimatedTicker from "components/vaultsReport/vault/animatedTicker/AnimatedTicker";
 import TokenLink from "components/vaultsReport/vault/tokenLink";
 import produce, { setAutoFreeze } from "immer";
 import { isUndefined } from "lodash";
-import { useSelector } from "react-redux";
 import { pure } from "recompose";
 import holdingsFormatterFactory from "utils/holdingsFormatterFactory";
 
-function TokenAndFiatBalance({
+function TokenAndUSDCBalance({
   tokenBalance,
-  fiatBalance,
+  usdcBalance,
   token,
   tokenDisplayPrecision = 2,
-  fiatMinShow = 0,
+  usdcMinShow = 0,
   tokenMinShow = 0,
 }) {
-  const tokenPricesLoading = useSelector(getTokenPricesLoading);
-  const localCurrency = useSelector(getLocalCurrency);
-
-  const shouldShowFiatBalance = !isUndefined(fiatBalance) && fiatBalance >= fiatMinShow;
-  const shouldShowTokenBalance = !isUndefined(tokenBalance) && tokenBalance >= tokenMinShow;
+  const shouldShowUSDCBalance = !isUndefined(usdcBalance) && usdcBalance >= usdcMinShow;
+  const shouldShowTokenBalance =
+    !isUndefined(token) && !isUndefined(tokenBalance) && tokenBalance >= tokenMinShow;
 
   return (
     <>
@@ -33,11 +28,7 @@ function TokenAndFiatBalance({
               value={tokenBalance}
               formatter={holdingsFormatterFactory({ precision: tokenDisplayPrecision })}
             />{" "}
-            <TokenLink
-              address={token.address}
-              linkText={token.symbolAlias}
-              titleText={token.name}
-            />
+            <TokenLink address={token.address} linkText={token.symbol} titleText={token.name} />
           </>
         ) : (
           <Typography display="inline">-</Typography>
@@ -45,7 +36,7 @@ function TokenAndFiatBalance({
       </div>
 
       <div>
-        {shouldShowFiatBalance ? (
+        {shouldShowUSDCBalance ? (
           <ThemeProvider
             theme={(outerTheme) => {
               // Have to turn off autofreeze otherwise immer tries to freeze an immutable theme
@@ -56,13 +47,9 @@ function TokenAndFiatBalance({
               });
             }}
           >
-            <AnimatedTicker
-              value={fiatBalance}
-              formatter={holdingsFormatterFactory()}
-              loading={tokenPricesLoading}
-            />{" "}
+            <AnimatedTicker value={usdcBalance} formatter={holdingsFormatterFactory()} />{" "}
             <Typography color={"textPrimary"} display="inline">
-              {localCurrency}
+              USDC
             </Typography>
           </ThemeProvider>
         ) : (
@@ -73,4 +60,4 @@ function TokenAndFiatBalance({
   );
 }
 
-export default pure(TokenAndFiatBalance);
+export default pure(TokenAndUSDCBalance);

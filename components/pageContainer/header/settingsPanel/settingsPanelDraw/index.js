@@ -2,7 +2,6 @@ import Drawer from "@material-ui/core/Drawer";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import { getSettingsPanelOpen } from "components/pageContainer/header/settingsPanel/selectors";
 import CloseButton from "components/pageContainer/header/settingsPanel/settingsPanelDraw/closeButton";
-import CurrencySettings from "components/pageContainer/header/settingsPanel/settingsPanelDraw/currencySettings";
 import ThemeSettings from "components/pageContainer/header/settingsPanel/settingsPanelDraw/themeSettings";
 import VaultSortSettings from "components/pageContainer/header/settingsPanel/settingsPanelDraw/vaultSortSettings";
 import WalletSettings from "components/pageContainer/header/settingsPanel/settingsPanelDraw/walletSettings";
@@ -25,7 +24,6 @@ function SettingsPanelDrawer() {
         <div className={drawerContentClasses.root}>
           <CloseButton />
           <WalletSettings />
-          <CurrencySettings />
           <ThemeSettings />
           <VaultSortSettings />
         </div>

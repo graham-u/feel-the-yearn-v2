@@ -3,9 +3,9 @@ import CardContent from "@material-ui/core/CardContent";
 import Grid from "@material-ui/core/Grid";
 import { makeStyles } from "@material-ui/core/styles";
 import { getVault } from "components/vaultsReport/selectors";
-import StrategyHoldings from "components/vaultsReport/vault/strategyHoldings";
+import StrategyInfo from "components/vaultsReport/vault/strategyInfo";
+import UserEarnings from "components/vaultsReport/vault/userEarnings";
 import UserHoldings from "components/vaultsReport/vault/userHoldings";
-import UserStats from "components/vaultsReport/vault/userStats";
 import VaultHoldings from "components/vaultsReport/vault/vaultHoldings";
 import VaultOverview from "components/vaultsReport/vault/vaultOverview";
 import { useSelector } from "react-redux";
@@ -48,19 +48,19 @@ function Vault({ vaultAddress }) {
 
           <Grid container spacing={1} alignItems="center" item md={layout.data.width}>
             <Grid item xs={12} sm={3} md={layout.data.vaultHoldings.width}>
-              <VaultHoldings vault={vault} />
+              <VaultHoldings vaultAddress={vaultAddress} />
             </Grid>
 
             <Grid item xs={12} sm={3} md={layout.data.strategyHoldings.width}>
-              <StrategyHoldings vault={vault} />
+              <StrategyInfo vaultAddress={vaultAddress} />
             </Grid>
 
-            <Grid item xs={12} sm={3} md={layout.data.strategyHoldings.width}>
-              <UserHoldings vault={vault} />
+            <Grid item xs={12} sm={3} md={layout.data.userHoldings.width}>
+              <UserHoldings vaultAddress={vaultAddress} />
             </Grid>
 
-            <Grid item xs={12} sm={3} md={layout.data.strategyHoldings.width}>
-              <UserStats vault={vault} />
+            <Grid item xs={12} sm={3} md={layout.data.userEarnings.width}>
+              <UserEarnings vaultAddress={vaultAddress} />
             </Grid>
           </Grid>
         </Grid>

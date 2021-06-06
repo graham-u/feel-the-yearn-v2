@@ -1,12 +1,4 @@
-import { useWeb3, useAddress } from "components/connectionProvider/hooks";
-import { getDrizzleInitialized } from "components/drizzleCreator/selectors";
-import { getLocalCurrency } from "components/pageContainer/header/settingsPanel/selectors";
-import { getVaultRegistryLoaded, getAllVaults } from "components/vaultsReport/selectors";
-import {
-  initializeContractData,
-  setPriceFetchInterval,
-  setUserStatsFetchInterval,
-} from "components/vaultsReport/setup";
+import { useAddress } from "components/connectionProvider/hooks";
 import { getSortedVaultAddresses } from "components/vaultsReport/sortedVaultAddressSelectors";
 import Vault from "components/vaultsReport/vault";
 import { isEmpty } from "lodash";
@@ -16,44 +8,18 @@ import { actions } from "./slice";
 
 function VaultsReport() {
   const dispatch = useDispatch();
-  const web3 = useWeb3();
-  const drizzleInitialized = useSelector(getDrizzleInitialized);
-
-  const localCurrency = useSelector(getLocalCurrency);
 
   useEffect(() => {
     dispatch(actions.fetchVaults());
+    dispatch(actions.fetchTokens());
   }, []);
-
-  useEffect(() => {
-    dispatch(actions.fetchVaultsApy());
-  }, []);
-
-  const allVaults = useSelector(getAllVaults);
-
-  useEffect(() => {
-    if (!isEmpty(allVaults)) {
-      const interval = setPriceFetchInterval(allVaults, localCurrency, dispatch);
-      return () => clearInterval(interval);
-    }
-  }, [allVaults, localCurrency]);
 
   const userAddress = useAddress();
   useEffect(() => {
     if (!isEmpty(userAddress)) {
-      const interval = setUserStatsFetchInterval(userAddress, dispatch);
-      return () => clearInterval(interval);
+      dispatch(actions.fetchUserPositions({ userAddress }));
     }
   }, [userAddress]);
-
-  // Initialize contract data.  We only want to do this once, after vaults have loaded and drizzle
-  // is initialized
-  const vaultRegistryLoaded = useSelector(getVaultRegistryLoaded);
-  useEffect(() => {
-    if (drizzleInitialized && vaultRegistryLoaded) {
-      initializeContractData(allVaults, web3, userAddress, dispatch);
-    }
-  }, [drizzleInitialized, vaultRegistryLoaded]);
 
   const sortedVaultAddresses = useSelector(getSortedVaultAddresses);
 

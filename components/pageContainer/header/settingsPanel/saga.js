@@ -3,10 +3,6 @@ import { saveSetting } from "utils/settings";
 
 function* saveToLocalStorage(action) {
   switch (action.type) {
-    case "settings/localCurrencySelected": {
-      saveSetting("localCurrency", action.payload);
-      break;
-    }
     case "settings/themeSelected": {
       saveSetting("theme", action.payload);
       break;

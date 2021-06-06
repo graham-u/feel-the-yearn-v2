@@ -1,219 +1,94 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { transform } from "lodash";
-import getTokenSymbolAlias from "utils/getTokenSymbolAlias";
 
-const vaultRegistrySubSlice = {
+const vaultSubSlice = {
   initialState: {
-    vaultRegistry: {
-      vaults: {},
-      loading: false,
-      loaded: false,
-      error: false,
+    vaults: {
+      data: {},
     },
+    loading: false,
+    loaded: false,
+    error: false,
   },
   reducers: {
     fetchVaults(state) {
-      state.vaultRegistry.loading = true;
-      state.vaultRegistry.error = false;
+      state.loading = true;
+      state.error = false;
     },
     fetchVaultsSuccess(state, action) {
       const { vaults } = action.payload;
-      state.vaultRegistry.vaults = vaults;
-
-      const tokens = transform(vaults, (acc, vault) => {
-        const tokenAddress = vault.tokenAddress;
-        acc[tokenAddress] = {
-          name: vault.tokenName,
-          symbol: vault.tokenSymbol,
-          symbolAlias: getTokenSymbolAlias(vault.tokenSymbol),
-          decimals: vault.decimals,
-          address: tokenAddress,
-        };
-      });
-
-      keyAndStoreTokens(state.tokens, tokens);
-      state.vaultRegistry.loading = false;
-      state.vaultRegistry.loaded = true;
+      state.vaults.data = vaults;
+      state.loading = false;
+      state.loaded = true;
     },
     fetchVaultsFailure(state, action) {
-      state.vaultRegistry.loading = false;
-      state.vaultRegistry.error = true;
+      state.loading = false;
+      state.error = true;
     },
   },
 };
 
-const strategyTokenMappingSlice = {
+const underlyingTokensSubSlice = {
   initialState: {
-    strategyWantTokensMapping: {},
+    tokens: {
+      data: {},
+    },
+    loading: false,
+    loaded: false,
+    error: false,
   },
   reducers: {
-    getStrategyWantTokenMapping(state, action) {
-      state.strategyWantTokensMapping = action.payload.strategyWantTokenMapping;
+    fetchTokens(state) {
+      state.tokens.loading = true;
+      state.tokens.error = false;
+    },
+    fetchTokensSuccess(state, action) {
+      const { tokens } = action.payload;
+      state.tokens.data = tokens;
+      state.tokens.loading = false;
+      state.tokens.loaded = true;
+    },
+    fetchTokensFailure(state, action) {
+      state.tokens.loading = false;
+      state.tokens.error = true;
     },
   },
 };
 
-const vaultHoldingsSlice = {
+const userPositionsSubSlice = {
   initialState: {
-    allVaultRawHoldings: {},
-  },
-  reducers: {
-    receivedRawVaultHoldings(state, action) {
-      const { vaultAddress, rawHoldings } = action.payload;
-      state.allVaultRawHoldings[vaultAddress] = rawHoldings;
-    },
-  },
-};
-
-const strategyHoldingsSlice = {
-  initialState: {
-    allStrategyRawHoldings: {},
-  },
-  reducers: {
-    receivedRawStrategyHoldings(state, action) {
-      const { strategyAddress, rawHoldings } = action.payload;
-      state.allStrategyRawHoldings[strategyAddress] = rawHoldings;
-    },
-  },
-};
-
-const userHoldingsSlice = {
-  initialState: {
-    allUserRawYvHoldings: {},
-  },
-  reducers: {
-    receivedRawUserYvHoldings(state, action) {
-      const { vaultAddress, rawYvHoldings } = action.payload;
-      state.allUserRawYvHoldings[vaultAddress] = rawYvHoldings;
-    },
-  },
-};
-
-const pricePerFullShareSlice = {
-  initialState: {
-    pricePerFullShare: {},
-  },
-  reducers: {
-    updatePricePerFullShare(state, action) {
-      const { vaultAddress, pricePerFullShare } = action.payload;
-      state.pricePerFullShare[vaultAddress] = pricePerFullShare;
-    },
-  },
-};
-
-const vaultsApySubSlice = {
-  initialState: {
-    vaultsApyStats: {
-      stats: [],
+    userPositions: {
+      data: {},
       loading: false,
       error: false,
     },
   },
   reducers: {
-    fetchVaultsApy(state) {
-      state.vaultsApyStats.loading = true;
-      state.vaultsApyStats.error = false;
+    fetchUserPositions(state) {
+      state.userPositions.loading = true;
+      state.userPositions.error = false;
     },
-    fetchVaultsApySuccess(state, action) {
-      let vaultsApyStats = action.payload;
-      state.vaultsApyStats.stats = vaultsApyStats;
-      state.vaultsApyStats.loading = false;
+    fetchUserPositionsSuccess(state, action) {
+      state.userPositions.data = action.payload;
+      state.userPositions.loading = false;
     },
-    fetchVaultsApyFailure(state, action) {
-      state.vaultsApyStats.loading = false;
-      state.vaultsApyStats.error = true;
-    },
-  },
-};
-
-const wantTokenPricesSubSlice = {
-  initialState: {
-    wantTokenPrices: {
-      prices: {},
-      loading: false,
-      error: false,
-    },
-  },
-  reducers: {
-    fetchWantTokenPrices(state) {
-      state.wantTokenPrices.loading = true;
-      state.wantTokenPrices.error = false;
-    },
-    fetchWantTokenPricesSuccess(state, action) {
-      state.wantTokenPrices.prices = action.payload;
-      state.wantTokenPrices.loading = false;
-    },
-    fetchWantTokenPricesFailure(state, action) {
-      state.wantTokenPrices.loading = false;
-      state.wantTokenPrices.error = true;
+    fetchUserPositionsFailure(state, action) {
+      state.userPositions.loading = false;
+      state.userPositions.error = true;
     },
   },
 };
-
-const tokensSubSlice = {
-  initialState: {
-    tokens: {},
-  },
-  reducers: {
-    getStrategyTokenData(state, action) {
-      keyAndStoreTokens(state.tokens, action.payload.strategyTokenData);
-    },
-  },
-};
-
-const userStatsSubSlice = {
-  initialState: {
-    userStats: {
-      stats: {},
-      loading: false,
-      error: false,
-    },
-  },
-  reducers: {
-    fetchUserStats(state) {
-      state.userStats.loading = true;
-      state.userStats.error = false;
-    },
-    fetchUserStatsSuccess(state, action) {
-      state.userStats.stats = action.payload;
-      state.userStats.loading = false;
-    },
-    fetchUserStatsFailure(state, action) {
-      state.userStats.loading = false;
-      state.userStats.error = true;
-    },
-  },
-};
-
-function keyAndStoreTokens(tokensState, tokensToSave) {
-  Object.assign(tokensState, tokensToSave);
-}
 
 const slice = createSlice({
   name: "vaultsReport",
   initialState: {
-    ...vaultRegistrySubSlice.initialState,
-    ...wantTokenPricesSubSlice.initialState,
-    ...tokensSubSlice.initialState,
-    ...userStatsSubSlice.initialState,
-    ...vaultsApySubSlice.initialState,
-    ...strategyTokenMappingSlice.initialState,
-    ...vaultHoldingsSlice.initialState,
-    ...userHoldingsSlice.initialState,
-    ...strategyHoldingsSlice.initialState,
-    ...pricePerFullShareSlice.initialState,
+    ...vaultSubSlice.initialState,
+    ...underlyingTokensSubSlice.initialState,
+    ...userPositionsSubSlice.initialState,
   },
   reducers: {
-    ...vaultRegistrySubSlice.reducers,
-    ...wantTokenPricesSubSlice.reducers,
-    ...tokensSubSlice.reducers,
-    ...userStatsSubSlice.reducers,
-    ...vaultsApySubSlice.reducers,
-    ...strategyTokenMappingSlice.reducers,
-    ...vaultHoldingsSlice.reducers,
-    ...userHoldingsSlice.reducers,
-    ...strategyHoldingsSlice.reducers,
-    ...pricePerFullShareSlice.reducers,
+    ...vaultSubSlice.reducers,
+    ...underlyingTokensSubSlice.reducers,
+    ...userPositionsSubSlice.reducers,
   },
 });
 
