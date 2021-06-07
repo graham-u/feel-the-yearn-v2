@@ -4,7 +4,7 @@ import { loadSetting } from "utils/settings";
 const nameSpace = "settings";
 
 const initialState = {
-  panelOpen: false,
+  panelOpen: loadSetting("settingsPanelOPen") ?? true,
   theme: loadSetting("theme") ?? "Red (Light)",
   vaultSortField: loadSetting("vaultSortField") ?? "Vault name",
 };

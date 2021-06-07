@@ -1,4 +1,5 @@
-import { takeEvery, spawn } from "redux-saga/effects";
+import { getSettingsPanelOpen } from "components/pageContainer/header/settingsPanel/selectors";
+import { takeEvery, spawn, select } from "redux-saga/effects";
 import { saveSetting } from "utils/settings";
 
 function* saveToLocalStorage(action) {
@@ -9,6 +10,11 @@ function* saveToLocalStorage(action) {
     }
     case "settings/vaultSortFieldSelected": {
       saveSetting("vaultSortField", action.payload);
+      break;
+    }
+    case "settings/panelToggled": {
+      const panelIsOpen = yield select(getSettingsPanelOpen);
+      saveSetting("settingsPanelOPen", panelIsOpen);
       break;
     }
   }
