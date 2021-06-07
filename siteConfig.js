@@ -4,9 +4,15 @@ const errorMessages = {
   fetchTokensFailure: "Failed to fetch token data.",
 };
 
-const announcementDurationInDays = 7;
+const announcementDurationInDays = 28;
 
 const announcements = [
+  {
+    id: "initialBetaRelease",
+    message:
+      "Welcome to the new beta version, powered by the Yearn SDK, please see about section for more info",
+    date: "2021-06-07",
+  },
   {
     id: "vaultSortingRelease",
     message: "You can now re-order vaults by any field! Configure via settings button.",
