@@ -1,6 +1,7 @@
 import AppBar from "@material-ui/core/AppBar";
 import Grid from "@material-ui/core/Grid";
 import Link from "@material-ui/core/Link";
+import InternalLink from "next/link";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import SettingsPanel from "components/pageContainer/header/settingsPanel";
@@ -15,6 +16,7 @@ const useAppBarStyles = makeStyles({
 const useLinkStyles = makeStyles({
   root: {
     paddingRight: "1rem",
+    cursor: "pointer",
   },
 });
 function Header() {
@@ -29,19 +31,41 @@ function Header() {
             Feel the Yearn
           </Typography>
           <div>
+            <InternalLink href="/vaults">
+              <Link
+                title="Yearn vaults"
+                className={linkClasses.root}
+                variant="subtitle1"
+                color="inherit"
+                display="inline"
+              >
+                Vaults
+              </Link>
+            </InternalLink>
+            <InternalLink href="/about">
+              <Link
+                title="About this site"
+                className={linkClasses.root}
+                variant="subtitle1"
+                color="inherit"
+                display="inline"
+              >
+                About
+              </Link>
+            </InternalLink>
             <Link
               className={linkClasses.root}
-              href="https://old.feel-the-yearn.app/vaults"
-              title="Visit original site (for limited time)"
+              href="https://feel-the-yearn.app/vaults"
+              title="Visit original site"
               variant="subtitle1"
               color="inherit"
               display="inline"
             >
-              Old site
+              Original site
             </Link>
             <Link
               className={linkClasses.root}
-              href="https://gitcoin.co/grants/1647/feel-the-yearn-2"
+              href="https://gitcoin.co/grants/1069/feel-the-yearn"
               title="Donate to my gitcoin grant"
               variant="subtitle1"
               color="inherit"
