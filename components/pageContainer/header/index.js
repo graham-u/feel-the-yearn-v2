@@ -31,17 +31,17 @@ function Header() {
           <div>
             <Link
               className={linkClasses.root}
-              href="https://old.feel-the-yearn.app/vaults"
-              title="Visit original site (for limited time)"
+              href="https://beta.feel-the-yearn.app"
+              title="Visit the new beta site"
               variant="subtitle1"
               color="inherit"
               display="inline"
             >
-              Old site
+              New site (Beta)
             </Link>
             <Link
               className={linkClasses.root}
-              href="https://gitcoin.co/grants/1647/feel-the-yearn-2"
+              href="https://gitcoin.co/grants/1069/feel-the-yearn"
               title="Donate to my gitcoin grant"
               variant="subtitle1"
               color="inherit"
