@@ -1,4 +1,4 @@
-import { getVault } from "components/vaultsReport/selectors";
+import { getVault } from "components/vaultsReport/getVaultSelector";
 import createCachedSelector from "re-reselect";
 import normalizedValue from "utils/normalizedValue";
 import { pick } from "lodash";

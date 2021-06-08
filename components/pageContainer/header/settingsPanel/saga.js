@@ -17,6 +17,10 @@ function* saveToLocalStorage(action) {
       saveSetting("settingsPanelOPen", panelIsOpen);
       break;
     }
+    case "settings/vaultVisibilitySelected": {
+      saveSetting("vaultVisibility", action.payload);
+      break;
+    }
   }
 }
 

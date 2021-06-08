@@ -1,5 +1,5 @@
 import { useAddress } from "components/connectionProvider/hooks";
-import { getSortedVaults } from "components/vaultsReport/sortedVaultAddressSelectors";
+import { getReportVaults } from "components/vaultsReport/selectors";
 import Vault from "components/vaultsReport/vault";
 import { isEmpty, map } from "lodash";
 import { useEffect } from "react";
@@ -21,11 +21,11 @@ function VaultsReport() {
     }
   }, [userAddress]);
 
-  const sortedVaultAddresses = map(useSelector(getSortedVaults), (vault) => vault.address);
+  const reportVaultAddresses = map(useSelector(getReportVaults), (vault) => vault.address);
 
   return (
     <>
-      {sortedVaultAddresses.map((vaultAddress) => (
+      {reportVaultAddresses.map((vaultAddress) => (
         <Vault key={vaultAddress} vaultAddress={vaultAddress} />
       ))}
     </>
