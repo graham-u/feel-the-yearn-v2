@@ -7,6 +7,7 @@ const usePageStyles = makeStyles((theme) => {
   return {
     root: {
       background: theme.palette.background.default,
+      height: "100vh",
     },
   };
 });
