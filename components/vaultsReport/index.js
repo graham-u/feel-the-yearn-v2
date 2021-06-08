@@ -1,7 +1,7 @@
 import { useAddress } from "components/connectionProvider/hooks";
-import { getSortedVaultAddresses } from "components/vaultsReport/sortedVaultAddressSelectors";
+import { getSortedVaults } from "components/vaultsReport/sortedVaultAddressSelectors";
 import Vault from "components/vaultsReport/vault";
-import { isEmpty } from "lodash";
+import { isEmpty, map } from "lodash";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { actions } from "./slice";
@@ -21,7 +21,7 @@ function VaultsReport() {
     }
   }, [userAddress]);
 
-  const sortedVaultAddresses = useSelector(getSortedVaultAddresses);
+  const sortedVaultAddresses = map(useSelector(getSortedVaults), (vault) => vault.address);
 
   return (
     <>

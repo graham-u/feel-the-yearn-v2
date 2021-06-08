@@ -2,82 +2,73 @@ import { getVaultSortField } from "components/pageContainer/header/settingsPanel
 import { getAllVaults } from "components/vaultsReport/selectors";
 import { getUserAllEarnings } from "components/vaultsReport/vault/userEarnings/selectors";
 import { getUserBalances } from "components/vaultsReport/vault/userHoldings/selectors";
-import { orderBy, map, has } from "lodash";
+import { orderBy, has } from "lodash";
 import { createSelector } from "reselect";
 
-const getVaultsAddressesSortedByAlias = createSelector(getAllVaults, (vaults) => {
-  const orderedVaults = orderBy(vaults, [(vault) => vault.name.toLowerCase()]);
-  return map(orderedVaults, (vault) => vault.address);
+const getVaultsSortedByAlias = createSelector(getAllVaults, (vaults) => {
+  return orderBy(vaults, [(vault) => vault.name.toLowerCase()]);
 });
 
 // For any selectors based on numerical sort, we default empty values to -9999 so that they fall to
 // the bottom of the sorted result.
 
-const getVaultsAddressesSortedByApy = createSelector(getAllVaults, (vaults) => {
-  const orderedVaults = orderBy(
-    vaults,
-    [(vault) => vault.metadata.apy.recommended || -9999],
-    ["desc"]
-  );
-  return map(orderedVaults, (vault) => vault.address);
+const getVaultsSortedByApy = createSelector(getAllVaults, (vaults) => {
+  return orderBy(vaults, [(vault) => vault.metadata.apy.recommended || -9999], ["desc"]);
 });
 
-const getVaultsAddressesSortedByVaultHoldings = createSelector(getAllVaults, (vaults) => {
-  const orderedVaults = orderBy(
+const getVaultsSortedByVaultHoldings = createSelector(getAllVaults, (vaults) => {
+  return orderBy(
     vaults,
     [(vault) => Number(vault.underlyingTokenBalance.amountUsdc) || -9999],
     ["desc"]
   );
-  return map(orderedVaults, (vault) => vault.address);
 });
 
-const getVaultsAddressesSortedByUserHoldings = createSelector(
+const getVaultsSortedByUserHoldings = createSelector(
   getAllVaults,
   getUserBalances,
   (vaults, userBalances) => {
-    const orderedVaults = orderBy(
+    return orderBy(
       vaults,
       [(vault) => Number(userBalances[vault.address]?.amountUsdc) || -9999],
       ["desc"]
     );
-    return map(orderedVaults, (vault) => vault.address);
   }
 );
 
-const getVaultsAddressesSortedByUserEarnings = createSelector(
+const getVaultsSortedByUserEarnings = createSelector(
   getAllVaults,
   getUserAllEarnings,
   (vaults, userEarnings) => {
-    const orderedVaults = orderBy(
+    return orderBy(
       vaults,
       [(vault) => Number(userEarnings[vault.address]?.amountUsdc) || -9999],
       ["desc"]
     );
-    return map(orderedVaults, (vault) => vault.address);
   }
 );
 
-const getSortedVaultAddresses = createSelector(
+const getSortedVaults = createSelector(
   getVaultSortField,
-  getVaultsAddressesSortedByAlias,
-  getVaultsAddressesSortedByApy,
-  getVaultsAddressesSortedByVaultHoldings,
-  getVaultsAddressesSortedByUserHoldings,
-  getVaultsAddressesSortedByUserEarnings,
+  getVaultsSortedByAlias,
+  getVaultsSortedByApy,
+  getVaultsSortedByVaultHoldings,
+  getVaultsSortedByUserHoldings,
+  getVaultsSortedByUserEarnings,
   (
     vaultSortField,
-    vaultsAddressesSortedByAlias,
-    vaultsAddressesSortedByApy,
-    vaultsAddressesSortedByVaultHoldings,
-    vaultsAddressesSortedByUserHoldings,
-    vaultsAddressesSortedByUserEarnings
+    vaultsSortedByAlias,
+    vaultsSortedByApy,
+    vaultsSortedByVaultHoldings,
+    vaultsSortedByUserHoldings,
+    vaultsSortedByUserEarnings
   ) => {
     const sortFieldSelectionResultMapping = {
-      "Vault name": vaultsAddressesSortedByAlias,
-      APY: vaultsAddressesSortedByApy,
-      "Vault holdings (in USDC)": vaultsAddressesSortedByVaultHoldings,
-      "User holdings (in USDC)": vaultsAddressesSortedByUserHoldings,
-      "User earnings (in USDC)": vaultsAddressesSortedByUserEarnings,
+      "Vault name": vaultsSortedByAlias,
+      APY: vaultsSortedByApy,
+      "Vault holdings (in USDC)": vaultsSortedByVaultHoldings,
+      "User holdings (in USDC)": vaultsSortedByUserHoldings,
+      "User earnings (in USDC)": vaultsSortedByUserEarnings,
     };
 
     if (!has(sortFieldSelectionResultMapping, vaultSortField)) {
@@ -88,4 +79,4 @@ const getSortedVaultAddresses = createSelector(
   }
 );
 
-export { getSortedVaultAddresses };
+export { getSortedVaults };
