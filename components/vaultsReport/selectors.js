@@ -9,7 +9,7 @@ import { filter, orderBy, has } from "lodash";
 import createCachedSelector from "re-reselect";
 import { createSelector } from "reselect";
 
-const getAllTokens = (state) => state.vaultsReport.tokens.data;
+const getAllTokens = (state) => state.vaultsReport.underlyingTokens.data;
 
 const getToken = createCachedSelector(
   getAllTokens,

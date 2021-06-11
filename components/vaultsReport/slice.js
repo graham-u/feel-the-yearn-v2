@@ -1,82 +1,45 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { camelCase } from "lodash";
 
-const vaultSubSlice = {
-  initialState: {
-    vaults: {
-      data: {},
-    },
-    loading: false,
-    loaded: false,
-    error: false,
-  },
-  reducers: {
-    fetchVaults(state) {
-      state.loading = true;
-      state.error = false;
-    },
-    fetchVaultsSuccess(state, action) {
-      const { vaults } = action.payload;
-      state.vaults.data = vaults;
-      state.loading = false;
-      state.loaded = true;
-    },
-    fetchVaultsFailure(state, action) {
-      state.loading = false;
-      state.error = true;
-    },
-  },
-};
+// Key should be pluralised description of what is being fetch / stored, e.g. vaults, underlyingTokens.
+function createLoadedDataSubSlice(key) {
+  const fetchReducerName = camelCase(`fetch ${key}`);
+  const successReducerName = camelCase(`fetch ${key}Success`);
+  const failureReducerName = camelCase(`fetch ${key}Failure`);
 
-const underlyingTokensSubSlice = {
-  initialState: {
-    tokens: {
-      data: {},
+  const subSlice = {
+    initialState: {
+      [key]: {
+        data: {},
+        loading: false,
+        loaded: false,
+        error: false,
+      },
     },
-    loading: false,
-    loaded: false,
-    error: false,
-  },
-  reducers: {
-    fetchTokens(state) {
-      state.tokens.loading = true;
-      state.tokens.error = false;
+    reducers: {
+      [fetchReducerName](state) {
+        state[key].loading = true;
+        state[key].error = false;
+      },
+      [successReducerName](state, action) {
+        // this function depends upon action payload being keyed by key parameter passed above.
+        state[key].data = action.payload[key];
+        state[key].loading = false;
+        state[key].loaded = true;
+      },
+      [failureReducerName](state) {
+        state[key].loading = false;
+        state[key].error = true;
+      },
     },
-    fetchTokensSuccess(state, action) {
-      const { tokens } = action.payload;
-      state.tokens.data = tokens;
-      state.tokens.loading = false;
-      state.tokens.loaded = true;
-    },
-    fetchTokensFailure(state, action) {
-      state.tokens.loading = false;
-      state.tokens.error = true;
-    },
-  },
-};
+  };
 
-const userPositionsSubSlice = {
-  initialState: {
-    userPositions: {
-      data: {},
-      loading: false,
-      error: false,
-    },
-  },
-  reducers: {
-    fetchUserPositions(state) {
-      state.userPositions.loading = true;
-      state.userPositions.error = false;
-    },
-    fetchUserPositionsSuccess(state, action) {
-      state.userPositions.data = action.payload;
-      state.userPositions.loading = false;
-    },
-    fetchUserPositionsFailure(state, action) {
-      state.userPositions.loading = false;
-      state.userPositions.error = true;
-    },
-  },
-};
+  return subSlice;
+}
+
+const vaultSubSlice = createLoadedDataSubSlice("vaults");
+const underlyingTokensSubSlice = createLoadedDataSubSlice("underlyingTokens");
+const userPositionsSubSlice = createLoadedDataSubSlice("userPositions");
 
 const slice = createSlice({
   name: "vaultsReport",

@@ -20,17 +20,17 @@ function* fetchVaults() {
   }
 }
 
-function* fetchTokens() {
+function* fetchUnderlyingTokens() {
   try {
     let tokens = yield call([yearn.vaults, yearn.vaults.tokens]);
 
     // Transform into object keyed by vault address
     tokens = keyBy(tokens, "address");
 
-    yield put(actions.fetchTokensSuccess({ tokens }));
+    yield put(actions.fetchUnderlyingTokensSuccess({ underlyingTokens: tokens }));
   } catch (error) {
     console.log(error);
-    yield put(actions.fetchUserPositionsFailure());
+    yield put(actions.fetchUnderlyingTokensFailure());
   }
 }
 
@@ -45,7 +45,7 @@ function* fetchUserPositions(action) {
 
     // Transform into object keyed by vault address
     userPositions = keyBy(userPositions, "assetAddress");
-    yield put(actions.fetchUserPositionsSuccess(userPositions));
+    yield put(actions.fetchUserPositionsSuccess({ userPositions }));
   } catch (error) {
     console.log(error);
     yield put(actions.fetchUserPositionsFailure());
@@ -54,6 +54,6 @@ function* fetchUserPositions(action) {
 
 export default function* vaultsReportSaga() {
   yield takeEvery(actions.fetchVaults, fetchVaults);
-  yield takeEvery(actions.fetchTokens, fetchTokens);
+  yield takeEvery(actions.fetchUnderlyingTokens, fetchUnderlyingTokens);
   yield takeEvery(actions.fetchUserPositions, fetchUserPositions);
 }
