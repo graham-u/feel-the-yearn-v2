@@ -1,5 +1,5 @@
 import { useAddress } from "components/connectionProvider/hooks";
-import { getReportVaults } from "components/vaultsReport/selectors";
+import { getReportVaults, getVaultsLoading } from "components/vaultsReport/selectors";
 import Vault from "components/vaultsReport/vault";
 import { isEmpty, map } from "lodash";
 import { useEffect } from "react";
@@ -8,6 +8,8 @@ import { actions } from "./slice";
 
 function VaultsReport() {
   const dispatch = useDispatch();
+
+  const vaultsLoading = useSelector(getVaultsLoading);
 
   useEffect(() => {
     dispatch(actions.fetchVaults());
@@ -23,6 +25,10 @@ function VaultsReport() {
   }, [userAddress]);
 
   const reportVaultAddresses = map(useSelector(getReportVaults), (vault) => vault.address);
+
+  if (vaultsLoading) {
+    return "Vaults loading...";
+  }
 
   return (
     <>

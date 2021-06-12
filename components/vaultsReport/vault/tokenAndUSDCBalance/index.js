@@ -1,6 +1,6 @@
 import { Typography } from "@material-ui/core";
 import { ThemeProvider } from "@material-ui/core/styles";
-import { getToken } from "components/vaultsReport/selectors";
+import { getToken, getUnderlyingTokensLoading } from "components/vaultsReport/selectors";
 import AnimatedTicker from "components/vaultsReport/vault/animatedTicker/AnimatedTicker";
 import TokenLink from "components/vaultsReport/vault/tokenLink";
 import produce, { setAutoFreeze } from "immer";
@@ -19,7 +19,14 @@ function TokenAndUSDCBalance({
   usdcMinShow = 0,
   tokenMinShow = 0,
 }) {
+  const tokensLoading = useSelector(getUnderlyingTokensLoading);
+
   const USDCToken = useSelector((state) => getToken(state, USDCAddress));
+
+  if (tokensLoading) {
+    return "Tokens loading";
+  }
+
   const shouldShowUSDCBalance = !isUndefined(usdcBalance) && usdcBalance >= usdcMinShow;
   const shouldShowTokenBalance =
     !isUndefined(token) && !isUndefined(tokenBalance) && tokenBalance >= tokenMinShow;

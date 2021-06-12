@@ -9,6 +9,11 @@ import { filter, orderBy, has } from "lodash";
 import createCachedSelector from "re-reselect";
 import { createSelector } from "reselect";
 
+const getVaultsLoading = (state) => state.vaultsReport.vaults.loading;
+const getUnderlyingTokensLoading = (state) => state.vaultsReport.underlyingTokens.loading;
+const getUserPositionsLoading = (state) => state.vaultsReport.userPositions.loading;
+const getStrategiesLoading = (state) => state.vaultsReport.strategies.loading;
+
 const getAllTokens = (state) => state.vaultsReport.underlyingTokens.data;
 
 const getToken = createCachedSelector(
@@ -125,4 +130,13 @@ const getReportVaults = createSelector(
   }
 );
 
-export { getVaultIcon, getVaultUnderlyingToken, getReportVaults, getToken };
+export {
+  getVaultsLoading,
+  getUnderlyingTokensLoading,
+  getUserPositionsLoading,
+  getStrategiesLoading,
+  getVaultIcon,
+  getVaultUnderlyingToken,
+  getReportVaults,
+  getToken,
+};
