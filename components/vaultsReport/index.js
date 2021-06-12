@@ -12,6 +12,7 @@ function VaultsReport() {
   useEffect(() => {
     dispatch(actions.fetchVaults());
     dispatch(actions.fetchUnderlyingTokens());
+    dispatch(actions.fetchStrategies());
   }, []);
 
   const userAddress = useAddress();

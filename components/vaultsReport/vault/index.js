@@ -2,8 +2,8 @@ import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Grid from "@material-ui/core/Grid";
 import { makeStyles } from "@material-ui/core/styles";
-import { getVault } from "components/vaultsReport/selectors";
-import StrategyInfo from "components/vaultsReport/vault/strategyInfo";
+import { getVault } from "components/vaultsReport/getVaultSelector";
+import StrategyHoldings from "components/vaultsReport/vault/strategyHoldings";
 import UserEarnings from "components/vaultsReport/vault/userEarnings";
 import UserHoldings from "components/vaultsReport/vault/userHoldings";
 import VaultHoldings from "components/vaultsReport/vault/vaultHoldings";
@@ -46,13 +46,13 @@ function Vault({ vaultAddress }) {
             </Grid>
           </Grid>
 
-          <Grid container spacing={1} alignItems="center" item md={layout.data.width}>
+          <Grid container spacing={1} item md={layout.data.width}>
             <Grid item xs={12} sm={3} md={layout.data.vaultHoldings.width}>
               <VaultHoldings vaultAddress={vaultAddress} />
             </Grid>
 
             <Grid item xs={12} sm={3} md={layout.data.strategyHoldings.width}>
-              <StrategyInfo vaultAddress={vaultAddress} />
+              <StrategyHoldings vaultAddress={vaultAddress} />
             </Grid>
 
             <Grid item xs={12} sm={3} md={layout.data.userHoldings.width}>

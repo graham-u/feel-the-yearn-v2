@@ -40,6 +40,7 @@ function createLoadedDataSubSlice(key) {
 const vaultSubSlice = createLoadedDataSubSlice("vaults");
 const underlyingTokensSubSlice = createLoadedDataSubSlice("underlyingTokens");
 const userPositionsSubSlice = createLoadedDataSubSlice("userPositions");
+const strategiesSubSlice = createLoadedDataSubSlice("strategies");
 
 const slice = createSlice({
   name: "vaultsReport",
@@ -47,11 +48,13 @@ const slice = createSlice({
     ...vaultSubSlice.initialState,
     ...underlyingTokensSubSlice.initialState,
     ...userPositionsSubSlice.initialState,
+    ...strategiesSubSlice.initialState,
   },
   reducers: {
     ...vaultSubSlice.reducers,
     ...underlyingTokensSubSlice.reducers,
     ...userPositionsSubSlice.reducers,
+    ...strategiesSubSlice.reducers,
   },
 });
 

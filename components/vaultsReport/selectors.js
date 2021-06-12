@@ -125,4 +125,4 @@ const getReportVaults = createSelector(
   }
 );
 
-export { getAllVaults, getVault, getVaultIcon, getVaultUnderlyingToken, getReportVaults };
+export { getVaultIcon, getVaultUnderlyingToken, getReportVaults, getToken };
