@@ -19,6 +19,11 @@ const announcements = [
       "You can now choose to show only vaults you are (or previously were) invested in, see visibility settings in the settings menu.",
     date: "2021-06-08",
   },
+  {
+    id: "showStrategiesAndHoldings",
+    message: "All strategies now listed (and linked) for each vault along with their total assets.",
+    date: "2021-06-13",
+  },
 ];
 
 export { errorMessages, announcements, announcementDurationInDays };

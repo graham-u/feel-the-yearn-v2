@@ -35,6 +35,16 @@ function About() {
       <ul>
         <li>Updated site to work with Yearn SDK</li>
       </ul>
+      <T variant={"h6"} component={"h3"}>
+        13th June 2021
+      </T>
+      <ul>
+        <li>
+          Choose to show only vaults you are (or previously were) invested in, see visibility
+          settings in the settings menu.
+        </li>
+        <li>All strategies listed (and linked) for each vault along with their total assets</li>
+      </ul>
     </>
   );
 }
