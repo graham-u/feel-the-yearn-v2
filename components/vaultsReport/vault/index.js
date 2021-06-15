@@ -6,23 +6,18 @@ import { getVault } from "components/vaultsReport/getVaultSelector";
 import StrategyHoldings from "components/vaultsReport/vault/strategyHoldings";
 import UserEarnings from "components/vaultsReport/vault/userEarnings";
 import UserHoldings from "components/vaultsReport/vault/userHoldings";
-import VaultHoldings from "components/vaultsReport/vault/vaultHoldings";
 import VaultOverview from "components/vaultsReport/vault/vaultOverview";
 import { useSelector } from "react-redux";
 
 const layout = {
-  overview: {
+  vaultData: {
     width: 4,
-    vaultDetails: {
-      width: 12,
-    },
   },
-  data: {
-    width: 8,
-    vaultHoldings: { width: 3 },
-    strategyHoldings: { width: 3 },
-    userHoldings: { width: 3 },
-    userEarnings: { width: 3 },
+  strategyData: {
+    width: 5,
+  },
+  userData: {
+    width: 3,
   },
 };
 
@@ -40,27 +35,22 @@ function Vault({ vaultAddress }) {
     <Card className={cardClasses.root}>
       <CardContent>
         <Grid container spacing={1}>
-          <Grid container spacing={1} item md={layout.overview.width}>
-            <Grid item xs={12} md={layout.overview.vaultDetails.width}>
-              <VaultOverview vault={vault} />
-            </Grid>
+          <Grid item xs={12} md={layout.vaultData.width}>
+            <VaultOverview vault={vault} />
           </Grid>
 
-          <Grid container spacing={1} item md={layout.data.width}>
-            <Grid item xs={12} sm={3} md={layout.data.vaultHoldings.width}>
-              <VaultHoldings vaultAddress={vaultAddress} />
-            </Grid>
+          <Grid item xs={12} md={layout.strategyData.width}>
+            <StrategyHoldings vaultAddress={vaultAddress} />
+          </Grid>
 
-            <Grid item xs={12} sm={3} md={layout.data.strategyHoldings.width}>
-              <StrategyHoldings vaultAddress={vaultAddress} />
-            </Grid>
-
-            <Grid item xs={12} sm={3} md={layout.data.userHoldings.width}>
-              <UserHoldings vaultAddress={vaultAddress} />
-            </Grid>
-
-            <Grid item xs={12} sm={3} md={layout.data.userEarnings.width}>
-              <UserEarnings vaultAddress={vaultAddress} />
+          <Grid item xs={12} md={layout.userData.width}>
+            <Grid container spacing={1}>
+              <Grid item xs={12} md={6}>
+                <UserHoldings vaultAddress={vaultAddress} />
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <UserEarnings vaultAddress={vaultAddress} />
+              </Grid>
             </Grid>
           </Grid>
         </Grid>

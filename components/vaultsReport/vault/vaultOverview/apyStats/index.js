@@ -1,4 +1,5 @@
 import Typography from "@material-ui/core/Typography";
+import ReportLabel from "components/vaultsReport/vault/reportLabel";
 
 function ApyStats({ APYData }) {
   const growthResult = APYData?.recommended
@@ -10,7 +11,8 @@ function ApyStats({ APYData }) {
 
   return (
     <>
-      <Typography variant="body1">APY: {growthResult}</Typography>
+      <ReportLabel>APY</ReportLabel>
+      <Typography variant="body1">{growthResult}</Typography>
     </>
   );
 }
