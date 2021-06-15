@@ -24,6 +24,11 @@ const announcements = [
     message: "All strategies now listed (and linked) for each vault along with their total assets.",
     date: "2021-06-13",
   },
+  {
+    id: "showStrategiesPercentagesAndPieChart",
+    message: "Strategy holdings percentages and pie chart breakdown added",
+    date: "2021-06-15",
+  },
 ];
 
 export { errorMessages, announcements, announcementDurationInDays };

@@ -30,10 +30,10 @@ function About() {
         What's new
       </T>
       <T variant={"h6"} component={"h3"}>
-        7th June 2021
+        15th June 2021
       </T>
       <ul>
-        <li>Updated site to work with Yearn SDK</li>
+        <li>Add strategy holdings percentages and strategy holdings breakdown pie chart.</li>
       </ul>
       <T variant={"h6"} component={"h3"}>
         13th June 2021
@@ -44,6 +44,12 @@ function About() {
           settings in the settings menu.
         </li>
         <li>All strategies listed (and linked) for each vault along with their total assets</li>
+      </ul>
+      <T variant={"h6"} component={"h3"}>
+        7th June 2021
+      </T>
+      <ul>
+        <li>Updated site to work with Yearn SDK</li>
       </ul>
     </>
   );
