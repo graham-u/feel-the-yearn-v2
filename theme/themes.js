@@ -1,4 +1,5 @@
 import { createMuiTheme, responsiveFontSizes } from "@material-ui/core/styles";
+import { createTheme } from "@material-ui/core/styles";
 import { memoize } from "lodash";
 
 const sharedThemeConfig = {
@@ -136,7 +137,7 @@ const themes = {
 const themeNames = Object.keys(themes);
 
 const getTheme = memoize((themeName) => {
-  return responsiveFontSizes(createMuiTheme(themes[themeName]));
+  return responsiveFontSizes(createTheme(themes[themeName]));
 });
 
 export { themes, themeNames, getTheme };
