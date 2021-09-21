@@ -25,7 +25,7 @@ function Header() {
 
   return (
     <AppBar position="static" classes={{ root: appBarClasses.root }}>
-      <Grid container justify="space-between">
+      <Grid container justifyContent="space-between">
         <Grid item>
           <Typography component="h1" variant="h4" display="inline" gutterBottom>
             Feel the Yearn

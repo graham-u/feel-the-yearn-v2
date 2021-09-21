@@ -12,7 +12,7 @@ function CloseButton() {
   };
 
   return (
-    <Grid container justify="flex-end">
+    <Grid container justifyContent="flex-end">
       <Grid item>
         <IconButton
           size="small"
