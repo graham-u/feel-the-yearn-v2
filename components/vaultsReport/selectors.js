@@ -40,7 +40,7 @@ const getVaultsSortedByAlias = createSelector(getAllVaults, (vaults) => {
 // the bottom of the sorted result.
 
 const getVaultsSortedByApy = createSelector(getAllVaults, (vaults) => {
-  return orderBy(vaults, [(vault) => vault.metadata.apy.recommended || -9999], ["desc"]);
+  return orderBy(vaults, [(vault) => vault.metadata?.apy?.recommended || -9999], ["desc"]);
 });
 
 const getVaultsSortedByVaultHoldings = createSelector(getAllVaults, (vaults) => {
