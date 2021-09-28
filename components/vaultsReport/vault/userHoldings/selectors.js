@@ -1,11 +1,14 @@
-import { getVault } from "components/vaultsReport/getVaultSelector";
 import { mapValues } from "lodash";
 import createCachedSelector from "re-reselect";
-import normalizedValue from "utils/normalizedValue";
 
 const getUserBalances = (state) => {
-  const balances = mapValues(state.vaultsReport.userPositions.data, (position) => {
-    return mapValues(position.balance, (balance) => Number(balance));
+  const holdings = state.vaultsReport.userHoldings.data;
+
+  const balances = mapValues(holdings, (position) => {
+    return {
+      balance: Number(position.amount),
+      balanceUsdc: Number(position.amountUsdc),
+    };
   });
 
   return balances;
@@ -13,17 +16,8 @@ const getUserBalances = (state) => {
 
 const getUserBalance = createCachedSelector(
   getUserBalances,
-  getVault,
   (state, vaultAddress) => vaultAddress,
-  (userBalances, vault, vaultAddress) => {
-    const defaultBalances = { amount: 0, amountUsdc: 0 };
-    let balance = userBalances[vaultAddress] || defaultBalances;
-
-    balance.amount = normalizedValue(balance.amount, vault.decimals);
-    balance.amountUsdc = normalizedValue(balance.amountUsdc, 6);
-
-    return balance;
-  }
+  (userBalances, vaultAddress) => userBalances[vaultAddress] || { balance: 0, balanceUsdc: 0 }
 )((state, vaultAddress) => vaultAddress);
 
 export { getUserBalances, getUserBalance };

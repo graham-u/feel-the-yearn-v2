@@ -1,12 +1,13 @@
+import { getAllTokens } from "components/vaultsReport/getTokensSelectors";
 import { getVault } from "components/vaultsReport/getVaultSelector";
-import { mapValues } from "lodash";
+import { mapValues, isNumber } from "lodash";
 import createCachedSelector from "re-reselect";
-import normalizedValue from "utils/normalizedValue";
 
 const getUserAllEarnings = (state) => {
-  const allEarnings = mapValues(state.vaultsReport.userPositions.data, (position) => {
-    return mapValues(position.earnings, (earned) => Number(earned));
-  });
+  const allEarnings = mapValues(
+    state.vaultsReport.userEarnings.data.earningsAssetData,
+    (earnings) => Number(earnings.earned)
+  );
 
   return allEarnings;
 };
@@ -14,15 +15,20 @@ const getUserAllEarnings = (state) => {
 const getUserEarnings = createCachedSelector(
   getUserAllEarnings,
   getVault,
+  getAllTokens,
   (state, vaultAddress) => vaultAddress,
-  (userEarnings, vault, vaultAddress) => {
-    const defaultEarnings = { amount: 0, amountUsdc: 0 };
-    let vaultEarnings = userEarnings[vaultAddress] || defaultEarnings;
+  (userEarnings, vault, allTokens, vaultAddress) => {
+    let earnings = { tokenEarnings: 0, usdcEarnings: 0 };
 
-    vaultEarnings.amount = normalizedValue(vaultEarnings.amount, vault.decimals);
-    vaultEarnings.amountUsdc = normalizedValue(vaultEarnings.amountUsdc, 6);
+    const userHasEarnings = isNumber(userEarnings[vaultAddress]);
+    if (userHasEarnings) {
+      earnings.usdcEarnings = userEarnings[vaultAddress] / 10 ** 6;
 
-    return vaultEarnings;
+      const tokenUsdcPrice = allTokens[vault.token].priceUsdc / 10 ** 6;
+      earnings.tokenEarnings = earnings.usdcEarnings / tokenUsdcPrice;
+    }
+
+    return earnings;
   }
 )((state, vaultAddress) => vaultAddress);
 

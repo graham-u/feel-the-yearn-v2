@@ -1,6 +1,7 @@
 import { Typography } from "@material-ui/core";
 import { ThemeProvider } from "@material-ui/core/styles";
-import { getToken, getUnderlyingTokensLoading } from "components/vaultsReport/selectors";
+import { getToken } from "components/vaultsReport/getTokensSelectors";
+import { getUnderlyingTokensLoading } from "components/vaultsReport/selectors";
 import AnimatedTicker from "components/vaultsReport/vault/animatedTicker/AnimatedTicker";
 import TokenLink from "components/vaultsReport/vault/tokenLink";
 import produce, { setAutoFreeze } from "immer";

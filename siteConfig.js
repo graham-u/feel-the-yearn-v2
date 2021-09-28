@@ -1,5 +1,6 @@
 const errorMessages = {
-  fetchUserPositionsFailure: "Failed to fetch user positions.",
+  fetchUserHoldingsFailure: "Failed to fetch user holdings.",
+  fetchUserEarningsFailure: "Failed to fetch user earnings.",
   fetchVaultsFailure: "Failed to fetch vault data.",
   fetchTokensFailure: "Failed to fetch token data.",
 };

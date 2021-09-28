@@ -2,6 +2,7 @@ import {
   getVaultVisibilitySetting,
   getVaultSortField,
 } from "components/pageContainer/header/settingsPanel/selectors";
+import { getToken, getAllTokens } from "components/vaultsReport/getTokensSelectors";
 import { getVault, getAllVaults } from "components/vaultsReport/getVaultSelector";
 import { getUserAllEarnings } from "components/vaultsReport/vault/userEarnings/selectors";
 import { getUserBalances } from "components/vaultsReport/vault/userHoldings/selectors";
@@ -10,19 +11,41 @@ import createCachedSelector from "re-reselect";
 import { createSelector } from "reselect";
 
 const getVaultsLoading = (state) => state.vaultsReport.vaults.loading;
-const getUnderlyingTokensLoading = (state) => state.vaultsReport.underlyingTokens.loading;
-const getUserPositionsLoading = (state) => state.vaultsReport.userPositions.loading;
 const getStrategiesLoading = (state) => state.vaultsReport.strategies.loading;
+const getUnderlyingTokensLoading = (state) => state.vaultsReport.underlyingTokens.loading;
+const getUserHoldingsLoading = (state) => state.vaultsReport.userHoldings.loading;
+const getUserEarningsLoading = (state) => state.vaultsReport.userEarnings.loading;
 
-const getAllTokens = (state) => state.vaultsReport.underlyingTokens.data;
+const getVaultsLoaded = (state) => state.vaultsReport.vaults.loaded;
+const getStrategiesLoaded = (state) => state.vaultsReport.strategies.loaded;
+const getUnderlyingTokensLoaded = (state) => state.vaultsReport.underlyingTokens.loaded;
+const getUserHoldingsLoaded = (state) => state.vaultsReport.userHoldings.loaded;
+const getUserEarningsLoaded = (state) => state.vaultsReport.userEarnings.loaded;
 
-const getToken = createCachedSelector(
-  getAllTokens,
-  (state, tokenAddress) => tokenAddress,
-  (allTokens, tokenAddress) => {
-    return allTokens[tokenAddress];
+const getLoadingComplete = createCachedSelector(
+  getVaultsLoaded,
+  getStrategiesLoaded,
+  getUnderlyingTokensLoaded,
+  getUserHoldingsLoaded,
+  getUserEarningsLoaded,
+  (state, userAddress) => userAddress || "",
+  (
+    vaultsLoaded,
+    strategiesLoaded,
+    underlyingTokensLoaded,
+    userHoldingsLoaded,
+    userEarningsLoaded,
+    userAddress
+  ) => {
+    let dataLoaded = vaultsLoaded && strategiesLoaded && underlyingTokensLoaded;
+
+    if (userAddress) {
+      dataLoaded = dataLoaded && userHoldingsLoaded && userEarningsLoaded;
+    }
+
+    return dataLoaded;
   }
-)((state, tokenAddress) => tokenAddress);
+)((state, userAddress) => userAddress);
 
 const getVaultIcon = createCachedSelector(getToken, (token) => {
   return token?.icon;
@@ -133,10 +156,11 @@ const getReportVaults = createSelector(
 export {
   getVaultsLoading,
   getUnderlyingTokensLoading,
-  getUserPositionsLoading,
+  getUserHoldingsLoading,
+  getUserEarningsLoading,
   getStrategiesLoading,
+  getLoadingComplete,
   getVaultIcon,
   getVaultUnderlyingToken,
   getReportVaults,
-  getToken,
 };

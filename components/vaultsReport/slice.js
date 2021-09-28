@@ -39,7 +39,8 @@ function createLoadedDataSubSlice(key) {
 
 const vaultSubSlice = createLoadedDataSubSlice("vaults");
 const underlyingTokensSubSlice = createLoadedDataSubSlice("underlyingTokens");
-const userPositionsSubSlice = createLoadedDataSubSlice("userPositions");
+const userHoldingsSubSlice = createLoadedDataSubSlice("userHoldings");
+const userEarningsSubSlice = createLoadedDataSubSlice("userEarnings");
 const strategiesSubSlice = createLoadedDataSubSlice("strategies");
 
 const slice = createSlice({
@@ -47,13 +48,15 @@ const slice = createSlice({
   initialState: {
     ...vaultSubSlice.initialState,
     ...underlyingTokensSubSlice.initialState,
-    ...userPositionsSubSlice.initialState,
+    ...userHoldingsSubSlice.initialState,
+    ...userEarningsSubSlice.initialState,
     ...strategiesSubSlice.initialState,
   },
   reducers: {
     ...vaultSubSlice.reducers,
     ...underlyingTokensSubSlice.reducers,
-    ...userPositionsSubSlice.reducers,
+    ...userHoldingsSubSlice.reducers,
+    ...userEarningsSubSlice.reducers,
     ...strategiesSubSlice.reducers,
   },
 });
