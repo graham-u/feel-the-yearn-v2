@@ -45,7 +45,7 @@ const getLoadingComplete = createCachedSelector(
 
     return dataLoaded;
   }
-)((state, userAddress) => userAddress);
+)((state, userAddress) => userAddress || "");
 
 const getVaultIcon = createCachedSelector(getToken, (token) => {
   return token?.icon;

@@ -20,6 +20,11 @@ function LoadingStatus() {
     "user earnings": useSelector(getUserEarningsLoading),
   };
 
+  if (!userAddress) {
+    delete statuses["user holdings"];
+    delete statuses["user earnings"];
+  }
+
   return map(statuses, (loading, type) => {
     return (
       <p key={type} style={{ color: loading ? "Red" : "Green" }}>
