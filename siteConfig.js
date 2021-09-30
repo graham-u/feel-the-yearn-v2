@@ -1,62 +1,35 @@
 const errorMessages = {
-  fetchUserStatsFailure: "Failed to fetch user stats. Lifetime earnings may be missing / stale.",
-  fetchVaultsFailure: "Failed to fetch vault registry data. Vaults cannot be shown.",
-  fetchWantTokenPricesFailure:
-    "Failed to fetch token prices. Fiat balances may be missing / stale.",
-  fetchVaultsApyFailure:
-    "Failed to fetch vault performance stats. Vault returns cannot currently be shown.",
+  fetchUserHoldingsFailure: "Failed to fetch user holdings.",
+  fetchUserEarningsFailure: "Failed to fetch user earnings.",
+  fetchVaultsFailure: "Failed to fetch vault data.",
+  fetchTokensFailure: "Failed to fetch token data.",
 };
 
-const announcementDurationInDays = 7;
+const announcementDurationInDays = 28;
 
 const announcements = [
   {
-    id: "vaultSortingRelease",
-    message: "You can now re-order vaults by any field! Configure via settings button.",
-    date: "2020-12-08",
+    id: "initialBetaRelease",
+    message:
+      "Welcome to the new beta version, powered by the Yearn SDK, please see about section for more info",
+    date: "2021-06-07",
   },
   {
-    id: "matrixThemeRelease",
+    id: "vaultVisibilityRelease",
     message:
-      "Unfortunately, no one can be told what The Matrix is. You'll have to see it for yourself (in the settings menu).",
-    date: "2021-01-03",
+      "You can now choose to show only vaults you are (or previously were) invested in, see visibility settings in the settings menu.",
+    date: "2021-06-08",
+  },
+  {
+    id: "showStrategiesAndHoldings",
+    message: "All strategies now listed (and linked) for each vault along with their total assets.",
+    date: "2021-06-13",
+  },
+  {
+    id: "showStrategiesPercentagesAndPieChart",
+    message: "Strategy holdings percentages and pie chart breakdown added",
+    date: "2021-06-15",
   },
 ];
 
-const fiatCurrencyCodes = [
-  "AUD",
-  "CAD",
-  "CHF",
-  "CNY",
-  "EUR",
-  "GBP",
-  "HKD",
-  "IDR",
-  "INR",
-  "JPY",
-  "KRW",
-  "RUB",
-  "SGD",
-  "THB",
-  "TRY",
-  "TWD",
-  "UAH",
-  "USD",
-  "VND",
-  "ZAR",
-];
-
-const tokenSymbolAliases = {
-  "yDAI+yUSDC+yUSDT+yTUSD": "yCRV",
-  "vcDAI+cUSDC": "cDAI+cUSDC",
-  crvRenWSBTC: "crvBTC",
-  "yDAI+yUSDC+yUSDT+yBUSD": "crvBUSD",
-};
-
-export {
-  errorMessages,
-  fiatCurrencyCodes,
-  tokenSymbolAliases,
-  announcements,
-  announcementDurationInDays,
-};
+export { errorMessages, announcements, announcementDurationInDays };

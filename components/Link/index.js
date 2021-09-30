@@ -14,7 +14,7 @@ function ThemedLink(props) {
         });
       }}
     >
-      <Link {...props} color={"textPrimary"}>
+      <Link {...props} color={"textPrimary"} style={{ overflowWrap: "break-word" }}>
         {props.children}
       </Link>
     </ThemeProvider>

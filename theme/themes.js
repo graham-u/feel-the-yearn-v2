@@ -1,4 +1,5 @@
 import { createMuiTheme, responsiveFontSizes } from "@material-ui/core/styles";
+import { createTheme } from "@material-ui/core/styles";
 import { memoize } from "lodash";
 
 const sharedThemeConfig = {
@@ -15,6 +16,7 @@ const sharedThemeConfig = {
 
     h2: {
       fontSize: "2rem",
+      margin: "2rem 0",
     },
 
     body2: {
@@ -26,6 +28,7 @@ const sharedThemeConfig = {
 
 const redThemeLight = {
   ...sharedThemeConfig,
+  mainColor: "red",
   palette: {
     type: "light",
     primary: {
@@ -42,6 +45,7 @@ const redThemeLight = {
 
 const redThemeDark = {
   ...sharedThemeConfig,
+  mainColor: "red",
   palette: {
     type: "dark",
     primary: {
@@ -58,6 +62,7 @@ const redThemeDark = {
 
 const blueThemeLight = {
   ...sharedThemeConfig,
+  mainColor: "blue",
   palette: {
     type: "light",
     primary: {
@@ -74,6 +79,7 @@ const blueThemeLight = {
 
 const blueThemeDark = {
   ...sharedThemeConfig,
+  mainColor: "blue",
   palette: {
     type: "dark",
     primary: {
@@ -90,6 +96,7 @@ const blueThemeDark = {
 
 const matrixTheme = {
   ...sharedThemeConfig,
+  mainColor: "green",
   container: {
     background:
       "linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), fixed url('/matrix.gif') center/cover",
@@ -130,7 +137,7 @@ const themes = {
 const themeNames = Object.keys(themes);
 
 const getTheme = memoize((themeName) => {
-  return responsiveFontSizes(createMuiTheme(themes[themeName]));
+  return responsiveFontSizes(createTheme(themes[themeName]));
 });
 
 export { themes, themeNames, getTheme };

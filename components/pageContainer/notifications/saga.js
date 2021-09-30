@@ -38,9 +38,8 @@ export default function* notificationsSaga() {
   yield takeEvery(
     [
       vaultsReportActions.fetchVaultsFailure,
-      vaultsReportActions.fetchVaultsApyFailure,
-      vaultsReportActions.fetchWantTokenPricesFailure,
-      vaultsReportActions.fetchUserStatsFailure,
+      vaultsReportActions.fetchUserHoldingsFailure,
+      vaultsReportActions.fetchUserEarningsFailure,
     ],
     handleError
   );

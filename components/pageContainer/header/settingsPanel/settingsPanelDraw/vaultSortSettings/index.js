@@ -9,13 +9,10 @@ import { useDispatch, useSelector } from "react-redux";
 
 const sortFields = [
   "Vault name",
-  "APY (week based)",
-  "APY (month based)",
-  "APY (all time based)",
-  "Vault holdings",
-  "Strategy holdings",
-  "User holdings",
-  "Lifetime earnings",
+  "APY",
+  "Vault holdings (in USDC)",
+  "User holdings (in USDC)",
+  "User earnings (in USDC)",
 ];
 
 function VaultSortSettings() {

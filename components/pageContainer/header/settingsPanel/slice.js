@@ -4,10 +4,10 @@ import { loadSetting } from "utils/settings";
 const nameSpace = "settings";
 
 const initialState = {
-  panelOpen: false,
-  localCurrency: loadSetting("localCurrency") ?? "USD",
+  panelOpen: loadSetting("settingsPanelOPen") ?? true,
   theme: loadSetting("theme") ?? "Red (Light)",
   vaultSortField: loadSetting("vaultSortField") ?? "Vault name",
+  vaultVisibility: loadSetting("vaultVisibility") ?? "allVaults",
 };
 
 const slice = createSlice({
@@ -17,14 +17,14 @@ const slice = createSlice({
     panelToggled(state) {
       state.panelOpen = !state.panelOpen;
     },
-    localCurrencySelected(state, action) {
-      state.localCurrency = action.payload;
-    },
     themeSelected(state, action) {
       state.theme = action.payload;
     },
     vaultSortFieldSelected(state, action) {
       state.vaultSortField = action.payload;
+    },
+    vaultVisibilitySelected(state, action) {
+      state.vaultVisibility = action.payload;
     },
   },
 });

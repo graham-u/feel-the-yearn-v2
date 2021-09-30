@@ -1,22 +1,16 @@
-import { reduce, mapValues, isEmpty, keyBy } from "lodash";
-import { takeEvery, call, put, all } from "redux-saga/effects";
-import { getContractAddressFromKey } from "utils/contractKey";
-import getTokenSymbolAlias from "utils/getTokenSymbolAlias";
-import normalizedValue from "utils/normalizedValue";
-import request from "utils/request";
+import strategiesHelperABI from "abi/strategiesHelper.json";
+import { keyBy, filter, groupBy, map, pickBy, mapValues } from "lodash";
+import { takeEvery, call, put } from "redux-saga/effects";
+import web3 from "utils/web3";
+import yearn from "utils/yearnSDK";
 import { actions } from "./slice";
 
 function* fetchVaults() {
   try {
-    let vaults = yield call(request, "https://api.yearn.tools/vaults");
-    // Swap in our own tokenSymbolAliases as some aliases in the vault differ
-    // from whats seen on the official site.
-    vaults = vaults.map((vault) => {
-      return {
-        ...vault,
-        tokenSymbolAlias: getTokenSymbolAlias(vault.tokenSymbol),
-      };
-    });
+    let vaults = yield call([yearn.vaults, yearn.vaults.get]);
+
+    // Don't show vaults that have available migrations
+    vaults = filter(vaults, (vault) => vault.metadata.migrationAvailable === false);
 
     // Transform into object keyed by vault address
     vaults = keyBy(vaults, "address");
@@ -28,142 +22,92 @@ function* fetchVaults() {
   }
 }
 
-function* fetchWantTokenPrices(action) {
-  const tokenAddresses = action.payload.vaultWantTokens;
-  const vsCurrency = (action.payload.localCurrency ?? "USD").toLowerCase();
-  const uri = `https://api.coingecko.com/api/v3/simple/token_price/ethereum?contract_addresses=TOKEN_ADDRESS&vs_currencies=${vsCurrency}`;
+function* fetchUnderlyingTokens() {
+  try {
+    let tokens = yield call([yearn.vaults, yearn.vaults.tokens]);
 
-  let priceCalls = {};
-  tokenAddresses.forEach((address) => {
-    priceCalls[address] = call(request, uri.replace("TOKEN_ADDRESS", address));
-  });
+    // Transform into object keyed by vault address
+    tokens = keyBy(tokens, "address");
+
+    yield put(actions.fetchUnderlyingTokensSuccess({ underlyingTokens: tokens }));
+  } catch (error) {
+    console.log(error);
+    yield put(actions.fetchUnderlyingTokensFailure());
+  }
+}
+
+function* fetchUserHoldings(action) {
+  const userAddress = action.payload.userAddress;
 
   try {
-    let priceResults = yield all(priceCalls);
+    let userHoldings = yield call([yearn.vaults, yearn.vaults.positionsOf], userAddress);
 
-    // CoinGecko API returns the price keyed by the address (lower case), so we need to tidy the results before storing.
-    priceResults = mapValues(priceResults, (priceResult, key) => {
-      if (isEmpty(priceResult)) {
-        // No price data returned.
-        return null;
-      }
+    // Transform into object keyed by vault address.
+    userHoldings = keyBy(userHoldings, "assetAddress");
 
-      return priceResult[key.toLowerCase()][vsCurrency];
+    // Strip out unneeded data.
+    userHoldings = mapValues(userHoldings, (holding) => {
+      return holding.underlyingTokenBalance;
     });
 
-    yield put(actions.fetchWantTokenPricesSuccess(priceResults));
+    yield put(actions.fetchUserHoldingsSuccess({ userHoldings }));
   } catch (error) {
     console.log(error);
-    yield put(actions.fetchWantTokenPricesFailure());
+    yield put(actions.fetchUserHoldingsFailure());
   }
 }
 
-function* fetchUserStats(action) {
+function* fetchUserEarnings(action) {
   const userAddress = action.payload.userAddress;
-  const uri = `https://api.yearn.tools/user/${userAddress}/vaults/statistics`;
 
   try {
-    let userStats = yield call(request, uri);
+    let userEarnings = yield call([yearn.earnings, yearn.earnings.accountAssetsData], userAddress);
 
-    // Transform array of stats into object keyed by vaultAddress
-    userStats = reduce(
-      userStats,
-      (result, vaultStats) => {
-        result[vaultStats.vaultAddress] = vaultStats;
-        return result;
-      },
-      {}
-    );
+    // Transform into object keyed by vault address.
+    userEarnings.earningsAssetData = keyBy(userEarnings.earningsAssetData, "assetAddress");
 
-    yield put(actions.fetchUserStatsSuccess(userStats));
+    yield put(actions.fetchUserEarningsSuccess({ userEarnings }));
   } catch (error) {
     console.log(error);
-    yield put(actions.fetchUserStatsFailure());
+    yield put(actions.fetchUserEarningsFailure());
   }
 }
 
-function* fetchVaultsApy() {
-  const uri = `https://api.yearn.tools/vaults/apy`;
-
+function* fetchStrategies(action) {
   try {
-    let vaultsApyStats = yield call(request, uri);
-
-    // Transform array of stats into object keyed by vaultAddress
-    vaultsApyStats = reduce(
-      vaultsApyStats,
-      (result, vaultApyStats) => {
-        result[vaultApyStats.address] = vaultApyStats;
-        return result;
-      },
-      {}
+    const strategiesHelperContractAddress = "0xae813841436fe29b95a14ac701afb1502c4cb789";
+    const strategiesContract = new web3.eth.Contract(
+      strategiesHelperABI,
+      strategiesHelperContractAddress
     );
 
-    yield put(actions.fetchVaultsApySuccess(vaultsApyStats));
+    let strategies = yield call(strategiesContract.methods.assetsStrategies().call);
+    let strategyAddresses = yield call(strategiesContract.methods.assetsStrategiesAddresses().call);
+
+    // Tidy up the strategies data returned from assetsStrategies method.
+    strategies = map(strategies, (strategy, index) => {
+      // Convert strategies to objects from arrays, as they have string keys that get lost when written to redux store
+      // as arrays. Also add in address field as its currently missing from assetsStrategies results.
+      strategy = Object.assign({}, strategy, { address: strategyAddresses[index] });
+
+      // Remove numeric keys as these just store duplicate data of descriptive keys.
+      strategy = pickBy(strategy, (property, propertyKey) => isNaN(propertyKey));
+      return strategy;
+    });
+
+    strategies = groupBy(strategies, "vault");
+
+    yield put(actions.fetchStrategiesSuccess({ strategies }));
   } catch (error) {
     console.log(error);
-    yield put(actions.fetchVaultsApyFailure());
-  }
-}
-
-function* updatePricePerFullShare(vaultAddress, pricePerFullShare) {
-  const normalizedPricePerFullShare = normalizedValue(pricePerFullShare, 18);
-  yield put(
-    actions.updatePricePerFullShare({
-      vaultAddress,
-      pricePerFullShare: normalizedPricePerFullShare,
-    })
-  );
-}
-
-const isVaultHoldingsUpdate = (action) => {
-  return action.variable === "balance" && action.name.startsWith("vault:");
-};
-
-const isStrategyHoldingsUpdate = (action) => {
-  return action.variable === "balanceOf" && action.name.startsWith("strategy:");
-};
-
-const isUserHoldingsUpdate = (action) => {
-  return (
-    action.variable === "balanceOf" && action.name.startsWith("vault:") && !isEmpty(action.args)
-  );
-};
-
-const isPricePerFullShareUpdate = (action) => {
-  return action.variable === "getPricePerFullShare";
-};
-
-/*
- * Receives all GOT_CONTRACT_VAR actions from drizzle, determines their meaning and delegates
- * to various handlers.
- */
-function* dispatchContactVariableUpdateHandler(action) {
-  if (isVaultHoldingsUpdate(action)) {
-    const vaultAddress = getContractAddressFromKey(action.name);
-    yield put(actions.receivedRawVaultHoldings({ vaultAddress, rawHoldings: action.value }));
-  }
-
-  if (isStrategyHoldingsUpdate(action)) {
-    const strategyAddress = getContractAddressFromKey(action.name);
-    yield put(actions.receivedRawStrategyHoldings({ strategyAddress, rawHoldings: action.value }));
-  }
-
-  if (isUserHoldingsUpdate(action)) {
-    const vaultAddress = getContractAddressFromKey(action.name);
-    yield put(actions.receivedRawUserYvHoldings({ vaultAddress, rawYvHoldings: action.value }));
-  }
-
-  if (isPricePerFullShareUpdate(action)) {
-    const vaultAddress = getContractAddressFromKey(action.name);
-    const rawPricePerFullShare = action.value;
-    yield* updatePricePerFullShare(vaultAddress, rawPricePerFullShare);
+    yield put(actions.fetchStrategiesFailure());
   }
 }
 
 export default function* vaultsReportSaga() {
   yield takeEvery(actions.fetchVaults, fetchVaults);
-  yield takeEvery(actions.fetchWantTokenPrices, fetchWantTokenPrices);
-  yield takeEvery(actions.fetchUserStats, fetchUserStats);
-  yield takeEvery(actions.fetchVaultsApy, fetchVaultsApy);
-  yield takeEvery("GOT_CONTRACT_VAR", dispatchContactVariableUpdateHandler);
+  yield takeEvery(actions.fetchUnderlyingTokens, fetchUnderlyingTokens);
+  yield takeEvery(actions.fetchUserHoldings, fetchUserHoldings);
+  yield takeEvery(actions.fetchUserEarnings, fetchUserEarnings);
+  yield takeEvery(actions.fetchStrategies, fetchStrategies);
 }

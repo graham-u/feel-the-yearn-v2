@@ -5,6 +5,7 @@ import Web3 from "web3";
 import ConnectionContext from "./context";
 import { initOnboard, initNotify } from "./services";
 import { actions } from "./slice";
+import yearn from "utils/yearnSDK";
 
 export default function ConnectionProvider(props) {
   const { children } = props;
@@ -16,20 +17,28 @@ export default function ConnectionProvider(props) {
   const [notify, setNotify] = useState(null);
   const [web3, setWeb3] = useState(null);
   const [connected, setConnected] = useState(false);
+  const [yearnSDK, setYearnSDK] = useState(null);
 
   const themeName = useSelector(getCurrentThemeName);
   const usingDarkMode = themeName.includes("Dark");
 
+  const initializeWeb3 = () => {
+    const web3 = new Web3(process.env.NEXT_PUBLIC_WEB3_PROVIDER);
+    web3.eth.net.isListening().then(() => {
+      dispatch(actions.connected());
+      setConnected(true);
+    });
+    setWeb3(web3);
+  };
+
+  const initializeYearnSDK = () => {
+    setYearnSDK(yearn);
+  };
+
   const initializeWallet = () => {
     const selectWallet = (newWallet) => {
       if (newWallet.provider) {
-        const newWeb3 = new Web3(newWallet.provider);
-        newWeb3.eth.net.isListening().then(() => {
-          dispatch(actions.connected());
-          setConnected(true);
-        });
         setWallet(newWallet);
-        setWeb3(newWeb3);
         window.localStorage.setItem("selectedWallet", newWallet.name);
       } else {
         setWallet({});
@@ -49,12 +58,6 @@ export default function ConnectionProvider(props) {
   const addressChanged = () => {
     if (address) {
       dispatch(actions.addressChanged(address));
-
-      // Keep drizzle's account state in sync
-      dispatch({
-        type: "ACCOUNTS_FETCHED",
-        accounts: [address],
-      });
     }
   };
 
@@ -71,6 +74,8 @@ export default function ConnectionProvider(props) {
     }
   };
 
+  useEffect(initializeWeb3, []);
+  useEffect(initializeYearnSDK, []);
   useEffect(initializeWallet, []);
 
   // Update dark mode when theme is dark.
@@ -107,6 +112,7 @@ export default function ConnectionProvider(props) {
         selectWallet: selectWallet.current,
         web3,
         connected,
+        yearnSDK,
         notify,
       }}
     >

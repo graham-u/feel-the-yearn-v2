@@ -1,30 +1,31 @@
-import {
-  getVaultWantToken,
-  getUserHoldings,
-  getUserFiatValue,
-} from "components/vaultsReport/selectors";
+import { getVaultUnderlyingToken, getUserHoldingsLoading } from "components/vaultsReport/selectors";
 import ReportLabel from "components/vaultsReport/vault/reportLabel";
-import TokenAndFiatBalance from "components/vaultsReport/vault/tokenAndFiatBalance";
+import TokenAndUSDCBalance from "components/vaultsReport/vault/tokenAndUSDCBalance";
+import { getUserBalance } from "components/vaultsReport/vault/userHoldings/selectors";
 import { useSelector } from "react-redux";
+import normalizedValue from "utils/normalizedValue";
 
-function UserHoldings({ vault }) {
-  const { address: vaultAddress } = vault;
+function UserHoldings({ vaultAddress }) {
+  const userHoldingsLoading = useSelector(getUserHoldingsLoading);
 
-  const userHoldings = useSelector((state) => getUserHoldings(state, vaultAddress));
-  const fiatValue = useSelector((state) => getUserFiatValue(state, vaultAddress));
-  const wantToken = useSelector((state) => getVaultWantToken(state, vaultAddress));
+  const userBalance = useSelector((state) => getUserBalance(state, vaultAddress));
+  const underlyingToken = useSelector((state) => getVaultUnderlyingToken(state, vaultAddress));
+
+  userBalance.balance = normalizedValue(userBalance.balance, underlyingToken.decimals);
+  userBalance.balanceUsdc = normalizedValue(userBalance.balanceUsdc, 6);
 
   return (
     <>
       <ReportLabel>User holdings</ReportLabel>
-      <TokenAndFiatBalance
-        tokenBalance={userHoldings}
-        fiatBalance={fiatValue}
-        token={wantToken}
-        fiatMinShow={0.01}
-        tokenMinShow={0.00001}
-        tokenDisplayPrecision={4}
-      />
+      {userHoldingsLoading ? (
+        "User holdings loading"
+      ) : (
+        <TokenAndUSDCBalance
+          tokenBalance={userBalance.balance}
+          usdcBalance={userBalance.balanceUsdc}
+          token={underlyingToken}
+        />
+      )}
     </>
   );
 }

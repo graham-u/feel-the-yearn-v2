@@ -1,276 +1,162 @@
-import { mapValues, transform, isUndefined, mapKeys } from "lodash";
-
+import {
+  getVaultVisibilitySetting,
+  getVaultSortField,
+} from "components/pageContainer/header/settingsPanel/selectors";
+import { getToken, getAllTokens } from "components/vaultsReport/getTokensSelectors";
+import { getVault, getAllVaults } from "components/vaultsReport/getVaultSelector";
+import { getUserAllEarnings } from "components/vaultsReport/vault/userEarnings/selectors";
+import { getUserBalances } from "components/vaultsReport/vault/userHoldings/selectors";
+import { filter, orderBy, has } from "lodash";
 import createCachedSelector from "re-reselect";
 import { createSelector } from "reselect";
-import normalizedValue from "utils/normalizedValue";
 
-/*
- * Utility function to used by various selectors, primarily to remove selector code duplication.
- * tokenAmounts and vaults are keyed by vault address, tokenPrices are keyed by token address.
- */
-function convertTokenAmountsToFiatAmounts(tokenAmounts, vaults, tokenPrices) {
-  const fiatAmounts = transform(
-    tokenAmounts,
-    (acc, tokenAmount, vaultAddress) => {
-      const tokenAddress = vaults[vaultAddress].tokenAddress;
-      const tokenPrice = tokenPrices[tokenAddress];
-      // Its possible the token prices have not loaded yet, in which case, dont convert yet.
-      // As this is called from selectors, this will be re-run as token prices load / update.
-      if (!isUndefined(tokenPrice)) {
-        acc[vaultAddress] = tokenAmount * tokenPrice;
-      }
-    },
-    {}
-  );
+const getVaultsLoading = (state) => state.vaultsReport.vaults.loading;
+const getStrategiesLoading = (state) => state.vaultsReport.strategies.loading;
+const getUnderlyingTokensLoading = (state) => state.vaultsReport.underlyingTokens.loading;
+const getUserHoldingsLoading = (state) => state.vaultsReport.userHoldings.loading;
+const getUserEarningsLoading = (state) => state.vaultsReport.userEarnings.loading;
 
-  return fiatAmounts;
-}
+const getVaultsLoaded = (state) => state.vaultsReport.vaults.loaded;
+const getStrategiesLoaded = (state) => state.vaultsReport.strategies.loaded;
+const getUnderlyingTokensLoaded = (state) => state.vaultsReport.underlyingTokens.loaded;
+const getUserHoldingsLoaded = (state) => state.vaultsReport.userHoldings.loaded;
+const getUserEarningsLoaded = (state) => state.vaultsReport.userEarnings.loaded;
 
-/*
- * Vault selectors
- */
-const getAllVaults = (state) => state.vaultsReport.vaultRegistry.vaults;
+const getLoadingComplete = createCachedSelector(
+  getVaultsLoaded,
+  getStrategiesLoaded,
+  getUnderlyingTokensLoaded,
+  getUserHoldingsLoaded,
+  getUserEarningsLoaded,
+  (state, userAddress) => userAddress || "",
+  (
+    vaultsLoaded,
+    strategiesLoaded,
+    underlyingTokensLoaded,
+    userHoldingsLoaded,
+    userEarningsLoaded,
+    userAddress
+  ) => {
+    let dataLoaded = vaultsLoaded && strategiesLoaded && underlyingTokensLoaded;
 
-const getAllVaultsKeyedLowerCase = createSelector(getAllVaults, (allVaults) => {
-  const allVaultsKeyedLowerCase = mapKeys(allVaults, (vault, vaultAddress) => {
-    return vaultAddress.toLowerCase();
-  });
+    if (userAddress) {
+      dataLoaded = dataLoaded && userHoldingsLoaded && userEarningsLoaded;
+    }
 
-  return allVaultsKeyedLowerCase;
+    return dataLoaded;
+  }
+)((state, userAddress) => userAddress || "");
+
+const getVaultIcon = createCachedSelector(getToken, (token) => {
+  return token?.icon;
+})((state, tokenAddress) => tokenAddress);
+
+const getVaultUnderlyingToken = createCachedSelector(getVault, getAllTokens, (vault, allTokens) => {
+  return allTokens[vault.token];
+})((state, vaultAddress) => vaultAddress);
+
+const getVaultsSortedByAlias = createSelector(getAllVaults, (vaults) => {
+  return orderBy(vaults, [(vault) => vault.name.toLowerCase()]);
 });
 
-const getVaultStats = (state) => state.vaultsReport.vaultsApyStats.stats;
+// For any selectors based on numerical sort, we default empty values to -9999 so that they fall to
+// the bottom of the sorted result.
 
-const getVault = createCachedSelector(
+const getVaultsSortedByApy = createSelector(getAllVaults, (vaults) => {
+  return orderBy(vaults, [(vault) => vault.metadata?.apy?.recommended || -9999], ["desc"]);
+});
+
+const getVaultsSortedByVaultHoldings = createSelector(getAllVaults, (vaults) => {
+  return orderBy(
+    vaults,
+    [(vault) => Number(vault.underlyingTokenBalance.amountUsdc) || -9999],
+    ["desc"]
+  );
+});
+
+const getVaultsSortedByUserHoldings = createSelector(
   getAllVaults,
-  (state, vaultAddress) => vaultAddress,
-  (allVaults, vaultAddress) => {
-    return allVaults[vaultAddress];
-  }
-)((state, vaultAddress) => vaultAddress);
-
-const getAllPricePerFullShare = (state) => state.vaultsReport.pricePerFullShare;
-
-/*
- * Token selectors
- */
-const getAllTokens = (state) => state.vaultsReport.tokens;
-
-const getStrategyWantTokensMapping = (state) => state.vaultsReport.strategyWantTokensMapping;
-
-const getAllWantTokenPrices = (state) => state.vaultsReport.wantTokenPrices.prices;
-
-const getStrategyWantTokenAddress = (state, strategyAddress) =>
-  getStrategyWantTokensMapping(state)[strategyAddress];
-
-const getVaultWantToken = (state, vaultAddress) => {
-  const vault = getVault(state, vaultAddress);
-  const allTokens = getAllTokens(state);
-  return allTokens[vault.tokenAddress];
-};
-
-const getStrategyWantToken = (state, strategyAddress) => {
-  const strategyWantTokenAddress = getStrategyWantTokenAddress(state, strategyAddress);
-  const allTokens = getAllTokens(state);
-  return allTokens[strategyWantTokenAddress];
-};
-
-/*
- * Vault holdings selectors
- */
-const getAllVaultRawHoldings = (state) => state.vaultsReport.allVaultRawHoldings;
-
-const getAllVaultsHoldings = createSelector(
-  getAllVaultRawHoldings,
-  getAllVaults,
-  (allVaultRawHoldings, allVaults) => {
-    const allVaultHoldings = mapValues(allVaultRawHoldings, (vaultRawHoldings, vaultAddress) => {
-      const vaultWantTokenDecimals = allVaults[vaultAddress].decimals;
-      return normalizedValue(vaultRawHoldings, vaultWantTokenDecimals);
-    });
-
-    return allVaultHoldings;
-  }
-);
-
-const getVaultHoldings = (state, vaultAddress) => getAllVaultsHoldings(state)[vaultAddress];
-
-const getAllVaultsFiatValue = createSelector(
-  getAllVaultsHoldings,
-  getAllVaults,
-  getAllWantTokenPrices,
-  convertTokenAmountsToFiatAmounts
-);
-
-const getVaultFiatValue = (state, vaultAddress) => getAllVaultsFiatValue(state)[vaultAddress];
-
-/*
- * Strategy holdings selectors
- */
-const getAllStrategyRawHoldings = (state) => state.vaultsReport.allStrategyRawHoldings;
-
-const getAllStrategiesHoldings = createSelector(
-  getAllStrategyRawHoldings,
-  getStrategyWantTokensMapping,
-  getAllTokens,
-  (allStrategyRawHoldings, strategyWantTokensMapping, allTokens) => {
-    const allStrategyHoldings = transform(
-      allStrategyRawHoldings,
-      (acc, strategyRawHoldings, strategyAddress) => {
-        const strategyWantTokenAddress = strategyWantTokensMapping[strategyAddress];
-        const strategyWantToken = allTokens[strategyWantTokenAddress];
-
-        if (!isUndefined(strategyWantToken)) {
-          const strategyWantTokenDecimals = strategyWantToken.decimals;
-          acc[strategyAddress] = normalizedValue(strategyRawHoldings, strategyWantTokenDecimals);
-        }
-      },
-      {}
+  getUserBalances,
+  (vaults, userBalances) => {
+    return orderBy(
+      vaults,
+      [(vault) => Number(userBalances[vault.address]?.balanceUsdc) || -9999],
+      ["desc"]
     );
-
-    return allStrategyHoldings;
   }
 );
 
-const getStrategyHoldings = (state, strategyAddress) =>
-  getAllStrategiesHoldings(state)[strategyAddress];
-
-const getAllStrategiesFiatValue = createSelector(
-  getAllStrategiesHoldings,
-  getStrategyWantTokensMapping,
-  getAllWantTokenPrices,
-  (allStrategiesHoldings, strategyWantTokensMapping, allWantTokenPrices) => {
-    const allStrategiesFiatValues = transform(
-      allStrategiesHoldings,
-      (acc, strategyHoldings, strategyAddress) => {
-        const strategyWantTokenAddress = strategyWantTokensMapping[strategyAddress];
-        const wantTokenPrice = allWantTokenPrices[strategyWantTokenAddress];
-        if (!isUndefined(wantTokenPrice)) {
-          acc[strategyAddress] = strategyHoldings * wantTokenPrice;
-        }
-      },
-      {}
-    );
-
-    return allStrategiesFiatValues;
-  }
-);
-
-const getStrategyFiatValue = (state, strategyAddress) =>
-  getAllStrategiesFiatValue(state)[strategyAddress];
-
-/*
- * User holdings selectors
- */
-const getAllUserRawYvHoldings = (state) => state.vaultsReport.allUserRawYvHoldings;
-
-const getAllUserHoldings = createSelector(
-  getAllUserRawYvHoldings,
-  getAllPricePerFullShare,
+const getVaultsSortedByUserEarnings = createSelector(
   getAllVaults,
-  (allUserRawYvHoldings, allPricePerFullShare, allVaults) => {
-    const allUserHoldings = transform(
-      allUserRawYvHoldings,
-      (acc, userRawYvHoldings, vaultAddress) => {
-        const pricePerFullShare = allPricePerFullShare[vaultAddress];
-        if (!isUndefined(pricePerFullShare)) {
-          const vaultWantTokenDecimals = allVaults[vaultAddress].decimals;
-          acc[vaultAddress] =
-            normalizedValue(userRawYvHoldings, vaultWantTokenDecimals) * pricePerFullShare;
-        }
-      }
-    );
-
-    return allUserHoldings;
+  getUserAllEarnings,
+  (vaults, userEarnings) => {
+    return orderBy(vaults, [(vault) => Number(userEarnings[vault.address]) || -9999], ["desc"]);
   }
 );
 
-const getUserHoldings = (state, vaultAddress) => getAllUserHoldings(state)[vaultAddress];
+const getSortedVaults = createSelector(
+  getVaultSortField,
+  getVaultsSortedByAlias,
+  getVaultsSortedByApy,
+  getVaultsSortedByVaultHoldings,
+  getVaultsSortedByUserHoldings,
+  getVaultsSortedByUserEarnings,
+  (
+    vaultSortField,
+    vaultsSortedByAlias,
+    vaultsSortedByApy,
+    vaultsSortedByVaultHoldings,
+    vaultsSortedByUserHoldings,
+    vaultsSortedByUserEarnings
+  ) => {
+    const sortFieldSelectionResultMapping = {
+      "Vault name": vaultsSortedByAlias,
+      APY: vaultsSortedByApy,
+      "Vault holdings (in USDC)": vaultsSortedByVaultHoldings,
+      "User holdings (in USDC)": vaultsSortedByUserHoldings,
+      "User earnings (in USDC)": vaultsSortedByUserEarnings,
+    };
 
-const getAllUserFiatValue = createSelector(
-  getAllUserHoldings,
-  getAllVaults,
-  getAllWantTokenPrices,
-  convertTokenAmountsToFiatAmounts
-);
+    if (!has(sortFieldSelectionResultMapping, vaultSortField)) {
+      vaultSortField = "Vault name";
+    }
 
-const getUserFiatValue = (state, vaultAddress) => getAllUserFiatValue(state)[vaultAddress];
-
-/*
- * User stats selectors
- * API currently returns user stats with vault addresses in lower case. As we can't guarantee Web3
- * being available for user stats, we cannot convert to checksummed addresses, so will instead have
- * handle this at the point of using vault addresses.
- */
-const getAllUserStats = (state) => state.vaultsReport.userStats.stats;
-
-const getAllUserEarnings = createSelector(
-  getAllUserStats,
-  getAllVaultsKeyedLowerCase,
-  (allUserStats, allVaultsKeyedLowerCase) => {
-    const allUserEarnings = transform(allUserStats, (acc, userStats, vaultAddress) => {
-      const vaultWantTokenDecimals = allVaultsKeyedLowerCase[vaultAddress].decimals;
-      acc[vaultAddress] = normalizedValue(userStats.earnings, vaultWantTokenDecimals);
-    });
-
-    return allUserEarnings;
+    return sortFieldSelectionResultMapping[vaultSortField];
   }
 );
 
-const getUserEarnings = (state, vaultAddress) =>
-  getAllUserEarnings(state)[vaultAddress.toLowerCase()];
+const getReportVaults = createSelector(
+  getSortedVaults,
+  getUserBalances,
+  getUserAllEarnings,
+  getVaultVisibilitySetting,
+  (vaults, userBalances, userEarnings, visibilitySetting) => {
+    switch (visibilitySetting) {
+      case "currentDeposits":
+        vaults = filter(vaults, (vault) => {
+          return userBalances[vault.address]?.amountUsdc > 0;
+        });
+        break;
 
-const getAllUserEarningsFiatValue = createSelector(
-  getAllUserEarnings,
-  getAllVaultsKeyedLowerCase,
-  getAllWantTokenPrices,
-  convertTokenAmountsToFiatAmounts
+      case "allDeposits":
+        vaults = filter(vaults, (vault) => {
+          return userEarnings[vault.address]?.amountUsdc > 0;
+        });
+        break;
+    }
+
+    return vaults;
+  }
 );
-
-const getUserEarningsFiatValue = (state, vaultAddress) =>
-  getAllUserEarningsFiatValue(state)[vaultAddress.toLowerCase()];
-
-/* Load / Error selectors */
-const getUserStatsFetchFailed = (state) => Boolean(state.vaultsReport.userStats.error);
-const getVaultRegistryFetchFailed = (state) => Boolean(state.vaultsReport.vaultRegistry.error);
-const getTokenPricesFetchFailed = (state) => Boolean(state.vaultsReport.wantTokenPrices.error);
-const getVaultApyStatsFetchFailed = (state) => Boolean(state.vaultsReport.vaultsApyStats.error);
-
-const getUserStatsLoading = (state) => state.vaultsReport.userStats.loading;
-const getVaultRegistryLoading = (state) => state.vaultsReport.vaultRegistry.loading;
-const getTokenPricesLoading = (state) => state.vaultsReport.wantTokenPrices.loading;
-const getVaultApyStatsLoading = (state) => state.vaultsReport.vaultsApyStats.loading;
-
-const getVaultRegistryLoaded = (state) => state.vaultsReport.vaultRegistry.loaded;
 
 export {
-  getAllVaults,
-  getVault,
-  getVaultStats,
-  getAllVaultsHoldings,
-  getVaultHoldings,
-  getAllVaultsFiatValue,
-  getVaultFiatValue,
-  getStrategyHoldings,
-  getAllStrategiesFiatValue,
-  getStrategyFiatValue,
-  getUserHoldings,
-  getAllUserFiatValue,
-  getUserFiatValue,
-  getUserEarnings,
-  getAllUserEarningsFiatValue,
-  getUserEarningsFiatValue,
-  getVaultWantToken,
-  getStrategyWantTokensMapping,
-  getStrategyWantTokenAddress,
-  getStrategyWantToken,
-  getUserStatsFetchFailed,
-  getVaultRegistryFetchFailed,
-  getTokenPricesFetchFailed,
-  getVaultApyStatsFetchFailed,
-  getUserStatsLoading,
-  getVaultRegistryLoading,
-  getTokenPricesLoading,
-  getVaultApyStatsLoading,
-  getVaultRegistryLoaded,
+  getVaultsLoading,
+  getUnderlyingTokensLoading,
+  getUserHoldingsLoading,
+  getUserEarningsLoading,
+  getStrategiesLoading,
+  getLoadingComplete,
+  getVaultIcon,
+  getVaultUnderlyingToken,
+  getReportVaults,
 };

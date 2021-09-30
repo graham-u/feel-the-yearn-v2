@@ -1,6 +1,7 @@
 import AppBar from "@material-ui/core/AppBar";
 import Grid from "@material-ui/core/Grid";
 import Link from "@material-ui/core/Link";
+import InternalLink from "next/link";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import SettingsPanel from "components/pageContainer/header/settingsPanel";
@@ -15,6 +16,7 @@ const useAppBarStyles = makeStyles({
 const useLinkStyles = makeStyles({
   root: {
     paddingRight: "1rem",
+    cursor: "pointer",
   },
 });
 function Header() {
@@ -23,21 +25,43 @@ function Header() {
 
   return (
     <AppBar position="static" classes={{ root: appBarClasses.root }}>
-      <Grid container justify="space-between">
+      <Grid container justifyContent="space-between">
         <Grid item>
           <Typography component="h1" variant="h4" display="inline" gutterBottom>
             Feel the Yearn
           </Typography>
           <div>
+            <InternalLink href="/vaults">
+              <Link
+                title="Yearn vaults"
+                className={linkClasses.root}
+                variant="subtitle1"
+                color="inherit"
+                display="inline"
+              >
+                Vaults
+              </Link>
+            </InternalLink>
+            <InternalLink href="/about">
+              <Link
+                title="About this site"
+                className={linkClasses.root}
+                variant="subtitle1"
+                color="inherit"
+                display="inline"
+              >
+                About
+              </Link>
+            </InternalLink>
             <Link
               className={linkClasses.root}
-              href="https://beta.feel-the-yearn.app"
-              title="Visit the new beta site"
+              href="https://feel-the-yearn.app/vaults"
+              title="Visit original site"
               variant="subtitle1"
               color="inherit"
               display="inline"
             >
-              New site (Beta)
+              Original site
             </Link>
             <Link
               className={linkClasses.root}
