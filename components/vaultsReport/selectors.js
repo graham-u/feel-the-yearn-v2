@@ -80,7 +80,7 @@ const getVaultsSortedByUserHoldings = createSelector(
   (vaults, userBalances) => {
     return orderBy(
       vaults,
-      [(vault) => Number(userBalances[vault.address]?.amountUsdc) || -9999],
+      [(vault) => Number(userBalances[vault.address]?.balanceUsdc) || -9999],
       ["desc"]
     );
   }
@@ -90,11 +90,7 @@ const getVaultsSortedByUserEarnings = createSelector(
   getAllVaults,
   getUserAllEarnings,
   (vaults, userEarnings) => {
-    return orderBy(
-      vaults,
-      [(vault) => Number(userEarnings[vault.address]?.amountUsdc) || -9999],
-      ["desc"]
-    );
+    return orderBy(vaults, [(vault) => Number(userEarnings[vault.address]) || -9999], ["desc"]);
   }
 );
 
