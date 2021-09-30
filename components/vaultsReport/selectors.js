@@ -134,13 +134,13 @@ const getReportVaults = createSelector(
     switch (visibilitySetting) {
       case "currentDeposits":
         vaults = filter(vaults, (vault) => {
-          return userBalances[vault.address]?.amountUsdc > 0;
+          return userBalances[vault.address]?.balanceUsdc > 0;
         });
         break;
 
       case "allDeposits":
         vaults = filter(vaults, (vault) => {
-          return userEarnings[vault.address]?.amountUsdc > 0;
+          return userEarnings[vault.address] > 0;
         });
         break;
     }
